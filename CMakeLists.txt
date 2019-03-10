@@ -136,7 +136,6 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/media/baseset)
 include(SourceList REQUIRED)
 source_list()
 
-include(SourceList2 REQUIRED)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 CheckSourceEquality()
 
