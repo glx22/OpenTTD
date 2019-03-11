@@ -131,8 +131,6 @@ endif (MSVC)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/media/baseset)
-
 include(SourceList REQUIRED)
 source_list()
 
@@ -181,6 +179,7 @@ endif (NOT MSVC)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/squirrel/include)
+add_subdirectory(${CMAKE_SOURCE_DIR}/media/baseset)
 
 add_executable(openttd
         WIN32

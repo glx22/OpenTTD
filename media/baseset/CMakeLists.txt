@@ -19,15 +19,18 @@ foreach(BASESET_SOURCE_FILE IN LISTS BASESET_SOURCE_FILES)
     get_filename_component(BASESET_SOURCE_FILE_NAME "${BASESET_SOURCE_FILE}" NAME)
 
     set(BASESET_BINARY_FILE "${CMAKE_BINARY_DIR}/baseset/${BASESET_SOURCE_FILE_NAME}")
+    get_target_property(LANG_SOURCE_FILES language_files LANG_SOURCE_FILES)
 
     add_custom_command(OUTPUT ${BASESET_BINARY_FILE}
-            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_SOURCE_DIR}/cmake/scripts/Baseset.cmake
-                    ${BASESET_SOURCE_FILE}
-                    ${BASESET_BINARY_FILE}
-                    "$<JOIN:$<TARGET_PROPERTY:language_files,LANG_SOURCE_FILES>,%>" # Make the list command line compatible
-                    ${BASESET_EXTRAGRF_FILE}
+            COMMAND ${CMAKE_COMMAND}
+                    -DBASESET_SOURCE_FILE=${BASESET_SOURCE_FILE}
+                    -DBASESET_BINARY_FILE=${BASESET_BINARY_FILE}
+                    -DBASESET_EXTRAGRF_FILE=${BASESET_EXTRAGRF_FILE}
+                    -P ${CMAKE_SOURCE_DIR}/cmake/scripts/Baseset.cmake
+                    --
+                    ${LANG_SOURCE_FILES}
             MAIN_DEPENDENCY ${BASESET_SOURCE_FILE}
-            DEPENDS $<TARGET_PROPERTY:language_files,LANG_SOURCE_FILES>
+            DEPENDS ${LANG_SOURCE_FILES}
                     ${BASESET_EXTRAGRF_FILE}
                     ${CMAKE_SOURCE_DIR}/cmake/scripts/Baseset.cmake
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
