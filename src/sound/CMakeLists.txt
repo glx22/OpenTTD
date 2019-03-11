@@ -14,7 +14,7 @@ if (NOT OPTION_DEDICATED)
     add_files(
         cocoa_s.cpp
         cocoa_s.h
-        CONDITION APPLE AND OPTION_COCOA
+        CONDITION APPLE
     )
 
     add_files(

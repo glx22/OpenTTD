@@ -12,15 +12,11 @@ if (NOT OPTION_DEDICATED)
     )
 
     add_files(
+        cocoa_m.cpp
+        cocoa_m.h
         qtmidi.cpp
         qtmidi.h
         CONDITION APPLE
-    )
-
-    add_files(
-        cocoa_m.cpp
-        cocoa_m.h
-        CONDITION APPLE AND OPTION_COCOA
     )
 
     add_files(
