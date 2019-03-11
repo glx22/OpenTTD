@@ -7,7 +7,7 @@ set(LANGFILES ${CMAKE_ARGV5})
 set(ORIG_EXTRA_GRF ${CMAKE_ARGV6})
 
 # Convert the command line compatible string into a real list
-string(REPLACE "\\ " ";" LANGFILES ${LANGFILES})
+string(REPLACE "%" ";" LANGFILES ${LANGFILES})
 
 # Place holder format is @<ini_key>_<str_id>@
 file(STRINGS ${INPUTFILE} PLACE_HOLDER REGEX "^@")
@@ -17,7 +17,7 @@ string(REGEX REPLACE "@(.*)@" "\\1" PLACE_HOLDER "${PLACE_HOLDER}")
 
 # Get the translations
 foreach(LANGFILE IN LISTS LANGFILES)
-    file(STRINGS ${LANGFILE} LANGLINES REGEX "^(##isocode|${STR_ID})" ENCODING UTF-8)
+    file(STRINGS "${LANGFILE}" LANGLINES REGEX "^(##isocode|${STR_ID})" ENCODING UTF-8)
     string(FIND "${LANGLINES}" "${STR_ID}" HAS_STR_ID)
     if (HAS_STR_ID LESS 0)
         continue()
