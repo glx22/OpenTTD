@@ -5,5 +5,5 @@ add_files(
 
 add_files(
     unix.cpp
-    CONDITION UNIX AND NOT APPLE
+    CONDITION UNIX AND NOT OPTION_OS2
 )
