@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Misc
 add_files(
     array.hpp
     binaryheap.hpp

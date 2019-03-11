@@ -1,13 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
-
-# AI API
-add_files(ai_changelog.hpp)
-
-# Game API
-add_files(game_changelog.hpp)
-
-# Script API
 add_files(
+    ai_changelog.hpp
+    game_changelog.hpp
     script_accounting.hpp
     script_admin.hpp
     script_airport.hpp
@@ -75,10 +68,6 @@ add_files(
     script_waypoint.hpp
     script_waypointlist.hpp
     script_window.hpp
-)
-
-# Script API Implementation
-add_files(
     script_accounting.cpp
     script_admin.cpp
     script_airport.cpp

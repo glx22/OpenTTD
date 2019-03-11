@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
 add_subdirectory(3rdparty)
 add_subdirectory(ai)
 add_subdirectory(blitter)
@@ -23,468 +21,452 @@ add_subdirectory(thread)
 add_subdirectory(video)
 add_subdirectory(widgets)
 
-# Source Files
 add_files(
-    airport.cpp
-    animated_tile.cpp
-    articulated_vehicles.cpp
-    autoreplace.cpp
-    bmp.cpp
-    cargoaction.cpp
-    cargomonitor.cpp
-    cargopacket.cpp
-    cargotype.cpp
-    cheat.cpp
-    command.cpp
-    console.cpp
-    console_cmds.cpp
-    cpu.cpp
-    crashlog.cpp
-    currency.cpp
-    date.cpp
-    debug.cpp
-    dedicated.cpp
-    depot.cpp
-    disaster_vehicle.cpp
-    driver.cpp
-    economy.cpp
-    effectvehicle.cpp
-    elrail.cpp
-    engine.cpp
-    fileio.cpp
-    fios.cpp
-    fontcache.cpp
-    fontdetection.cpp
-    base_consist.cpp
-    gamelog.cpp
-    genworld.cpp
-    gfx.cpp
-    gfxinit.cpp
-    gfx_layout.cpp
-    goal.cpp
-    ground_vehicle.cpp
-    heightmap.cpp
-    highscore.cpp
-    hotkeys.cpp
-    ini.cpp
-    ini_load.cpp
-    landscape.cpp
-    map.cpp
-    misc.cpp
-    mixer.cpp
-    music.cpp
-    openttd.cpp
-    order_backup.cpp
-    pbs.cpp
-    progress.cpp
-    rail.cpp
-    road.cpp
-    roadstop.cpp
-    screenshot.cpp
-    settings.cpp
-    signal.cpp
-    signs.cpp
-    sound.cpp
-    sprite.cpp
-    spritecache.cpp
-    station.cpp
-    string.cpp
-    stringfilter.cpp
-    strings.cpp
-    story.cpp
-    subsidy.cpp
-    textbuf.cpp
-    texteff.cpp
-    tgp.cpp
-    tile_map.cpp
-    tilearea.cpp
-    townname.cpp
-    vehicle.cpp
-    vehiclelist.cpp
-    viewport.cpp
+    viewport_sprite_sorter_sse4.cpp
+    CONDITION SSE_FOUND
 )
-if (SSE_FOUND)
-    add_files(viewport_sprite_sorter_sse4.cpp)
-endif (SSE_FOUND)
-add_files(
-    waypoint.cpp
-    widget.cpp
-    window.cpp
-)
+if (SSE_FOUND AND NOT MSVC)
+    set_compile_flags(
+        viewport_sprite_sorter_sse4.cpp
+        COMPILE_FLAGS -msse4.1)
+endif (SSE_FOUND AND NOT MSVC)
 
-# Header Files
 add_files(
     aircraft.h
+    aircraft_cmd.cpp
+    aircraft_gui.cpp
+    airport.cpp
     airport.h
+    airport_gui.cpp
+    animated_tile.cpp
     animated_tile_func.h
+    articulated_vehicles.cpp
     articulated_vehicles.h
+    autoreplace.cpp
     autoreplace_base.h
+    autoreplace_cmd.cpp
     autoreplace_func.h
+    autoreplace_gui.cpp
     autoreplace_gui.h
     autoreplace_type.h
     autoslope.h
+    base_consist.cpp
+    base_consist.h
     base_media_base.h
     base_media_func.h
     base_station_base.h
     bitmap_type.h
+    bmp.cpp
     bmp.h
+    bootstrap_gui.cpp
     bridge.h
+    bridge_gui.cpp
+    bridge_map.cpp
+    bridge_map.h
+    build_vehicle_gui.cpp
     cargo_type.h
+    cargoaction.cpp
     cargoaction.h
+    cargomonitor.cpp
     cargomonitor.h
+    cargopacket.cpp
     cargopacket.h
+    cargotype.cpp
     cargotype.h
+    cheat.cpp
     cheat_func.h
+    cheat_gui.cpp
     cheat_type.h
+    clear_cmd.cpp
     clear_func.h
+    clear_map.h
     cmd_helper.h
+    command.cpp
     command_func.h
     command_type.h
     company_base.h
+    company_cmd.cpp
     company_func.h
+    company_gui.cpp
     company_gui.h
     company_manager_face.h
     company_type.h
+    console.cpp
+    console_cmds.cpp
     console_func.h
+    console_gui.cpp
     console_gui.h
     console_internal.h
     console_type.h
+    cpu.cpp
     cpu.h
+    crashlog.cpp
     crashlog.h
+    currency.cpp
     currency.h
+    date.cpp
     date_func.h
+    date_gui.cpp
     date_gui.h
     date_type.h
+    debug.cpp
     debug.h
+    dedicated.cpp
+    depot.cpp
     depot_base.h
+    depot_cmd.cpp
     depot_func.h
+    depot_gui.cpp
     depot_map.h
     depot_type.h
     direction_func.h
     direction_type.h
+    disaster_vehicle.cpp
     disaster_vehicle.h
+    dock_gui.cpp
+    driver.cpp
     driver.h
+    economy.cpp
     economy_base.h
     economy_func.h
     economy_type.h
+    effectvehicle.cpp
     effectvehicle_base.h
     effectvehicle_func.h
+    elrail.cpp
     elrail_func.h
+    engine.cpp
     engine_base.h
     engine_func.h
+    engine_gui.cpp
     engine_gui.h
     engine_type.h
     error.h
+    error_gui.cpp
+    fileio.cpp
     fileio_func.h
     fileio_type.h
+    fios.cpp
     fios.h
+    fios_gui.cpp
+    fontcache.cpp
     fontcache.h
+    fontdetection.cpp
     fontdetection.h
+    framerate_gui.cpp
     framerate_type.h
-    base_consist.h
+    gamelog.cpp
     gamelog.h
     gamelog_internal.h
+    genworld.cpp
     genworld.h
+    genworld_gui.cpp
+    gfx.cpp
     gfx_func.h
+    gfx_layout.cpp
     gfx_layout.h
     gfx_type.h
+    gfxinit.cpp
     gfxinit.h
+    goal.cpp
     goal_base.h
+    goal_gui.cpp
     goal_type.h
+    graph_gui.cpp
     graph_gui.h
+    ground_vehicle.cpp
     ground_vehicle.hpp
     group.h
+    group_cmd.cpp
+    group_gui.cpp
     group_gui.h
     group_type.h
     gui.h
     guitimer_func.h
+    heightmap.cpp
     heightmap.h
+    highscore.cpp
     highscore.h
+    highscore_gui.cpp
+    hotkeys.cpp
     hotkeys.h
     house.h
     house_type.h
     industry.h
+    industry_cmd.cpp
+    industry_gui.cpp
+    industry_map.h
     industry_type.h
     industrytype.h
+    ini.cpp
+    ini_load.cpp
     ini_type.h
+    intro_gui.cpp
+    landscape.cpp
     landscape.h
     landscape_type.h
     language.h
     livery.h
+    main_gui.cpp
+    map.cpp
     map_func.h
     map_type.h
+    misc.cpp
+    misc_cmd.cpp
+    misc_gui.cpp
+    mixer.cpp
     mixer.h
+    music.cpp
+    music_gui.cpp
+    newgrf.cpp
     newgrf.h
+    newgrf_airport.cpp
     newgrf_airport.h
+    newgrf_airporttiles.cpp
     newgrf_airporttiles.h
     newgrf_animation_base.h
     newgrf_animation_type.h
     newgrf_callbacks.h
+    newgrf_canal.cpp
     newgrf_canal.h
+    newgrf_cargo.cpp
     newgrf_cargo.h
     newgrf_class.h
     newgrf_class_func.h
+    newgrf_commons.cpp
     newgrf_commons.h
+    newgrf_config.cpp
     newgrf_config.h
     newgrf_debug.h
+    newgrf_debug_gui.cpp
+    newgrf_engine.cpp
     newgrf_engine.h
+    newgrf_generic.cpp
     newgrf_generic.h
+    newgrf_gui.cpp
+    newgrf_house.cpp
     newgrf_house.h
+    newgrf_industries.cpp
     newgrf_industries.h
+    newgrf_industrytiles.cpp
     newgrf_industrytiles.h
+    newgrf_object.cpp
     newgrf_object.h
     newgrf_properties.h
+    newgrf_railtype.cpp
     newgrf_railtype.h
+    newgrf_sound.cpp
     newgrf_sound.h
+    newgrf_spritegroup.cpp
     newgrf_spritegroup.h
+    newgrf_station.cpp
     newgrf_station.h
+    newgrf_storage.cpp
     newgrf_storage.h
+    newgrf_text.cpp
     newgrf_text.h
+    newgrf_town.cpp
     newgrf_town.h
+    newgrf_townname.cpp
     newgrf_townname.h
     news_func.h
+    news_gui.cpp
     news_gui.h
     news_type.h
     object.h
     object_base.h
+    object_cmd.cpp
+    object_gui.cpp
+    object_map.h
     object_type.h
+    openttd.cpp
     openttd.h
+    order_backup.cpp
     order_backup.h
     order_base.h
+    order_cmd.cpp
     order_func.h
+    order_gui.cpp
     order_type.h
+    osk_gui.cpp
+    pbs.cpp
     pbs.h
+    progress.cpp
     progress.h
     querystring_gui.h
+    rail.cpp
     rail.h
+    rail_cmd.cpp
+    rail_gui.cpp
     rail_gui.h
+    rail_map.h
     rail_type.h
     rev.h
+    road.cpp
+    road_cmd.cpp
     road_cmd.h
     road_func.h
+    road_gui.cpp
     road_gui.h
     road_internal.h
+    road_map.cpp
+    road_map.h
     road_type.h
+    roadstop.cpp
     roadstop_base.h
     roadveh.h
+    roadveh_cmd.cpp
+    roadveh_gui.cpp
     safeguards.h
+    screenshot.cpp
     screenshot.h
+    settings.cpp
     settings_func.h
+    settings_gui.cpp
     settings_gui.h
     settings_internal.h
     settings_type.h
     ship.h
+    ship_cmd.cpp
+    ship_gui.cpp
+    signal.cpp
     signal_func.h
     signal_type.h
+    signs.cpp
     signs_base.h
+    signs_cmd.cpp
     signs_func.h
+    signs_gui.cpp
     signs_type.h
     slope_func.h
     slope_type.h
+    smallmap_gui.cpp
     smallmap_gui.h
     sortlist_type.h
+    sound.cpp
     sound_func.h
     sound_type.h
+    sprite.cpp
     sprite.h
+    spritecache.cpp
     spritecache.h
+    station.cpp
     station_base.h
+    station_cmd.cpp
     station_func.h
+    station_gui.cpp
     station_gui.h
     station_kdtree.h
+    station_map.h
     station_type.h
+    statusbar_gui.cpp
     statusbar_gui.h
     stdafx.h
+    story.cpp
     story_base.h
+    story_gui.cpp
     story_type.h
     strgen/strgen.h
+    string.cpp
     string_base.h
     string_func.h
     string_type.h
+    stringfilter.cpp
     stringfilter_type.h
+    strings.cpp
     strings_func.h
     strings_type.h
+    subsidy.cpp
     subsidy_base.h
     subsidy_func.h
+    subsidy_gui.cpp
     subsidy_type.h
     tar_type.h
+    terraform_cmd.cpp
+    terraform_gui.cpp
     terraform_gui.h
+    textbuf.cpp
     textbuf_gui.h
     textbuf_type.h
+    texteff.cpp
     texteff.hpp
+    textfile_gui.cpp
     textfile_gui.h
     textfile_type.h
+    tgp.cpp
     tgp.h
     tile_cmd.h
+    tile_map.cpp
+    tile_map.h
     tile_type.h
+    tilearea.cpp
     tilearea_type.h
     tilehighlight_func.h
     tilehighlight_type.h
     tilematrix_type.hpp
     timetable.h
+    timetable_cmd.cpp
+    timetable_gui.cpp
+    toolbar_gui.cpp
     toolbar_gui.h
     town.h
-    town_type.h
+    town_cmd.cpp
+    town_gui.cpp
     town_kdtree.h
+    town_map.h
+    town_type.h
+    townname.cpp
     townname_func.h
     townname_type.h
     track_func.h
     track_type.h
     train.h
+    train_cmd.cpp
+    train_gui.cpp
     transparency.h
+    transparency_gui.cpp
     transparency_gui.h
     transport_type.h
+    tree_cmd.cpp
+    tree_gui.cpp
+    tree_map.h
+    tunnel_map.cpp
+    tunnel_map.h
     tunnelbridge.h
+    tunnelbridge_cmd.cpp
+    tunnelbridge_map.h
+    vehicle.cpp
     vehicle_base.h
+    vehicle_cmd.cpp
     vehicle_func.h
+    vehicle_gui.cpp
     vehicle_gui.h
     vehicle_gui_base.h
     vehicle_type.h
+    vehiclelist.cpp
     vehiclelist.h
+    viewport.cpp
     viewport_func.h
+    viewport_gui.cpp
     viewport_kdtree.h
     viewport_sprite_sorter.h
     viewport_type.h
+    void_cmd.cpp
+    void_map.h
     water.h
+    water_cmd.cpp
+    water_map.h
+    waypoint.cpp
     waypoint_base.h
+    waypoint_cmd.cpp
     waypoint_func.h
+    waypoint_gui.cpp
+    widget.cpp
     widget_type.h
+    window.cpp
     window_func.h
     window_gui.h
     window_type.h
     zoom_func.h
     zoom_type.h
-)
-
-# GUI Source Code
-add_files(
-    aircraft_gui.cpp
-    airport_gui.cpp
-    autoreplace_gui.cpp
-    bootstrap_gui.cpp
-    bridge_gui.cpp
-    build_vehicle_gui.cpp
-    cheat_gui.cpp
-    company_gui.cpp
-    console_gui.cpp
-    date_gui.cpp
-    depot_gui.cpp
-    dock_gui.cpp
-    engine_gui.cpp
-    error_gui.cpp
-    fios_gui.cpp
-    framerate_gui.cpp
-    genworld_gui.cpp
-    goal_gui.cpp
-    graph_gui.cpp
-    group_gui.cpp
-    highscore_gui.cpp
-    industry_gui.cpp
-    intro_gui.cpp
-    main_gui.cpp
-    misc_gui.cpp
-    music_gui.cpp
-    newgrf_debug_gui.cpp
-    newgrf_gui.cpp
-    news_gui.cpp
-    object_gui.cpp
-    order_gui.cpp
-    osk_gui.cpp
-    rail_gui.cpp
-    road_gui.cpp
-    roadveh_gui.cpp
-    settings_gui.cpp
-    ship_gui.cpp
-    signs_gui.cpp
-    smallmap_gui.cpp
-    station_gui.cpp
-    statusbar_gui.cpp
-    story_gui.cpp
-    subsidy_gui.cpp
-    terraform_gui.cpp
-    textfile_gui.cpp
-    timetable_gui.cpp
-    toolbar_gui.cpp
-    town_gui.cpp
-    train_gui.cpp
-    transparency_gui.cpp
-    tree_gui.cpp
-    vehicle_gui.cpp
-    viewport_gui.cpp
-    waypoint_gui.cpp
-)
-
-# Command handlers
-add_files(
-    aircraft_cmd.cpp
-    autoreplace_cmd.cpp
-    clear_cmd.cpp
-    company_cmd.cpp
-    depot_cmd.cpp
-    group_cmd.cpp
-    industry_cmd.cpp
-    misc_cmd.cpp
-    object_cmd.cpp
-    order_cmd.cpp
-    rail_cmd.cpp
-    road_cmd.cpp
-    roadveh_cmd.cpp
-    ship_cmd.cpp
-    signs_cmd.cpp
-    station_cmd.cpp
-    terraform_cmd.cpp
-    timetable_cmd.cpp
-    town_cmd.cpp
-    train_cmd.cpp
-    tree_cmd.cpp
-    tunnelbridge_cmd.cpp
-    vehicle_cmd.cpp
-    void_cmd.cpp
-    water_cmd.cpp
-    waypoint_cmd.cpp
-)
-
-# NewGRF
-add_files(
-    newgrf.cpp
-    newgrf_airport.cpp
-    newgrf_airporttiles.cpp
-    newgrf_canal.cpp
-    newgrf_cargo.cpp
-    newgrf_commons.cpp
-    newgrf_config.cpp
-    newgrf_engine.cpp
-    newgrf_generic.cpp
-    newgrf_house.cpp
-    newgrf_industries.cpp
-    newgrf_industrytiles.cpp
-    newgrf_object.cpp
-    newgrf_railtype.cpp
-    newgrf_sound.cpp
-    newgrf_spritegroup.cpp
-    newgrf_station.cpp
-    newgrf_storage.cpp
-    newgrf_text.cpp
-    newgrf_town.cpp
-    newgrf_townname.cpp
-)
-
-# Map Accessors
-add_files(
-    bridge_map.cpp
-    bridge_map.h
-    clear_map.h
-    industry_map.h
-    object_map.h
-    rail_map.h
-    road_map.cpp
-    road_map.h
-    station_map.h
-    tile_map.h
-    town_map.h
-    tree_map.h
-    tunnel_map.cpp
-    tunnel_map.h
-    tunnelbridge_map.h
-    void_map.h
-    water_map.h
 )

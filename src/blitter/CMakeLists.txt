@@ -1,48 +1,51 @@
-cmake_minimum_required(VERSION 3.5)
+add_files(
+    32bpp_anim.cpp
+    32bpp_anim.hpp
+    32bpp_base.cpp
+    32bpp_base.hpp
+    32bpp_optimized.cpp
+    32bpp_optimized.hpp
+    32bpp_simple.cpp
+    32bpp_simple.hpp
+    8bpp_base.cpp
+    8bpp_base.hpp
+    8bpp_optimized.cpp
+    8bpp_optimized.hpp
+    8bpp_simple.cpp
+    8bpp_simple.hpp
+    CONDITION NOT OPTION_DEDICATED
+)
 
-# Blitters
-if (NOT OPTION_DEDICATED)
-    add_files(
-        32bpp_anim.cpp
-        32bpp_anim.hpp
-    )
-    if (SSE_FOUND)
-        add_files(
-            32bpp_anim_sse2.cpp
-            32bpp_anim_sse2.hpp
-            32bpp_anim_sse4.cpp
-            32bpp_anim_sse4.hpp
-        )
-    endif(SSE_FOUND)
-    add_files(
-        32bpp_base.cpp
-        32bpp_base.hpp
-        32bpp_optimized.cpp
-        32bpp_optimized.hpp
-        32bpp_simple.cpp
-        32bpp_simple.hpp
-    )
-    if (SSE_FOUND)
-        add_files(
-            32bpp_sse_func.hpp
-            32bpp_sse_type.h
-            32bpp_sse2.cpp
-            32bpp_sse2.hpp
-            32bpp_sse4.cpp
-            32bpp_sse4.hpp
-            32bpp_ssse3.cpp
-            32bpp_ssse3.hpp
-        )
-    endif (SSE_FOUND)
-    add_files(
-        8bpp_base.cpp
-        8bpp_base.hpp
-        8bpp_optimized.cpp
-        8bpp_optimized.hpp
-        8bpp_simple.cpp
-        8bpp_simple.hpp
-    )
-endif (NOT OPTION_DEDICATED)
+add_files(
+    32bpp_anim_sse2.cpp
+    32bpp_anim_sse2.hpp
+    32bpp_anim_sse4.cpp
+    32bpp_anim_sse4.hpp
+    32bpp_sse2.cpp
+    32bpp_sse2.hpp
+    32bpp_sse4.cpp
+    32bpp_sse4.hpp
+    32bpp_sse_func.hpp
+    32bpp_sse_type.h
+    32bpp_ssse3.cpp
+    32bpp_ssse3.hpp
+    CONDITION NOT OPTION_DEDICATED AND SSE_FOUND
+)
+
+if (SSE_FOUND AND NOT MSVC)
+    set_compile_flags(
+        32bpp_anim_sse2.cpp
+        32bpp_sse2.cpp
+        COMPILE_FLAGS -msse2)
+    set_compile_flags(
+        32bpp_ssse3.cpp
+        COMPILE_FLAGS -mssse3)
+    set_compile_flags(
+        32bpp_anim_sse4.cpp
+        32bpp_sse4.cpp
+        COMPILE_FLAGS -msse4.1)
+endif (SSE_FOUND AND NOT MSVC)
+
 add_files(
     base.hpp
     common.hpp

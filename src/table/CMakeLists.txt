@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
 set(GENERATED_BINARY_DIR ${CMAKE_BINARY_DIR}/generated)
 set(TABLE_BINARY_DIR ${GENERATED_BINARY_DIR}/table)
 
@@ -44,8 +42,6 @@ add_dependencies(settings
 )
 add_library(openttd::settings ALIAS settings)
 
-
-# Tables
 add_files(
     airport_defaults.h
     airport_movement.h

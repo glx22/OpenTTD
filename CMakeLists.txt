@@ -131,27 +131,26 @@ endif (MSVC)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS NO)
 
-include(SourceList REQUIRED)
-source_list()
-
-add_subdirectory(${CMAKE_SOURCE_DIR}/src)
-CheckSourceEquality()
-
-list(APPEND FIND_VERSION_FILES "${CMAKE_BINARY_DIR}/generated/rev.cpp")
+list(APPEND GENERATED_SOURCE_FILES "${CMAKE_BINARY_DIR}/generated/rev.cpp")
 if (WIN32)
-    list(APPEND FIND_VERSION_FILES "${CMAKE_BINARY_DIR}/generated/ottdres.rc")
+    list(APPEND GENERATED_SOURCE_FILES "${CMAKE_BINARY_DIR}/generated/ottdres.rc")
 endif (WIN32)
 
 # Generate a target to determine version, which is execute every 'make' run
 add_custom_target(find_version
         ${CMAKE_COMMAND} -DFIND_VERSION_BINARY_DIR=${CMAKE_BINARY_DIR}/generated -P "${CMAKE_SOURCE_DIR}/cmake/scripts/FindVersion.cmake"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        BYPRODUCTS ${FIND_VERSION_FILES}
+        BYPRODUCTS ${GENERATED_SOURCE_FILES}
 )
-list(APPEND SOURCE_FILES "${FIND_VERSION_FILES}")
 
+include(SourceList REQUIRED)
 include(Endian REQUIRED)
 add_endian_definition()
+
+# Needed by rev.cpp
+include_directories(${CMAKE_SOURCE_DIR}/src)
+# Needed by everything that uses Squirrel
+include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/squirrel/include)
 
 if (MSVC)
     # Switch to MT (static) instead of MD (dynamic) binary
@@ -170,23 +169,21 @@ if (MSVC)
     endforeach()
 
     # Add DPI manifest to project; other WIN32 targets get this via ottdres.rc
-    list(APPEND SOURCE_FILES "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
+    list(APPEND GENERATED_SOURCE_FILES "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
 endif (MSVC)
 
 if (NOT MSVC)
     add_compile_options(-Wno-multichar)
 endif (NOT MSVC)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/squirrel/include)
+add_executable(openttd WIN32 ${GENERATED_SOURCE_FILES})
+# All other files are added via target_sources()
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/media/baseset)
 
-add_executable(openttd
-        WIN32
-        ${SOURCE_FILES})
-
 add_dependencies(openttd
-        find_version)
+    find_version)
 
 target_link_libraries(openttd
     openttd::languages
@@ -196,6 +193,7 @@ target_link_libraries(openttd
 )
 
 set_target_properties(openttd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
+process_compile_flags()
 
 if (APPLE OR UNIX)
     add_definitions(-DUNIX)
@@ -246,16 +244,6 @@ endif (SHARED_DIR)
 
 if (SSE_FOUND)
     add_definitions(-DWITH_SSE)
-
-    if (NOT MSVC)
-        # Add the correct (S)SSE flag for (S)SSE files
-        file(GLOB SSE2_FILES ${CMAKE_SOURCE_DIR}/src/*_sse2.cpp ${CMAKE_SOURCE_DIR}/src/*/*_sse2.cpp)
-        file(GLOB SSSE3_FILES ${CMAKE_SOURCE_DIR}/src/*_ssse3.cpp ${CMAKE_SOURCE_DIR}/src/*/*_ssse3.cpp)
-        file(GLOB SSE4_FILES ${CMAKE_SOURCE_DIR}/src/*_sse4.cpp ${CMAKE_SOURCE_DIR}/src/*/*_sse4.cpp)
-        set_source_files_properties(${SSE2_FILES} PROPERTIES COMPILE_FLAGS -msse2)
-        set_source_files_properties(${SSSE3_FILES} PROPERTIES COMPILE_FLAGS -mssse3)
-        set_source_files_properties(${SSE4_FILES} PROPERTIES COMPILE_FLAGS -msse4.1)
-    endif (NOT MSVC)
 endif (SSE_FOUND)
 
 add_definitions_based_on_options()

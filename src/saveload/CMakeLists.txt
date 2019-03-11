@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Save/Load handlers
 add_files(
     afterload.cpp
     ai_sl.cpp

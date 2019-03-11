@@ -1,8 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
-
 add_subdirectory(api)
 
-# Script
 add_files(
     script_config.cpp
     script_config.hpp

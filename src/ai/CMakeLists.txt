@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# AI Core
 add_files(
     ai.hpp
     ai_config.cpp

@@ -1,31 +1,22 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Source Files
 add_files(
     demands.cpp
-    flowmapper.cpp
-    linkgraph.cpp
-    linkgraphjob.cpp
-    linkgraphschedule.cpp
-    mcf.cpp
-    refresh.cpp
-)
-
-# Header Files
-add_files(
     demands.h
+    flowmapper.cpp
     flowmapper.h
     init.h
+    linkgraph.cpp
     linkgraph.h
     linkgraph_base.h
+    linkgraph_gui.cpp
     linkgraph_gui.h
     linkgraph_type.h
+    linkgraphjob.cpp
     linkgraphjob.h
     linkgraphjob_base.h
+    linkgraphschedule.cpp
     linkgraphschedule.h
+    mcf.cpp
     mcf.h
+    refresh.cpp
     refresh.h
 )
-
-# GUI Source Code
-add_files(linkgraph_gui.cpp)

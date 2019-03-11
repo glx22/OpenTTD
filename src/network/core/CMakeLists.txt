@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Network Core
 add_files(
     address.cpp
     address.h

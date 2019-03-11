@@ -1,9 +1,6 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Widgets
 add_files(
-    airport_widget.h
     ai_widget.h
+    airport_widget.h
     autoreplace_widget.h
     bootstrap_widget.h
     bridge_widget.h

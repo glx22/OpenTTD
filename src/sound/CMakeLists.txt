@@ -1,36 +1,37 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Header Files
-add_files(
-    allegro_s.h
-    null_s.h
-    sdl_s.h
-    win32_s.h
-    xaudio2_s.h
-)
-if (NOT WIN32)
-    add_files(cocoa_s.h)
-endif (NOT WIN32)
-
-# Drivers
-add_files(sound_driver.hpp)
-
-# Sound
-add_files(null_s.cpp)
 if (NOT OPTION_DEDICATED)
-    if (ALLEGRO_FOUND)
-        add_files(allegro_s.cpp)
-    endif (ALLEGRO_FOUND)
-    if (SDL_FOUND)
-        add_files(sdl_s.cpp)
-    endif (SDL_FOUND)
-    if (WIN32)
-        add_files(win32_s.cpp)
-        if (XAUDIO2_FOUND)
-            add_files(xaudio2_s.cpp)
-        endif (XAUDIO2_FOUND)
-    endif (WIN32)
+    add_files(
+        allegro_s.cpp
+        allegro_s.h
+        CONDITION ALLEGRO_FOUND
+    )
+
+    add_files(
+        sdl_s.cpp
+        sdl_s.h
+        CONDITION SDL_FOUND
+    )
+
+    add_files(
+        cocoa_s.cpp
+        cocoa_s.h
+        CONDITION APPLE AND OPTION_COCOA
+    )
+
+    add_files(
+        win32_s.cpp
+        win32_s.h
+        CONDITION WIN32
+    )
+
+    add_files(
+        xaudio2_s.cpp
+        xaudio2_s.h
+        CONDITION WIN32 AND XAUDIO2_FOUND
+    )
 endif (NOT OPTION_DEDICATED)
-if (APPLE AND OPTION_COCOA)
-    add_files(cocoa_s.cpp)
-endif (APPLE AND OPTION_COCOA)
+
+add_files(
+    sound_driver.hpp
+    null_s.cpp
+    null_s.h
+)

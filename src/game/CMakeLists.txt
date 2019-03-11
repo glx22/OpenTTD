@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Game Core
 add_files(
     game.hpp
     game_config.cpp

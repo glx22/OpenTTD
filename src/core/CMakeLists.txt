@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Core Source Code
 add_files(
     alloc_func.cpp
     alloc_func.hpp

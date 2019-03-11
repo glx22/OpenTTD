@@ -1,31 +1,29 @@
-cmake_minimum_required(VERSION 3.5)
-
 add_subdirectory(cocoa)
 
-# Header Files
-add_files(
-    dedicated_v.h
-    null_v.h
-    sdl_v.h
-    win32_v.h
-    allegro_v.h
-)
-# Drivers
-add_files(video_driver.hpp)
+if (NOT OPTION_DEDICATED)
+    add_files(
+        allegro_v.cpp
+        allegro_v.h
+        CONDITION ALLEGRO_FOUND
+    )
 
-# Video
+    add_files(
+        sdl_v.cpp
+        sdl_v.h
+        CONDITION SDL_FOUND
+    )
+
+    add_files(
+        win32_v.cpp
+        win32_v.h
+        CONDITION WIN32
+    )
+endif (NOT OPTION_DEDICATED)
+
 add_files(
     dedicated_v.cpp
+    dedicated_v.h
     null_v.cpp
+    null_v.h
+    video_driver.hpp
 )
-if (NOT OPTION_DEDICATED)
-    if (ALLEGRO_FOUND)
-        add_files(allegro_v.cpp)
-    endif (ALLEGRO_FOUND)
-    if (SDL_FOUND)
-        add_files(sdl_v.cpp)
-    endif (SDL_FOUND)
-    if (WIN32)
-        add_files(win32_v.cpp)
-    endif (WIN32)
-endif (NOT OPTION_DEDICATED)
