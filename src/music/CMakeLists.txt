@@ -21,12 +21,9 @@ if (NOT OPTION_DEDICATED)
             add_files(extmidi.cpp)
         endif (NOT OPTION_DOS AND NOT OPTION_MORPHOS)
     endif (WIN32)
-    if (OPTION_BEOS)
+    if (OPTION_HAIKU)
         add_files(bemidi.cpp)
-    endif (OPTION_BEOS)
-    if (OPTION_TIMIDITY)
-        add_files(libtimidity.cpp)
-    endif (OPTION_TIMIDITY)
+    endif (OPTION_HAIKU)
     if (FLUIDSYNTH_FOUND)
         add_files(fluidsynth.cpp)
     endif (FLUIDSYNTH_FOUND)
@@ -45,8 +42,6 @@ endif (APPLE)
 # Header Files
 if (ALLEGRO_FOUND)
     add_files(allegro_m.h)
-    add_files(sound/allegro_s.h)
-    add_files(video/allegro_v.h)
 endif (ALLEGRO_FOUND)
 add_files(dmusic.h)
 add_files(
@@ -60,7 +55,6 @@ if (NOT WIN32)
         bemidi.h
         cocoa_m.h
         extmidi.h
-        libtimidity.h
         fluidsynth.h
         os2_m.h
         qtmidi.h

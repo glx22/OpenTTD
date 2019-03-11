@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 # Header Files
 add_files(
+    allegro_s.h
     null_s.h
     sdl_s.h
     win32_s.h

@@ -8,6 +8,7 @@ add_files(
     null_v.h
     sdl_v.h
     win32_v.h
+    allegro_v.h
 )
 # Drivers
 add_files(video_driver.hpp)
