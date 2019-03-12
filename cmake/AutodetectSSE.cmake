@@ -2,9 +2,9 @@ macro(autodetect_sse)
     include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")
 
-    if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         set(CMAKE_REQUIRED_FLAGS "-msse4.1")
-    endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
+    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     check_cxx_source_compiles("
         #include <xmmintrin.h>

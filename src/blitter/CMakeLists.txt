@@ -32,7 +32,7 @@ add_files(
     CONDITION NOT OPTION_DEDICATED AND SSE_FOUND
 )
 
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set_compile_flags(
         32bpp_anim_sse2.cpp
         32bpp_sse2.cpp
@@ -44,7 +44,7 @@ if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
         32bpp_anim_sse4.cpp
         32bpp_sse4.cpp
         COMPILE_FLAGS -msse4.1)
-endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
+endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 add_files(
     base.hpp
