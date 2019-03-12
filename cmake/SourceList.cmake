@@ -38,7 +38,7 @@ function(set_compile_flags)
     get_property(SOURCE_PROPERTIES GLOBAL PROPERTY source_properties)
 
     foreach(FILE ${PARAM_FILES})
-        list(APPEND SOURCE_PROPERTIES "${CMAKE_CURRENT_SOURCE_DIR}/${FILE}:${PARAM_COMPILE_FLAGS}")
+        list(APPEND SOURCE_PROPERTIES "${CMAKE_CURRENT_SOURCE_DIR}/${FILE}::${PARAM_COMPILE_FLAGS}")
     endforeach()
 
     set_property(GLOBAL PROPERTY source_properties "${SOURCE_PROPERTIES}")
@@ -54,7 +54,7 @@ function(process_compile_flags)
     get_property(SOURCE_PROPERTIES GLOBAL PROPERTY source_properties)
 
     foreach(ENTRY ${SOURCE_PROPERTIES})
-        string(REPLACE ":" ";" ENTRY "${ENTRY}")
+        string(REPLACE "::" ";" ENTRY "${ENTRY}")
         list(GET ENTRY 0 FILE)
         list(GET ENTRY 1 PROPERTIES)
 
