@@ -263,12 +263,59 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     add_definitions(-D_SQ64)
 endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-add_custom_target(regression
-        COMMAND ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
-        DEPENDS openttd)
+# Find all the files in the regression folder; they need to be copied to the
+# build folder before we can run the regression
+file(GLOB_RECURSE REGRESSION_SOURCE_FILES ${CMAKE_SOURCE_DIR}/regression/*)
+foreach(REGRESSION_SOURCE_FILE IN LISTS REGRESSION_SOURCE_FILES)
+    string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}/regression/" "${CMAKE_BINARY_DIR}/ai/regression/" REGRESSION_BINARY_FILE "${REGRESSION_SOURCE_FILE}")
+    string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}/regression/" "" REGRESSION_SOURCE_FILE_NAME "${REGRESSION_SOURCE_FILE}")
 
-# Also make sure that 'make test' runs the regression
+    add_custom_command(OUTPUT ${REGRESSION_BINARY_FILE}
+            COMMAND ${CMAKE_COMMAND} -E copy
+                    ${REGRESSION_SOURCE_FILE}
+                    ${REGRESSION_BINARY_FILE}
+            MAIN_DEPENDENCY ${REGRESSION_SOURCE_FILE}
+            COMMENT "Copying ${REGRESSION_SOURCE_FILE_NAME} regression file"
+    )
+
+    list(APPEND REGRESSION_BINARY_FILES ${REGRESSION_BINARY_FILE})
+endforeach(REGRESSION_SOURCE_FILE)
+
+# Create a new target which copies all regression files
+add_custom_target(regression_files
+        ALL  # this is needed because 'make test' doesn't resolve dependencies, and otherwise this is never executed
+        DEPENDS
+        ${REGRESSION_BINARY_FILES}
+)
+
 enable_testing()
-add_test(NAME regression
-        COMMAND ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
+# Find all the tests we have, and create a target for them
+file(GLOB REGRESSION_TESTS ${CMAKE_SOURCE_DIR}/regression/tst_*)
+foreach(REGRESSION_TEST IN LISTS REGRESSION_TESTS)
+    get_filename_component(REGRESSION_TEST_NAME "${REGRESSION_TEST}" NAME)
+
+    add_custom_target(regression_${REGRESSION_TEST_NAME}
+            COMMAND ${CMAKE_COMMAND}
+                    -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
+                    -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
+                    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
+            DEPENDS openttd regression_files
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMENT "Running regression test ${REGRESSION_TEST_NAME}"
+            )
+
+    # Also make sure that 'make test' runs the regression
+    add_test(NAME regression_${REGRESSION_TEST_NAME}
+            COMMAND ${CMAKE_COMMAND}
+                    -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
+                    -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
+                    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+    list(APPEND REGRESSION_TARGETS regression_${REGRESSION_TEST_NAME})
+endforeach(REGRESSION_TEST)
+
+# Create a new target which runs the regression
+add_custom_target(regression
+        DEPENDS ${REGRESSION_TARGETS})
