@@ -12,13 +12,20 @@ set(BASESET_SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/orig_dos.obs
         ${CMAKE_CURRENT_SOURCE_DIR}/orig_win.obs
 )
-set(BASESET_EXTRAGRF_FILE ${CMAKE_SOURCE_DIR}/bin/baseset/orig_extra.grf)
+set(BASESET_OTHER_SOURCE_FILES
+        ${CMAKE_CURRENT_SOURCE_DIR}/openttd.grf
+        ${CMAKE_CURRENT_SOURCE_DIR}/opntitle.dat
+        )
+
+# TODO -- Detect grfcodec; create orig_extra.grf if needed
+set(BASESET_EXTRAGRF_FILE ${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf)
+list(APPEND BASESET_OTHER_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf)
 
 # Walk over all the baseset files, and generate a command to configure them
 foreach(BASESET_SOURCE_FILE IN LISTS BASESET_SOURCE_FILES)
     get_filename_component(BASESET_SOURCE_FILE_NAME "${BASESET_SOURCE_FILE}" NAME)
-
     set(BASESET_BINARY_FILE "${CMAKE_BINARY_DIR}/baseset/${BASESET_SOURCE_FILE_NAME}")
+
     get_target_property(LANG_SOURCE_FILES language_files LANG_SOURCE_FILES)
 
     add_custom_command(OUTPUT ${BASESET_BINARY_FILE}
@@ -39,6 +46,22 @@ foreach(BASESET_SOURCE_FILE IN LISTS BASESET_SOURCE_FILES)
 
     list(APPEND BASESET_BINARY_FILES ${BASESET_BINARY_FILE})
 endforeach(BASESET_SOURCE_FILE)
+
+# Walk over all the other baseset files, and generate a command to copy them
+foreach(BASESET_OTHER_SOURCE_FILE IN LISTS BASESET_OTHER_SOURCE_FILES)
+    get_filename_component(BASESET_OTHER_SOURCE_FILE_NAME "${BASESET_OTHER_SOURCE_FILE}" NAME)
+    set(BASESET_OTHER_BINARY_FILE "${CMAKE_BINARY_DIR}/baseset/${BASESET_OTHER_SOURCE_FILE_NAME}")
+
+    add_custom_command(OUTPUT ${BASESET_OTHER_BINARY_FILE}
+            COMMAND ${CMAKE_COMMAND} -E copy
+                    ${BASESET_OTHER_SOURCE_FILE}
+                    ${BASESET_OTHER_BINARY_FILE}
+            MAIN_DEPENDENCY ${BASESET_OTHER_SOURCE_FILE}
+            COMMENT "Copying ${BASESET_OTHER_SOURCE_FILE_NAME} baseset file"
+    )
+
+    list(APPEND BASESET_BINARY_FILES ${BASESET_OTHER_BINARY_FILE})
+endforeach(BASESET_OTHER_SOURCE_FILE)
 
 # Create a new target which generates all baseset metadata files
 add_custom_target(baseset_files
