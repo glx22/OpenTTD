@@ -4,7 +4,7 @@ parameters:
 steps:
 - bash: |
     set -ex
-    cd ${{ parameters.SharedFolder }}bin/baseset
+    cd "${{ parameters.SharedFolder }}bin/baseset"
     curl -L https://binaries.openttd.org/extra/opengfx/0.5.2/opengfx-0.5.2-all.zip > opengfx-0.5.2-all.zip
     unzip opengfx-0.5.2-all.zip
     rm -f opengfx-0.5.2-all.zip
