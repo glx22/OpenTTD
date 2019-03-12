@@ -1,8 +1,8 @@
 macro(autodetect_xaudio2)
-    include(CheckCXXSourceRuns)
+    include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")
 
-    check_cxx_source_runs("
+    check_cxx_source_compiles("
         #include <windows.h>
 
         #undef NTDDI_VERSION
