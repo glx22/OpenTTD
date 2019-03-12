@@ -32,7 +32,7 @@ add_files(
     CONDITION NOT OPTION_DEDICATED AND SSE_FOUND
 )
 
-if (SSE_FOUND AND NOT MSVC)
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
     set_compile_flags(
         32bpp_anim_sse2.cpp
         32bpp_sse2.cpp
@@ -44,7 +44,7 @@ if (SSE_FOUND AND NOT MSVC)
         32bpp_anim_sse4.cpp
         32bpp_sse4.cpp
         COMPILE_FLAGS -msse4.1)
-endif (SSE_FOUND AND NOT MSVC)
+endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
 
 add_files(
     base.hpp

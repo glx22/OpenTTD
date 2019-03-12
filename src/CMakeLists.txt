@@ -25,11 +25,11 @@ add_files(
     viewport_sprite_sorter_sse4.cpp
     CONDITION SSE_FOUND
 )
-if (SSE_FOUND AND NOT MSVC)
+if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
     set_compile_flags(
         viewport_sprite_sorter_sse4.cpp
         COMPILE_FLAGS -msse4.1)
-endif (SSE_FOUND AND NOT MSVC)
+endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANG)
 
 add_files(
     aircraft.h
