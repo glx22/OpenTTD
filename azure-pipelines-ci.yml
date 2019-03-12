@@ -25,7 +25,7 @@ jobs:
   - template: azure-pipelines/templates/windows-dependencies.yml
   - template: azure-pipelines/templates/ci-opengfx.yml
     parameters:
-      SharedFolder: C:/Users/Public/Documents/OpenTTD/
+      SharedFolder: C:/Users/Public/Documents/OpenTTD
   - template: azure-pipelines/templates/windows-build.yml
     parameters:
       OptionalBuildArch: $(OptionalBuildArch)
@@ -71,7 +71,7 @@ jobs:
   - template: azure-pipelines/templates/osx-dependencies.yml
   - template: azure-pipelines/templates/ci-opengfx.yml
     parameters:
-      SharedFolder: /Library/Application Support/OpenTTD/
+      SharedFolder: /Library/Application Support/OpenTTD
   - template: azure-pipelines/templates/osx-build.yml
   - script: 'make test'
     displayName: 'Test'
