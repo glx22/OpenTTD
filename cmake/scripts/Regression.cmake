@@ -11,6 +11,16 @@ if (NOT EXISTS ai/${REGRESSION_TEST}/test.sav)
     message(FATAL_ERROR "Regression test ${REGRESSION_TEST} does not exist (tip: check regression folder for the correct spelling)")
 endif ()
 
+# If editbin is given, copy the executable to a new folder, and change the
+# subsystem to console. The copy is needed as multiple regressions can run
+# at the same time.
+if (EDITBIN_EXECUTABLE)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy ${OPENTTD_EXECUTABLE} regression/${REGRESSION_TEST}.exe)
+    set(OPENTTD_EXECUTABLE "regression/${REGRESSION_TEST}.exe")
+
+    execute_process(COMMAND ${EDITBIN_EXECUTABLE} /nologo /subsystem:console ${OPENTTD_EXECUTABLE})
+endif (EDITBIN_EXECUTABLE)
+
 # Run the regression test
 execute_process(COMMAND ${OPENTTD_EXECUTABLE}
                         -x

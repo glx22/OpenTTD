@@ -72,6 +72,14 @@ if (APPLE)
     find_library(COCOA_LIBRARY Cocoa)
 endif (APPLE)
 
+if (MSVC)
+    find_program(EDITBIN_EXECUTABLE editbin.exe)
+
+    if (EDITBIN_EXECUTABLE STREQUAL "EDITBIN_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "editbin is required for this platform; this should be shipped with MSVC!")
+    endif (EDITBIN_EXECUTABLE STREQUAL "EDITBIN_EXECUTABLE-NOTFOUND")
+endif (MSVC)
+
 # LZO is an utter mess, and works on most platforms by accident.
 # The pkg-config that ships with LZO, sets the includepath to the folder
 # "lzo", so something like "/usr/include/lzo".
@@ -314,6 +322,7 @@ foreach(REGRESSION_TEST IN LISTS REGRESSION_TESTS)
     add_custom_target(regression_${REGRESSION_TEST_NAME}
             COMMAND ${CMAKE_COMMAND}
                     -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
+                    -DEDITBIN_EXECUTABLE=${EDITBIN_EXECUTABLE}
                     -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
                     -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
             DEPENDS openttd regression_files
@@ -325,6 +334,7 @@ foreach(REGRESSION_TEST IN LISTS REGRESSION_TESTS)
     add_test(NAME regression_${REGRESSION_TEST_NAME}
             COMMAND ${CMAKE_COMMAND}
                     -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
+                    -DEDITBIN_EXECUTABLE=${EDITBIN_EXECUTABLE}
                     -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
                     -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
