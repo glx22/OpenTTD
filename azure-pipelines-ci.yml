@@ -52,7 +52,10 @@ jobs:
   steps:
   - template: azure-pipelines/templates/ci-git-rebase.yml
   # The dockers already have the dependencies installed
-  # The dockers already have OpenGFX installed
+  - template: azure-pipelines/templates/ci-opengfx.yml
+    parameters:
+      SharedFolder: /usr/local/share/games/openttd
+      PrefixCommand: sudo
   - template: azure-pipelines/templates/linux-build.yml
     parameters:
       Image: compile-farm-ci
@@ -72,6 +75,7 @@ jobs:
   - template: azure-pipelines/templates/ci-opengfx.yml
     parameters:
       SharedFolder: /Library/Application Support/OpenTTD
+      PrefixCommand: sudo
   - template: azure-pipelines/templates/osx-build.yml
   - script: 'make test'
     displayName: 'Test'

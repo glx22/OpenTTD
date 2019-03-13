@@ -1,12 +1,13 @@
 parameters:
   SharedFolder: '/usr/local/share/games/openttd'
+  PrefixCommand: ''
 
 steps:
 - bash: |
     set -ex
-    mkdir -p "${{ parameters.SharedFolder }}/baseset"
+    ${{ parameters.PrefixCommand }} mkdir -p "${{ parameters.SharedFolder }}/baseset"
     cd "${{ parameters.SharedFolder }}/baseset"
-    curl -L https://binaries.openttd.org/extra/opengfx/0.5.2/opengfx-0.5.2-all.zip > opengfx-0.5.2-all.zip
-    unzip opengfx-0.5.2-all.zip
-    rm -f opengfx-0.5.2-all.zip
+    ${{ parameters.PrefixCommand }} curl -L https://binaries.openttd.org/extra/opengfx/0.5.2/opengfx-0.5.2-all.zip > opengfx-0.5.2-all.zip
+    ${{ parameters.PrefixCommand }} unzip opengfx-0.5.2-all.zip
+    ${{ parameters.PrefixCommand }} rm -f opengfx-0.5.2-all.zip
   displayName: 'Install OpenGFX'
