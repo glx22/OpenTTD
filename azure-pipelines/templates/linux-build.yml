@@ -36,3 +36,4 @@ steps:
     runInBackground: false
     envVars: |
       TARGET_BRANCH
+      CTEST_OUTPUT_ON_FAILURE=1
