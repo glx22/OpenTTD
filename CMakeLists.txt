@@ -72,9 +72,6 @@ if (APPLE)
     find_library(COCOA_LIBRARY Cocoa)
 endif (APPLE)
 
-# TODO -- Support timidity
-set(OPTION_TIMIDITY NO)
-
 # LZO is an utter mess, and works on most platforms by accident.
 # The pkg-config that ships with LZO, sets the includepath to the folder
 # "lzo", so something like "/usr/include/lzo".
