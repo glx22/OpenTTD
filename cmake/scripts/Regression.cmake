@@ -7,27 +7,15 @@ if (NOT OPENTTD_EXECUTABLE)
     message(FATAL_ERROR "Script needs OPENTTD_EXECUTABLE defined (tip: use -DOPENTTD_EXECUTABLE=..)")
 endif (NOT OPENTTD_EXECUTABLE)
 
-if (NOT EXISTS ai/regression/${REGRESSION_TEST}/test.sav)
-    message(FATAL_ERROR "Regression test ${REGRESSION_TEST} does not exist (tip: check ai/regression folder for the exist spelling; include 'tst_'!)")
+if (NOT EXISTS ai/${REGRESSION_TEST}/test.sav)
+    message(FATAL_ERROR "Regression test ${REGRESSION_TEST} does not exist (tip: check regression folder for the correct spelling)")
 endif ()
-
-# Remove any existing info.nut, disabling that AI
-file(GLOB INFO_NUTS ai/regression/*/info.nut)
-foreach(INFO_NUT IN LISTS INFO_NUTS)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove -f ${INFO_NUT})
-endforeach(INFO_NUT)
-
-# Enabling the AI for the test we are running
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy
-                        ai/regression/regression_info.nut
-                        ai/regression/${REGRESSION_TEST}/info.nut
-)
 
 # Run the regression test
 execute_process(COMMAND ${OPENTTD_EXECUTABLE}
                         -x
-                        -c ai/regression/regression.cfg
-                        -g ai/regression/${REGRESSION_TEST}/test.sav
+                        -c regression/regression.cfg
+                        -g ai/${REGRESSION_TEST}/test.sav
                         -snull
                         -mnull
                         -vnull:ticks=30000
@@ -59,7 +47,7 @@ string(REPLACE "\n[P] " "\n" REGRESSION_RESULT "${REGRESSION_RESULT}")
 string(REGEX REPLACE "dbg: ([^\n]*)\n?" "" REGRESSION_RESULT "${REGRESSION_RESULT}")
 
 # Read the expected result
-file(READ ai/regression/${REGRESSION_TEST}/result.txt REGRESSION_EXPECTED)
+file(READ ai/${REGRESSION_TEST}/result.txt REGRESSION_EXPECTED)
 
 # Convert the string to a list
 string(REPLACE "\n" ";" REGRESSION_RESULT "${REGRESSION_RESULT}")
@@ -67,6 +55,8 @@ string(REPLACE "\n" ";" REGRESSION_EXPECTED "${REGRESSION_EXPECTED}")
 
 set(ARGC 0)
 set(ERROR NO)
+
+list(LENGTH REGRESSION_EXPECTED REGRESSION_EXPECTED_LENGTH)
 
 # Compare the output
 foreach(RESULT IN LISTS REGRESSION_RESULT)
@@ -80,6 +70,12 @@ foreach(RESULT IN LISTS REGRESSION_RESULT)
 
     math(EXPR ARGC "${ARGC} + 1")
 endforeach(RESULT)
+
+if (NOT REGRESSION_EXPECTED_LENGTH EQUAL ARGC)
+    math(EXPR MISSING "${REGRESSION_EXPECTED_LENGTH} - ${ARGC}")
+    message("(${MISSING} more lines were expected than found)")
+    set(ERROR YES)
+endif (NOT REGRESSION_EXPECTED_LENGTH EQUAL ARGC)
 
 if (ERROR)
     message(FATAL_ERROR "Regression failed")

@@ -1,11 +1,11 @@
 /* $Id$ */
 
-class Regression extends AIController {
+class StationList extends AIController {
 	function Start();
 };
 
 
-function Regression::StationList()
+function StationList::StationList()
 {
 	local list = AIStationList(AIStation.STATION_BUS_STOP + AIStation.STATION_TRUCK_STOP);
 
@@ -29,7 +29,7 @@ function Regression::StationList()
 	}
 };
 
-function Regression::StationList_Cargo()
+function StationList::StationList_Cargo()
 {
 	print("");
 	print("--StationList_Cargo--");
@@ -46,7 +46,7 @@ function Regression::StationList_Cargo()
 	}
 };
 
-function Regression::StationList_CargoPlanned()
+function StationList::StationList_CargoPlanned()
 {
 	print("");
 	print("--StationList_CargoPlanned--");
@@ -60,7 +60,7 @@ function Regression::StationList_CargoPlanned()
 	}
 };
 
-function Regression::StationList_CargoPlannedByFrom()
+function StationList::StationList_CargoPlannedByFrom()
 {
 	print("");
 	print("--StationList_CargoPlannedByFrom--");
@@ -70,7 +70,7 @@ function Regression::StationList_CargoPlannedByFrom()
 	}
 };
 
-function Regression::StationList_CargoPlannedByVia()
+function StationList::StationList_CargoPlannedByVia()
 {
 	print("");
 	print("--StationList_CargoPlannedByVia--");
@@ -80,7 +80,7 @@ function Regression::StationList_CargoPlannedByVia()
 	}
 };
 
-function Regression::StationList_CargoPlannedViaByFrom()
+function StationList::StationList_CargoPlannedViaByFrom()
 {
 	print("");
 	print("--StationList_CargoPlannedViaByFrom--");
@@ -90,7 +90,7 @@ function Regression::StationList_CargoPlannedViaByFrom()
 	}
 };
 
-function Regression::StationList_CargoPlannedFromByVia()
+function StationList::StationList_CargoPlannedFromByVia()
 {
 	print("");
 	print("--StationList_CargoPlannedFromByVia--");
@@ -100,7 +100,7 @@ function Regression::StationList_CargoPlannedFromByVia()
 	}
 };
 
-function Regression::StationList_CargoWaiting()
+function StationList::StationList_CargoWaiting()
 {
 	print("");
 	print("--StationList_CargoWaiting--");
@@ -114,7 +114,7 @@ function Regression::StationList_CargoWaiting()
 	}
 };
 
-function Regression::StationList_CargoWaitingByFrom()
+function StationList::StationList_CargoWaitingByFrom()
 {
 	print("");
 	print("--StationList_CargoWaitingByFrom--");
@@ -124,7 +124,7 @@ function Regression::StationList_CargoWaitingByFrom()
 	}
 };
 
-function Regression::StationList_CargoWaitingByVia()
+function StationList::StationList_CargoWaitingByVia()
 {
 	print("");
 	print("--StationList_CargoWaitingByVia--");
@@ -134,7 +134,7 @@ function Regression::StationList_CargoWaitingByVia()
 	}
 };
 
-function Regression::StationList_CargoWaitingViaByFrom()
+function StationList::StationList_CargoWaitingViaByFrom()
 {
 	print("");
 	print("--StationList_CargoWaitingViaByFrom--");
@@ -144,7 +144,7 @@ function Regression::StationList_CargoWaitingViaByFrom()
 	}
 };
 
-function Regression::StationList_CargoWaitingFromByVia()
+function StationList::StationList_CargoWaitingFromByVia()
 {
 	print("");
 	print("--StationList_CargoWaitingFromByVia--");
@@ -154,7 +154,7 @@ function Regression::StationList_CargoWaitingFromByVia()
 	}
 };
 
-function Regression::StationList_Vehicle()
+function StationList::StationList_Vehicle()
 {
 	local list = AIStationList_Vehicle(12);
 
@@ -198,7 +198,7 @@ function Regression::StationList_Vehicle()
 	}
 }
 
-function Regression::Start()
+function StationList::Start()
 {
 	StationList();
 	StationList_Cargo();
