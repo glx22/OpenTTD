@@ -7,7 +7,7 @@ steps:
     set -ex
     ${{ parameters.PrefixCommand }} mkdir -p "${{ parameters.SharedFolder }}/baseset"
     cd "${{ parameters.SharedFolder }}/baseset"
-    ${{ parameters.PrefixCommand }} curl -L https://binaries.openttd.org/extra/opengfx/0.5.2/opengfx-0.5.2-all.zip > opengfx-0.5.2-all.zip
+    ${{ parameters.PrefixCommand }} curl -L -O https://binaries.openttd.org/extra/opengfx/0.5.2/opengfx-0.5.2-all.zip
     ${{ parameters.PrefixCommand }} unzip opengfx-0.5.2-all.zip
     ${{ parameters.PrefixCommand }} rm -f opengfx-0.5.2-all.zip
   displayName: 'Install OpenGFX'
