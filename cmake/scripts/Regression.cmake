@@ -45,9 +45,10 @@ if (NOT REGRESSION_RESULT)
     message(FATAL_ERROR "Regression did not output anything; did the compilation fail?")
 endif (NOT REGRESSION_RESULT)
 
-# For some reason pointer can be printed as '0x(nil)' or '0x0000000000000000'
+# For some reason pointer can be printed as '0x(nil)', '0x0000000000000000', or '0x0x0'
 string(REPLACE "0x(nil)" "0x00000000" REGRESSION_RESULT "${REGRESSION_RESULT}")
 string(REPLACE "0x0000000000000000" "0x00000000" REGRESSION_RESULT "${REGRESSION_RESULT}")
+string(REPLACE "0x0x0" "0x00000000" REGRESSION_RESULT "${REGRESSION_RESULT}")
 
 # Convert the output to a format that is expected (and more readable) by result.txt
 string(REPLACE "\ndbg: [script]" "\n" REGRESSION_RESULT "${REGRESSION_RESULT}")
