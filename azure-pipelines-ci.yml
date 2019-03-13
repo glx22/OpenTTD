@@ -77,5 +77,9 @@ jobs:
       SharedFolder: /Library/Application Support/OpenTTD
       PrefixCommand: sudo
   - template: azure-pipelines/templates/osx-build.yml
-  - script: 'CTEST_OUTPUT_ON_FAILURE=1 make test'
+  - script: |
+      set -ex
+
+      cd build
+      CTEST_OUTPUT_ON_FAILURE=1 make test
     displayName: 'Test'
