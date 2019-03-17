@@ -263,7 +263,9 @@ target_link_libraries(openttd
 )
 
 if (IPO_FOUND)
-    set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION True)
+    set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELEASE True)
+    set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION_MINSIZEREL True)
+    set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO True)
 endif (IPO_FOUND)
 set_target_properties(openttd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 process_compile_flags()
