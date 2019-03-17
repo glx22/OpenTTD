@@ -185,9 +185,64 @@ if (MSVC)
     list(APPEND GENERATED_SOURCE_FILES "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
 endif (MSVC)
 
-if (NOT MSVC)
-    add_compile_options(-Wno-multichar)
-endif (NOT MSVC)
+if (MSVC)
+    add_compile_options(/W3)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    add_compile_options(
+        -W
+        -Wall
+        -Wcast-qual
+        -Wextra
+        -Wsign-compare
+        -Wundef
+        -Wpointer-arith
+        -Wwrite-strings
+        -Wredundant-decls
+        -Wformat-security
+        -Wformat=2
+        -Winit-self
+        -Wnon-virtual-dtor
+
+        # Often parameters are unused, which is fine.
+        -Wno-unused-parameter
+        # We use 'ABCD' multichar for SaveLoad chunks identifiers
+        -Wno-multichar
+
+        # TODO -- Claim is that this is needed when compiling without asserts
+        #-Wno-unused-variable
+        #-Wno-unused-but-set-parameter
+        #-Wno-unused-but-set-variable
+
+        # Compilers complains about that we break strict-aliasing.
+        #  On most places we don't see how to fix it, and it doesn't
+        #  break anything. So disable strict-aliasing to make the
+        #  compiler all happy.
+        -fno-strict-aliasing
+    )
+
+    # rdynamic is used to get useful stack traces from crash reports.
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        add_compile_options(
+            # GCC 4.2+ automatically assumes that signed overflows do
+            # not occur in signed arithmetics, whereas we are not
+            # sure that they will not happen. It furthermore complains
+            # about its own optimized code in some places.
+            -fno-strict-overflow
+
+            # Prevent optimisation supposing enums are in a range specified by the standard
+            # For details, see http://gcc.gnu.org/PR43680
+            -fno-tree-vrp
+
+            # -flifetime-dse=2 (default since GCC 6) doesn't play
+            # well with our custom pool item allocator
+            -flifetime-dse=1
+        )
+    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+else ()
+    message(FATAL_ERROR "No warning flags are set for this compiler yet; please consider creating a Pull Request to add support for this compiler.")
+endif ()
 
 add_executable(openttd WIN32 ${GENERATED_SOURCE_FILES})
 # All other files are added via target_sources()
