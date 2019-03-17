@@ -1,3 +1,7 @@
+# Add the definitions to indicate which endian we are building for.
+#
+# add_endian_definition()
+#
 function(add_endian_definition)
     include(TestBigEndian)
     TEST_BIG_ENDIAN(IS_BIG_ENDIAN)

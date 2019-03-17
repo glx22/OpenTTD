@@ -17,6 +17,10 @@ macro(_autodetect_program FRIENDLY NAME EXECUTABLE)
     set(${NAME}_FOUND "${${NAME}_FOUND}" CACHE INTERNAL "")
 endmacro()
 
+# Autodetect grfcodec and nforenum.
+#
+# autodetect_grfcodec()
+#
 function(autodetect_grfcodec)
     _autodetect_program(nforenum NFORENUM nforenum)
     _autodetect_program(grfcodec GRFCODEC grfcodec)

@@ -1,3 +1,8 @@
+# Autodetect if SSE4.1 can be used. If so, the assumption is, so can the other
+# SSE version (SSE 2.0, SSSE 3.0).
+#
+# autodetect_sse()
+#
 function(autodetect_sse)
     include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")

@@ -10,38 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 include(Options REQUIRED)
 set_options()
-
-if (APPLE)
-    set(DEFAULT_PERSONAL_DIR "Documents/OpenTTD")
-    set(DEFAULT_SHARED_DIR "/Library/Application Support/OpenTTD")
-    set(DEFAULT_GLOBAL_DIR "(not set)")
-elseif (WIN32)
-    set(DEFAULT_PERSONAL_DIR "OpenTTD")
-    set(DEFAULT_SHARED_DIR "(not set)")
-    set(DEFAULT_GLOBAL_DIR "(not set)")
-elseif (UNIX)
-    set(DEFAULT_PERSONAL_DIR ".openttd")
-    set(DEFAULT_SHARED_DIR "(not set)")
-    set(DEFAULT_GLOBAL_DIR "${CMAKE_INSTALL_PREFIX}/share/games/openttd")
-else ()
-    message(FATAL_ERROR "Unknown OS found; please consider creating a Pull Request to add support for this OS.")
-endif ()
-
-if (NOT PERSONAL_DIR)
-    set(PERSONAL_DIR "${DEFAULT_PERSONAL_DIR}" CACHE STRING "Personal directory")
-    message(STATUS "Detecting Personal Data directory - ${PERSONAL_DIR}")
-endif (NOT PERSONAL_DIR)
-
-if (NOT SHARED_DIR)
-    set(SHARED_DIR "${DEFAULT_SHARED_DIR}" CACHE STRING "Shared directory")
-    message(STATUS "Detecting Shared Data directory - ${SHARED_DIR}")
-endif (NOT SHARED_DIR)
-
-if (NOT GLOBAL_DIR)
-    set(GLOBAL_DIR "${DEFAULT_GLOBAL_DIR}" CACHE STRING "Global directory")
-    message(STATUS "Detecting Global Data directory - ${GLOBAL_DIR}")
-endif (NOT GLOBAL_DIR)
-
+set_directory_options()
 
 # Make sure we have Threads available. We don't use autodetect_library here,
 # as the CMake 'FindThreads' is a lot more clever, always available, and
@@ -165,101 +134,8 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 # Needed by everything that uses Squirrel
 include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/squirrel/include)
 
-if (MSVC)
-    # Switch to MT (static) instead of MD (dynamic) binary
-
-    # For MSVC two generators are available
-    # - a command line generator (Ninja) using CMAKE_BUILD_TYPE to specify the
-    #   configuration of the build tree
-    # - an IDE generator (Visual Studio) using CMAKE_CONFIGURATION_TYPES to
-    #   specify all configurations that will be available in the generated solution
-    list(APPEND MSVC_CONFIGS "${CMAKE_BUILD_TYPE}" "${CMAKE_CONFIGURATION_TYPES}")
-
-    # Set usage of static runtime for all configurations
-    foreach(MSVC_CONFIG ${MSVC_CONFIGS})
-        string(TOUPPER "CMAKE_CXX_FLAGS_${MSVC_CONFIG}" MSVC_FLAGS)
-        string(REPLACE "/MD" "/MT" ${MSVC_FLAGS} "${${MSVC_FLAGS}}")
-    endforeach()
-
-    # Add DPI manifest to project; other WIN32 targets get this via ottdres.rc
-    list(APPEND GENERATED_SOURCE_FILES "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
-endif (MSVC)
-
-# Add some -D flags for Debug builds. We cannot use add_definitions(), because
-# it does not appear to support the $<> tags.
-add_compile_options(
-    "$<$<CONFIG:Debug>:-D_DEBUG>"
-    "$<$<CONFIG:Debug>:-D_FORTIFY_SOURCE=2>"
-)
-
-# Prepare a generator that checks if we are not a debug, and don't have asserts
-# on. We need this later on to set some compile options for stable releases.
-set(IS_STABLE_RELEASE "$<AND:$<NOT:$<CONFIG:Debug>>,$<NOT:$<BOOL:${OPTION_USE_ASSERTS}>>>")
-
-if (MSVC)
-    add_compile_options(/W3)
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    add_compile_options(
-        -W
-        -Wall
-        -Wcast-qual
-        -Wextra
-        -Wsign-compare
-        -Wundef
-        -Wpointer-arith
-        -Wwrite-strings
-        -Wredundant-decls
-        -Wformat-security
-        -Wformat=2
-        -Winit-self
-        -Wnon-virtual-dtor
-
-        # Often parameters are unused, which is fine.
-        -Wno-unused-parameter
-        # We use 'ABCD' multichar for SaveLoad chunks identifiers
-        -Wno-multichar
-
-        # Compilers complains about that we break strict-aliasing.
-        #  On most places we don't see how to fix it, and it doesn't
-        #  break anything. So disable strict-aliasing to make the
-        #  compiler all happy.
-        -fno-strict-aliasing
-    )
-
-    add_compile_options(
-        # When we are a stable release (Release build + USE_ASSERTS not set),
-        # assertations are off, which trigger a lot of warnings. We disable
-        # these warnings for these releases.
-        "$<${IS_STABLE_RELEASE}:-Wno-unused-variable>"
-        "$<${IS_STABLE_RELEASE}:-Wno-unused-but-set-parameter>"
-        "$<${IS_STABLE_RELEASE}:-Wno-unused-but-set-variable>"
-    )
-
-    if (NOT WIN32)
-        # rdynamic is used to get useful stack traces from crash reports.
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
-    endif (NOT WIN32)
-
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        add_compile_options(
-            # GCC 4.2+ automatically assumes that signed overflows do
-            # not occur in signed arithmetics, whereas we are not
-            # sure that they will not happen. It furthermore complains
-            # about its own optimized code in some places.
-            -fno-strict-overflow
-
-            # Prevent optimisation supposing enums are in a range specified by the standard
-            # For details, see http://gcc.gnu.org/PR43680
-            -fno-tree-vrp
-
-            # -flifetime-dse=2 (default since GCC 6) doesn't play
-            # well with our custom pool item allocator
-            -flifetime-dse=1
-        )
-    endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-else ()
-    message(FATAL_ERROR "No warning flags are set for this compiler yet; please consider creating a Pull Request to add support for this compiler.")
-endif ()
+include(CompileFlags REQUIRED)
+compile_flags()
 
 add_executable(openttd WIN32 ${GENERATED_SOURCE_FILES})
 # All other files are added via target_sources()
@@ -353,80 +229,5 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     add_definitions(-D_SQ64)
 endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-# Find all the files in the regression folder; they need to be copied to the
-# build folder before we can run the regression
-file(GLOB_RECURSE REGRESSION_SOURCE_FILES ${CMAKE_SOURCE_DIR}/regression/*)
-foreach(REGRESSION_SOURCE_FILE IN LISTS REGRESSION_SOURCE_FILES)
-    string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}/regression/" "${CMAKE_BINARY_DIR}/ai/" REGRESSION_BINARY_FILE "${REGRESSION_SOURCE_FILE}")
-    string(REGEX REPLACE "^${CMAKE_SOURCE_DIR}/regression/" "" REGRESSION_SOURCE_FILE_NAME "${REGRESSION_SOURCE_FILE}")
-
-    if ("${REGRESSION_SOURCE_FILE_NAME}" STREQUAL "regression.cfg")
-        continue()
-    endif ("${REGRESSION_SOURCE_FILE_NAME}" STREQUAL "regression.cfg")
-
-    add_custom_command(OUTPUT ${REGRESSION_BINARY_FILE}
-            COMMAND ${CMAKE_COMMAND} -E copy
-                    ${REGRESSION_SOURCE_FILE}
-                    ${REGRESSION_BINARY_FILE}
-            MAIN_DEPENDENCY ${REGRESSION_SOURCE_FILE}
-            COMMENT "Copying ${REGRESSION_SOURCE_FILE_NAME} regression file"
-    )
-
-    list(APPEND REGRESSION_BINARY_FILES ${REGRESSION_BINARY_FILE})
-endforeach(REGRESSION_SOURCE_FILE)
-
-# Copy the regression configuration in a special folder, so all autogenerated
-# folders end up in the same place after running regression.
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/regression/regression.cfg
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/regression/regression.cfg
-                ${CMAKE_BINARY_DIR}/regression/regression.cfg
-        MAIN_DEPENDENCY ${CMAKE_SOURCE_DIR}/regression/regression.cfg
-        COMMENT "Copying ${REGRESSION_SOURCE_FILE_NAME} regression file"
-)
-list(APPEND REGRESSION_BINARY_FILES ${CMAKE_BINARY_DIR}/regression/regression.cfg)
-
-# Create a new target which copies all regression files
-add_custom_target(regression_files
-        ALL  # this is needed because 'make test' doesn't resolve dependencies, and otherwise this is never executed
-        DEPENDS
-        ${REGRESSION_BINARY_FILES}
-)
-
-enable_testing()
-
-# Find all the tests we have, and create a target for them
-file(GLOB REGRESSION_TESTS ${CMAKE_SOURCE_DIR}/regression/*)
-foreach(REGRESSION_TEST IN LISTS REGRESSION_TESTS)
-    get_filename_component(REGRESSION_TEST_NAME "${REGRESSION_TEST}" NAME)
-
-    if ("${REGRESSION_TEST_NAME}" STREQUAL "regression.cfg")
-        continue()
-    endif ("${REGRESSION_TEST_NAME}" STREQUAL "regression.cfg")
-
-    add_custom_target(regression_${REGRESSION_TEST_NAME}
-            COMMAND ${CMAKE_COMMAND}
-                    -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
-                    -DEDITBIN_EXECUTABLE=${EDITBIN_EXECUTABLE}
-                    -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
-                    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
-            DEPENDS openttd regression_files
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-            COMMENT "Running regression test ${REGRESSION_TEST_NAME}"
-            )
-
-    # Also make sure that 'make test' runs the regression
-    add_test(NAME regression_${REGRESSION_TEST_NAME}
-            COMMAND ${CMAKE_COMMAND}
-                    -DOPENTTD_EXECUTABLE=$<TARGET_FILE:openttd>
-                    -DEDITBIN_EXECUTABLE=${EDITBIN_EXECUTABLE}
-                    -DREGRESSION_TEST=${REGRESSION_TEST_NAME}
-                    -P "${CMAKE_SOURCE_DIR}/cmake/scripts/Regression.cmake"
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
-
-    list(APPEND REGRESSION_TARGETS regression_${REGRESSION_TEST_NAME})
-endforeach(REGRESSION_TEST)
-
-# Create a new target which runs the regression
-add_custom_target(regression
-        DEPENDS ${REGRESSION_TARGETS})
+include(CreateRegression REQUIRED)
+create_regression()

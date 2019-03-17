@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.5)
 
+#
+# Create a single GRF file based on sprites/<grfname>.nfo and sprites/*.png
+# files.
+#
+
 if (NOT NFORENUM_EXECUTABLE)
     message(FATAL_ERROR "Script needs NFORENUM_EXECUTABLE defined")
 endif (NOT NFORENUM_EXECUTABLE)

@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+#
+# Runs a single regressoion test
+#
+
 if (NOT REGRESSION_TEST)
     message(FATAL_ERROR "Script needs REGRESSION_TEST defined (tip: use -DREGRESSION_TEST=..)")
 endif (NOT REGRESSION_TEST)

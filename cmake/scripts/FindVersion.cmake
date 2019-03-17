@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+#
+# Finds the current version of the current folder.
+#
+
 find_package(Git QUIET)
 if (GIT_FOUND AND IS_DIRECTORY "${CMAKE_SOURCE_DIR}/.git")
     # Make sure LC_ALL is set to something desirable

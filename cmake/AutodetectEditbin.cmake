@@ -1,3 +1,7 @@
+# Autodetect editbin. Only useful for MSVC.
+#
+# autodetect_editbin()
+#
 function(autodetect_editbin)
     if (DEFINED EDITBIN_FOUND)
         return()

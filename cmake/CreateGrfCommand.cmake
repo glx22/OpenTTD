@@ -1,3 +1,8 @@
+# Macro which contains all bits and pieces to create a single grf file based
+# on NFO and PNG files.
+#
+# create_grf_command()
+#
 function(create_grf_command)
     set(EXTRA_PNG_SOURCE_FILES ${ARGV})
 

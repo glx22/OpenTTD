@@ -1,3 +1,7 @@
+# Autodetect if xaudio2 can be used.
+#
+# autodetect_xaudio2()
+#
 function(autodetect_xaudio2)
     include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")

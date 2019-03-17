@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
+#
+# Create a single baseset meta file with the correct translations.
+#
+
 set(ARGC 1)
 set(ARG_READ NO)
 
