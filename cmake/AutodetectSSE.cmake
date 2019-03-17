@@ -1,4 +1,4 @@
-macro(autodetect_sse)
+function(autodetect_sse)
     include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")
 
@@ -12,4 +12,4 @@ macro(autodetect_sse)
         #include <tmmintrin.h>
         int main() { return 0; }"
         SSE_FOUND)
-endmacro()
+endfunction()

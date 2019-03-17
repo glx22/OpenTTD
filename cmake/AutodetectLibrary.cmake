@@ -48,9 +48,9 @@ macro(_autodetect_library_via_find NAME HEADER_PATH HEADER LIBRARY)
     find_library(${NAME}_LIBRARY NAMES "${LIBRARY}")
 
     if (${NAME}_INCLUDE_DIR AND ${NAME}_LIBRARY)
-        set(${NAME}_FOUND YES CACHE INTERNAL "")
-        set(${NAME}_INCLUDE_DIRS ${${NAME}_INCLUDE_DIR})
-        set(${NAME}_INCLUDE_LIBRARIES ${${NAME}_LIBRARY})
+        set(${NAME}_FOUND YES)
+        set(${NAME}_INCLUDE_DIRS "${${NAME}_INCLUDE_DIR}")
+        set(${NAME}_INCLUDE_LIBRARIES "${${NAME}_LIBRARY}")
     endif (${NAME}_INCLUDE_DIR AND ${NAME}_LIBRARY)
 endmacro()
 
@@ -109,18 +109,14 @@ macro(_patch_vcpkg_debug_optimized NAME)
     endif (VCPKG_TOOLCHAIN AND ${NAME}_LIBRARIES)
 endmacro()
 
-macro(autodetect_library FRIENDLY NAME PACKAGE PKGCONFIG HEADER_PATH HEADER LIBRARY)
-    if (${NAME}_FOUND)
+function(autodetect_library FRIENDLY NAME PACKAGE PKGCONFIG HEADER_PATH HEADER LIBRARY)
+    if (DEFINED ${NAME}_FOUND)
         return()
-    endif (${NAME}_FOUND)
+    endif (DEFINED ${NAME}_FOUND)
 
     message(STATUS "Detecting ${FRIENDLY}")
 
     find_package("${PACKAGE}" QUIET)
-    # Make sure the FOUND variable is cached
-    if (${NAME}_FOUND)
-        set(${NAME}_FOUND "${${NAME}_FOUND}" CACHE INTERNAL "")
-    endif (${NAME}_FOUND)
 
     if (NOT ${NAME}_FOUND)
         _autodetect_library_via_pkgconfig("${NAME}" "${PKGCONFIG}")
@@ -137,9 +133,14 @@ macro(autodetect_library FRIENDLY NAME PACKAGE PKGCONFIG HEADER_PATH HEADER LIBR
     else (${NAME}_FOUND)
         message(STATUS "Detecting ${FRIENDLY} - not found")
     endif (${NAME}_FOUND)
-endmacro()
 
-macro(link_library NAME)
+    # Make sure these values are cached properly
+    set(${NAME}_FOUND "${${NAME}_FOUND}" CACHE INTERNAL "")
+    set(${NAME}_LIBRARIES "${${NAME}_LIBRARIES}" CACHE INTERNAL "")
+    set(${NAME}_INCLUDE_DIRS "${${NAME}_INCLUDE_DIRS}" CACHE INTERNAL "")
+endfunction()
+
+function(link_library NAME)
     set(args ${ARGN})
 
     # Check if any of the argument is ENCOURAGED
@@ -160,4 +161,4 @@ macro(link_library NAME)
             message(WARNING "${NAME} not found; compiling OpenTTD without ${NAME} is strongly disencouraged")
         endif (ENCOURAGED)
     endif (${NAME}_FOUND)
-endmacro()
+endfunction()

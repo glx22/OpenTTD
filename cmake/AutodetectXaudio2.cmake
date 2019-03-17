@@ -1,4 +1,4 @@
-macro(autodetect_xaudio2)
+function(autodetect_xaudio2)
     include(CheckCXXSourceCompiles)
     set(CMAKE_REQUIRED_FLAGS "")
 
@@ -14,4 +14,4 @@ macro(autodetect_xaudio2)
         #include <xaudio2.h>
         int main() { return 0; }"
         XAUDIO2_FOUND)
-endmacro()
+endfunction()
