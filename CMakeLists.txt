@@ -111,6 +111,14 @@ autodetect_sse()
 include(AutodetectXaudio2 REQUIRED)
 autodetect_xaudio2()
 
+# IPO is only properly supported from CMake 3.9. Despite the fact we are
+# CMake 3.5, still enable IPO if we detect we are 3.9+.
+if (NOT CMAKE_VERSION VERSION_LESS 3.9)
+    cmake_policy(SET CMP0069 NEW)
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT IPO_FOUND)
+endif (NOT CMAKE_VERSION VERSION_LESS 3.9)
+
 show_options()
 
 if (UNIX AND NOT APPLE AND NOT OPTION_DEDICATED)
@@ -184,6 +192,13 @@ if (MSVC)
     # Add DPI manifest to project; other WIN32 targets get this via ottdres.rc
     list(APPEND GENERATED_SOURCE_FILES "${CMAKE_SOURCE_DIR}/os/windows/openttd.manifest")
 endif (MSVC)
+
+# Add some -D flags for Debug builds. We cannot use add_definitions(), because
+# it does not appear to support the $<> tags.
+add_compile_options(
+    "$<$<CONFIG:Debug>:-D_DEBUG>"
+    "$<$<CONFIG:Debug>:-D_FORTIFY_SOURCE=2>"
+)
 
 if (MSVC)
     add_compile_options(/W3)
@@ -260,6 +275,9 @@ target_link_libraries(openttd
     Threads::Threads
 )
 
+if (IPO_FOUND)
+    set_target_properties(openttd PROPERTIES INTERPROCEDURAL_OPTIMIZATION True)
+endif (IPO_FOUND)
 set_target_properties(openttd PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 process_compile_flags()
 

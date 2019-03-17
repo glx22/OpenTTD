@@ -634,6 +634,14 @@ been added for the base sets which are not yet included in the base set
 information files. Use the configure option '`--without-grfcodec`' to avoid
 modification of the base set files by the build process.
 
+### 7.4) Developers settings
+
+TODO
+To profile, use ...
+To debug inline functions, use ...
+To disable optimizations, use ...
+To debug desyncs, use ...
+
 ## 8.0) Translating
 
 See https://www.openttd.org/development for up-to-date information.
