@@ -73,11 +73,6 @@ macro(compile_flags)
             "$<${IS_STABLE_RELEASE}:-Wno-unused-but-set-variable>"
         )
 
-        if (NOT WIN32)
-            # rdynamic is used to get useful stack traces from crash reports.
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
-        endif (NOT WIN32)
-
         if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             add_compile_options(
                 # GCC 4.2+ automatically assumes that signed overflows do
@@ -95,7 +90,24 @@ macro(compile_flags)
                 -flifetime-dse=1
             )
         endif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+        add_compile_options(
+            -Wall
+            # warning #873: function ... ::operator new ... has no corresponding operator delete ...
+            -wd873
+            # warning #1292: unknown attribute "fallthrough"
+            -wd1292
+            # warning #1899: multicharacter character literal (potential portability problem)
+            -wd1899
+            # warning #2160: anonymous union qualifier is ignored
+            -wd2160
+        )
     else ()
         message(FATAL_ERROR "No warning flags are set for this compiler yet; please consider creating a Pull Request to add support for this compiler.")
     endif ()
+
+    if (NOT WIN32)
+        # rdynamic is used to get useful stack traces from crash reports.
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+    endif (NOT WIN32)
 endmacro()
