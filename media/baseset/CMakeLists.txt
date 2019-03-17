@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.5)
+add_subdirectory(openttd)
+add_subdirectory(orig_extra)
 
 set(BASESET_SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/orig_dos.obg
@@ -15,11 +16,16 @@ set(BASESET_SOURCE_FILES
 set(BASESET_OTHER_SOURCE_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/openttd.grf
         ${CMAKE_CURRENT_SOURCE_DIR}/opntitle.dat
-        )
+        ${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf
+)
 
-# TODO -- Detect grfcodec; create orig_extra.grf if needed
+# Done by the subdirectories, if nforenum / grfcodec is installed
+if (NFORENUM_FOUND AND GRFCODEC_FOUND)
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/openttd.grf PROPERTIES GENERATED TRUE)
+    set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf PROPERTIES GENERATED TRUE)
+endif (NFORENUM_FOUND AND GRFCODEC_FOUND)
+
 set(BASESET_EXTRAGRF_FILE ${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf)
-list(APPEND BASESET_OTHER_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/orig_extra.grf)
 
 # Walk over all the baseset files, and generate a command to configure them
 foreach(BASESET_SOURCE_FILE IN LISTS BASESET_SOURCE_FILES)

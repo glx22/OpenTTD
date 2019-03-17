@@ -98,6 +98,9 @@ autodetect_sse()
 include(AutodetectXaudio2 REQUIRED)
 autodetect_xaudio2()
 
+include(AutodetectGrfcodec REQUIRED)
+autodetect_grfcodec()
+
 # IPO is only properly supported from CMake 3.9. Despite the fact we are
 # CMake 3.5, still enable IPO if we detect we are 3.9+.
 if (NOT CMAKE_VERSION VERSION_LESS 3.9)
@@ -146,7 +149,9 @@ endif (WIN32)
 
 # Generate a target to determine version, which is execute every 'make' run
 add_custom_target(find_version
-        ${CMAKE_COMMAND} -DFIND_VERSION_BINARY_DIR=${CMAKE_BINARY_DIR}/generated -P "${CMAKE_SOURCE_DIR}/cmake/scripts/FindVersion.cmake"
+        ${CMAKE_COMMAND}
+                -DFIND_VERSION_BINARY_DIR=${CMAKE_BINARY_DIR}/generated
+                -P "${CMAKE_SOURCE_DIR}/cmake/scripts/FindVersion.cmake"
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         BYPRODUCTS ${GENERATED_SOURCE_FILES}
 )
