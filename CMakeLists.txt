@@ -192,6 +192,10 @@ add_compile_options(
     "$<$<CONFIG:Debug>:-D_FORTIFY_SOURCE=2>"
 )
 
+# Prepare a generator that checks if we are not a debug, and don't have asserts
+# on. We need this later on to set some compile options for stable releases.
+set(IS_STABLE_RELEASE "$<AND:$<NOT:$<CONFIG:Debug>>,$<NOT:$<BOOL:${OPTION_USE_ASSERTS}>>>")
+
 if (MSVC)
     add_compile_options(/W3)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
@@ -215,16 +219,20 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "
         # We use 'ABCD' multichar for SaveLoad chunks identifiers
         -Wno-multichar
 
-        # TODO -- Claim is that this is needed when compiling without asserts
-        #-Wno-unused-variable
-        #-Wno-unused-but-set-parameter
-        #-Wno-unused-but-set-variable
-
         # Compilers complains about that we break strict-aliasing.
         #  On most places we don't see how to fix it, and it doesn't
         #  break anything. So disable strict-aliasing to make the
         #  compiler all happy.
         -fno-strict-aliasing
+    )
+
+    add_compile_options(
+        # When we are a stable release (Release build + USE_ASSERTS not set),
+        # assertations are off, which trigger a lot of warnings. We disable
+        # these warnings for these releases.
+        "$<${IS_STABLE_RELEASE}:-Wno-unused-variable>"
+        "$<${IS_STABLE_RELEASE}:-Wno-unused-but-set-parameter>"
+        "$<${IS_STABLE_RELEASE}:-Wno-unused-but-set-variable>"
     )
 
     if (NOT WIN32)
