@@ -227,8 +227,10 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "
         -fno-strict-aliasing
     )
 
-    # rdynamic is used to get useful stack traces from crash reports.
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+    if (NOT WIN32)
+        # rdynamic is used to get useful stack traces from crash reports.
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+    endif (NOT WIN32)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         add_compile_options(
