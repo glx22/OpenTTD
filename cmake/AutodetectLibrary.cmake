@@ -48,7 +48,7 @@ macro(_autodetect_library_via_find NAME HEADER_PATH HEADER LIBRARY)
     find_library(${NAME}_LIBRARY NAMES "${LIBRARY}")
 
     if (${NAME}_INCLUDE_DIR AND ${NAME}_LIBRARY)
-        set(${NAME}_FOUND YES)
+        set(${NAME}_FOUND YES CACHE INTERNAL "")
         set(${NAME}_INCLUDE_DIRS ${${NAME}_INCLUDE_DIR})
         set(${NAME}_INCLUDE_LIBRARIES ${${NAME}_LIBRARY})
     endif (${NAME}_INCLUDE_DIR AND ${NAME}_LIBRARY)
@@ -110,25 +110,28 @@ macro(_patch_vcpkg_debug_optimized NAME)
 endmacro()
 
 macro(autodetect_library FRIENDLY NAME PACKAGE PKGCONFIG HEADER_PATH HEADER LIBRARY)
+    if (${NAME}_FOUND)
+        return()
+    endif (${NAME}_FOUND)
+
     message(STATUS "Detecting ${FRIENDLY}")
 
     find_package("${PACKAGE}" QUIET)
+    # Make sure the FOUND variable is cached
+    if (${NAME}_FOUND)
+        set(${NAME}_FOUND "${${NAME}_FOUND}" CACHE INTERNAL "")
+    endif (${NAME}_FOUND)
 
     if (NOT ${NAME}_FOUND)
-        message(STATUS "Trying with pkgconfig") # TODO: temporary debug
         _autodetect_library_via_pkgconfig("${NAME}" "${PKGCONFIG}")
     endif (NOT ${NAME}_FOUND)
     if (NOT ${NAME}_FOUND)
-        message(STATUS "Trying with find") # TODO: temporary debug
         _autodetect_library_via_find("${NAME}" "${HEADER_PATH}" "${HEADER}" "${LIBRARY}")
     endif (NOT ${NAME}_FOUND)
 
     if (${NAME}_FOUND)
         _patch_older_cmake("${NAME}")
         _patch_vcpkg_debug_optimized("${NAME}")
-
-        message(STATUS "${NAME}_INCLUDE_DIRS: ${${NAME}_INCLUDE_DIRS}")  # TODO: temporary debug
-        message(STATUS "${NAME}_LIBRARIES: ${${NAME}_LIBRARIES}") # TODO: temporary debug
 
         message(STATUS "Detecting ${FRIENDLY} - found")
     else (${NAME}_FOUND)
