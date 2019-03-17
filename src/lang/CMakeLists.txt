@@ -94,7 +94,7 @@ set(GENERATED_BINARY_DIR ${CMAKE_BINARY_DIR}/generated)
 set(TABLE_BINARY_DIR ${GENERATED_BINARY_DIR}/table)
 
 # Generate a command and target to create the strings table
-add_custom_command(OUTPUT ${TABLE_BINARY_DIR}/strings.h
+add_custom_command_timestamp(OUTPUT ${TABLE_BINARY_DIR}/strings.h
         COMMAND ${CMAKE_COMMAND} -E make_directory ${TABLE_BINARY_DIR}
         COMMAND strgen
                 -s ${CMAKE_CURRENT_SOURCE_DIR}
@@ -103,7 +103,7 @@ add_custom_command(OUTPUT ${TABLE_BINARY_DIR}/strings.h
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating table/strings.h"
 )
-add_custom_target(table_strings
+add_custom_target_timestamp(table_strings
         DEPENDS
         ${TABLE_BINARY_DIR}/strings.h
 )

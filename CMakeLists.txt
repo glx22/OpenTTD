@@ -140,6 +140,7 @@ compile_flags()
 add_executable(openttd WIN32 ${GENERATED_SOURCE_FILES})
 # All other files are added via target_sources()
 
+include(AddCustomXXXTimestamp REQUIRED)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src)
 add_subdirectory(${CMAKE_SOURCE_DIR}/media/baseset)
 

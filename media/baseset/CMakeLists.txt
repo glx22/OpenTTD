@@ -37,7 +37,7 @@ foreach(BASESET_SOURCE_FILE IN LISTS BASESET_SOURCE_FILES)
 
     get_target_property(LANG_SOURCE_FILES language_files LANG_SOURCE_FILES)
 
-    add_custom_command(OUTPUT ${BASESET_BINARY_FILE}
+    add_custom_command_timestamp(OUTPUT ${BASESET_BINARY_FILE}
             COMMAND ${CMAKE_COMMAND}
                     -DBASESET_SOURCE_FILE=${BASESET_SOURCE_FILE}
                     -DBASESET_BINARY_FILE=${BASESET_BINARY_FILE}
@@ -73,7 +73,7 @@ foreach(BASESET_OTHER_SOURCE_FILE IN LISTS BASESET_OTHER_SOURCE_FILES)
 endforeach(BASESET_OTHER_SOURCE_FILE)
 
 # Create a new target which generates all baseset metadata files
-add_custom_target(baseset_files
+add_custom_target_timestamp(baseset_files
         DEPENDS
         ${BASESET_BINARY_FILES}
 )

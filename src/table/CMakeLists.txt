@@ -12,7 +12,7 @@ set(TABLE_INI_SOURCE_FILES
 )
 
 # Generate a command and target to create the settings table
-add_custom_command(OUTPUT ${TABLE_BINARY_DIR}/settings.h
+add_custom_command_timestamp(OUTPUT ${TABLE_BINARY_DIR}/settings.h
         COMMAND ${CMAKE_COMMAND} -E make_directory ${TABLE_BINARY_DIR}
         COMMAND settingsgen
                 -o ${TABLE_BINARY_DIR}/settings.h
@@ -25,7 +25,7 @@ add_custom_command(OUTPUT ${TABLE_BINARY_DIR}/settings.h
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Generating table/settings.h"
 )
-add_custom_target(table_settings
+add_custom_target_timestamp(table_settings
         DEPENDS
         ${TABLE_BINARY_DIR}/settings.h
 )
