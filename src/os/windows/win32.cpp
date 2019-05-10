@@ -63,7 +63,7 @@ bool LoadLibraryList(Function proc[], const char *dll)
 
 		if (lib == nullptr) return false;
 		for (;;) {
-			FARPROC p;
+			VOIDFNPTR p;
 
 			while (*dll++ != '\0') { /* Nothing */ }
 			if (*dll == '\0') break;
