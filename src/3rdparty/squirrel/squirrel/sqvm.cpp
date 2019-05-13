@@ -727,8 +727,12 @@ bool SQVM::Execute(SQObjectPtr &closure, SQInteger target, SQInteger nargs, SQIn
 		case ET_RESUME_VM:
 		case ET_RESUME_THROW_VM:
 			traps = _suspended_traps;
-			ci->_root = _suspended_root;
-			ci->_vargs = _suspend_varargs;
+			if (ci == NULL) {
+				CallErrorHandler(_lasterror);
+			} else{
+				ci->_root = _suspended_root;
+				ci->_vargs = _suspend_varargs;
+			}
 			_suspended = SQFalse;
 			if(et  == ET_RESUME_THROW_VM) { SQ_THROW(); }
 			break;
