@@ -1318,7 +1318,7 @@ protected:
 		GetAllCargoSuffixes(CARGOSUFFIX_OUT, CST_DIR, i, i->type, indsp, i->produced_cargo, cargo_suffix);
 
 		/* Industry productions */
-		for (byte j = 0; j < lengthof(i->produced_cargo); j++) {
+		for (byte j = 0; p < 7 && j < lengthof(i->produced_cargo); j++) {
 			if (i->produced_cargo[j] == CT_INVALID) continue;
 			SetDParam(p++, i->produced_cargo[j]);
 			SetDParam(p++, i->last_month_production[j]);
@@ -1326,7 +1326,7 @@ protected:
 		}
 
 		/* Transported productions */
-		for (byte j = 0; j < lengthof(i->produced_cargo); j++) {
+		for (byte j = 0; p < 9 && j < lengthof(i->produced_cargo); j++) {
 			if (i->produced_cargo[j] == CT_INVALID) continue;
 			SetDParam(p++, ToPercent8(i->last_month_pct_transported[j]));
 		}
