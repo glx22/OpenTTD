@@ -770,7 +770,7 @@ uint ConvertDisplaySpeedToKmhishSpeed(uint speed)
  */
 static char *FormatString(char *buff, const char *str_arg, StringParameters *args, const char *last, uint case_index, bool game_script, bool dry_run)
 {
-	uint orig_offset = args->offset;
+	size_t orig_offset = args->offset;
 
 	/* When there is no array with types there is no need to do a dry run. */
 	if (args->HasTypeInformation() && !dry_run) {
@@ -923,7 +923,7 @@ static char *FormatString(char *buff, const char *str_arg, StringParameters *arg
 
 			case SCC_GENDER_LIST: { // {G 0 Der Die Das}
 				/* First read the meta data from the language file. */
-				uint offset = orig_offset + (byte)*str++;
+				size_t offset = orig_offset + (byte)*str++;
 				int gender = 0;
 				if (!dry_run && args->GetTypeAtOffset(offset) != 0) {
 					/* Now we need to figure out what text to resolve, i.e.
@@ -965,7 +965,7 @@ static char *FormatString(char *buff, const char *str_arg, StringParameters *arg
 
 			case SCC_PLURAL_LIST: { // {P}
 				int plural_form = *str++;          // contains the plural form for this string
-				uint offset = orig_offset + (byte)*str++;
+				size_t offset = orig_offset + (byte)*str++;
 				int64 v = *args->GetPointerToOffset(offset); // contains the number that determines plural
 				str = ParseStringChoice(str, DeterminePluralForm(v, plural_form), &buff, last);
 				break;

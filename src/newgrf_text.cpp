@@ -965,7 +965,7 @@ void RewindTextRefStack()
  * @param modify_argv When true, modify the OpenTTD stack.
  * @return the string control code to "execute" now
  */
-uint RemapNewGRFStringControlCode(uint scc, char *buf_start, char **buff, const char **str, int64 *argv, uint argv_size, bool modify_argv)
+uint RemapNewGRFStringControlCode(uint scc, char *buf_start, char **buff, const char **str, int64 *argv, size_t argv_size, bool modify_argv)
 {
 	switch (scc) {
 		default: break;

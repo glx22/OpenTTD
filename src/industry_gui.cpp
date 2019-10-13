@@ -1306,37 +1306,39 @@ protected:
 	 * @param i the industry to get the StringID of.
 	 * @return the StringID.
 	 */
-	StringID GetIndustryString(const Industry *i) const
+	char *GetIndustryString(const Industry *i) const
 	{
+		static char buffer[DRAW_STRING_BUFFER];
 		const IndustrySpec *indsp = GetIndustrySpec(i->type);
-		byte p = 0;
+		std::vector<uint64> args;
 
 		/* Industry name */
-		SetDParam(p++, i->index);
+		args.push_back(i->index);
 
 		static CargoSuffix cargo_suffix[lengthof(i->produced_cargo)];
 		GetAllCargoSuffixes(CARGOSUFFIX_OUT, CST_DIR, i, i->type, indsp, i->produced_cargo, cargo_suffix);
 
-		/* Industry productions */
+		/* Industry and transported productions */
 		for (byte j = 0; j < lengthof(i->produced_cargo); j++) {
 			if (i->produced_cargo[j] == CT_INVALID) continue;
-			SetDParam(p++, i->produced_cargo[j]);
-			SetDParam(p++, i->last_month_production[j]);
-			SetDParamStr(p++, cargo_suffix[j].text);
-		}
-
-		/* Transported productions */
-		for (byte j = 0; j < lengthof(i->produced_cargo); j++) {
-			if (i->produced_cargo[j] == CT_INVALID) continue;
-			SetDParam(p++, ToPercent8(i->last_month_pct_transported[j]));
+			args.push_back(i->produced_cargo[j]);
+			args.push_back(i->last_month_production[j]);
+			args.push_back((uint64)cargo_suffix[j].text);
+			args.push_back(ToPercent8(i->last_month_pct_transported[j]));
 		}
 
 		/* Drawing the right string */
-		switch (p) {
-			case 1:  return STR_INDUSTRY_DIRECTORY_ITEM_NOPROD;
-			case 5:  return STR_INDUSTRY_DIRECTORY_ITEM;
-			default: return STR_INDUSTRY_DIRECTORY_ITEM_TWO;
+		StringID str;
+		switch (args.size()) {
+			case 1:  str = STR_INDUSTRY_DIRECTORY_ITEM_NOPROD; break;
+			case 5:  str = STR_INDUSTRY_DIRECTORY_ITEM; break;
+			default: str = STR_INDUSTRY_DIRECTORY_ITEM_TWO; break;
 		}
+
+		StringParameters params(args.data(), args.size(), nullptr);
+		GetStringWithArgs(buffer, str, &params, lastof(buffer));
+
+		return buffer;
 	}
 
 public:

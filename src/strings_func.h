@@ -65,11 +65,11 @@ class StringParameters {
 	WChar *type;              ///< Array with type information about the data. Can be nullptr when no type information is needed. See #StringControlCode.
 
 public:
-	uint offset;              ///< Current offset in the data/type arrays.
-	uint num_param;           ///< Length of the data array.
+	size_t offset;            ///< Current offset in the data/type arrays.
+	size_t num_param;         ///< Length of the data array.
 
 	/** Create a new StringParameters instance. */
-	StringParameters(uint64 *data, uint num_param, WChar *type) :
+	StringParameters(uint64 *data, size_t num_param, WChar *type) :
 		parent(nullptr),
 		data(data),
 		type(type),
@@ -93,7 +93,7 @@ public:
 	 * Create a new StringParameters instance that can reference part of the data of
 	 * the given partent instance.
 	 */
-	StringParameters(StringParameters &parent, uint size) :
+	StringParameters(StringParameters &parent, size_t size) :
 		parent(&parent),
 		data(parent.data + parent.offset),
 		offset(0),
@@ -133,13 +133,13 @@ public:
 	}
 
 	/** Return the amount of elements which can still be read. */
-	uint GetDataLeft() const
+	size_t GetDataLeft() const
 	{
 		return this->num_param - this->offset;
 	}
 
 	/** Get a pointer to a specific element in the data array. */
-	uint64 *GetPointerToOffset(uint offset) const
+	uint64 *GetPointerToOffset(size_t offset) const
 	{
 		assert(offset < this->num_param);
 		return &this->data[offset];
@@ -152,20 +152,20 @@ public:
 	}
 
 	/** Get the type of a specific element. */
-	WChar GetTypeAtOffset(uint offset) const
+	WChar GetTypeAtOffset(size_t offset) const
 	{
 		assert(offset < this->num_param);
 		assert(this->HasTypeInformation());
 		return this->type[offset];
 	}
 
-	void SetParam(uint n, uint64 v)
+	void SetParam(size_t n, uint64 v)
 	{
 		assert(n < this->num_param);
 		this->data[n] = v;
 	}
 
-	uint64 GetParam(uint n) const
+	uint64 GetParam(size_t n) const
 	{
 		assert(n < this->num_param);
 		return this->data[n];
