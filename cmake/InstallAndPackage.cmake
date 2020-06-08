@@ -108,4 +108,7 @@ else ()
     message(FATAL_ERROR "Unknown OS found for packaging; please consider creating a Pull Request to add support for this OS.")
 endif ()
 
+add_custom_target(dist ${CMAKE_COMMAND} --build . --target package_source)
+add_dependencies(dist find_version)
+
 include(CPack)
