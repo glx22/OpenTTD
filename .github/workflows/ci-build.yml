@@ -28,6 +28,7 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
+        sudo apt-get update
         sudo apt-get install -y --no-install-recommends \
           libfontconfig-dev \
           libicu-dev \
@@ -67,25 +68,42 @@ jobs:
       fail-fast: false
       matrix:
         arch: [x86, x64]
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.arch }}-windows-static
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Prepare vcpkg (with cache)
-      uses: lukka/run-vcpkg@v4
-      with:
-        vcpkgDirectory: 'c:/vcpkg'
-        doNotUpdateVcpkg: true
-        vcpkgArguments: 'liblzma libpng lzo zlib'
-        vcpkgTriplet: '${{ matrix.arch }}-windows-static'
+    - name: Prepare cache key
+      id: cache-key
+      run: |
+        cd c:\vcpkg
+        git fetch
+        $head = git rev-parse FETCH_HEAD
+        echo "::set-output name=head::$head"
+        Get-Date -UFormat "::set-output name=date::%Y%m%d"
 
-    - name: 'Build'
-      uses: lukka/run-cmake@v3
+    - name: Cache vcpkg
+      uses: actions/cache@v2
+      id: cache
       with:
-        cmakeListsOrSettingsJson: CMakeListsTxtBasic
-        useVcpkgToolchainFile: true
-        buildDirectory: '${{ runner.workspace }}/build'
+        path: |
+            c:/vcpkg
+            !c:/vcpkg/packages
+            !c:/vcpkg/buildtrees
+            !c:/vcpkg/downloads
+        key: ${{ runner.os }}-vcpkg-${{ matrix.arch }}-${{ steps.cache-key.outputs.date }}-${{ steps.cache-key.outputs.head }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-${{ matrix.arch }}-${{ steps.cache-key.outputs.date }}-
+          ${{ runner.os }}-vcpkg-${{ matrix.arch }}-
+
+    - name: Install dependencies
+      run: |
+        cd c:\vcpkg
+        git pull
+        if (.\vcpkg.exe update | Select-String -pattern bootstrap) { .\bootstrap-vcpkg.bat }
+        .\vcpkg install liblzma libpng lzo zlib
 
     - name: Install OpenGFX
       run: |
@@ -96,10 +114,19 @@ jobs:
         rm -f opengfx-all.zip
       shell: bash
 
+    - name: Set ${{ matrix.arch }} build environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ matrix.arch }}
+
+    - name: CMake
+      run: mkdir build && cd build && cmake .. -G Ninja -DCMAKE_TOOLCHAIN_FILE="c:\vcpkg\scripts\buildsystems\vcpkg.cmake" -DVCPKG_TARGET_TRIPLET="$env:VCPKG_DEFAULT_TRIPLET"
+
+    - name: Build
+      run: cd build && cmake --build .
+
     - name: Test
-      run: |
-        cd ${{ runner.workspace }}/build
-        ctest -C Debug
+      run: cd build && ctest -C Debug
 
   macos:
     name: Mac OS
