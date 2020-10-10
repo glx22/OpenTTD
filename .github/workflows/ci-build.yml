@@ -74,6 +74,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Vcpkg version before
+      run: |
+        cd c:\vcpkg
+        git rev-parse HEAD
+
     - name: Prepare vcpkg (with cache)
       uses: lukka/run-vcpkg@v4
       with:
@@ -81,6 +86,11 @@ jobs:
         doNotUpdateVcpkg: true
         vcpkgArguments: 'liblzma libpng lzo zlib'
         vcpkgTriplet: '${{ matrix.arch }}-windows-static'
+
+    - name: Vcpkg version after
+      run: |
+        cd c:\vcpkg
+        git rev-parse HEAD
 
     - uses: ammaraskar/msvc-problem-matcher@master
     - name: 'Build'
