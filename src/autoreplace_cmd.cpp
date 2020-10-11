@@ -209,7 +209,10 @@ static CargoID GetNewCargoTypeForReplace(Vehicle *v, EngineID engine_type, bool 
 	if (union_mask == 0) return CT_NO_REFIT; // Don't try to refit an engine with no cargo capacity
 
 	CargoID cargo_type;
-	if (IsArticulatedVehicleCarryingDifferentCargoes(v, &cargo_type)) return CT_INVALID; // We cannot refit to mixed cargoes in an automated way
+	if (IsArticulatedVehicleCarryingDifferentCargoes(v, &cargo_type)) {
+		if (v->engine_type == engine_type) return CT_RENEW_REFIT;
+		return CT_INVALID; // We cannot refit to mixed cargoes in an automated way
+	}
 
 	if (cargo_type == CT_INVALID) {
 		if (v->type != VEH_TRAIN) return CT_NO_REFIT; // If the vehicle does not carry anything at all, every replacement is fine.
@@ -304,7 +307,33 @@ static CommandCost BuildReplacementVehicle(Vehicle *old_veh, Vehicle **new_vehic
 	*new_vehicle = new_veh;
 
 	/* Refit the vehicle if needed */
-	if (refit_cargo != CT_NO_REFIT) {
+	if (refit_cargo == CT_RENEW_REFIT) {
+		Vehicle *v = old_veh;
+		Vehicle *w = new_veh;
+
+		do {
+			assert(w != nullptr);
+
+			/* Find out what's the best sub type */
+			byte subtype = GetBestFittingSubType(v, w, v->cargo_type);
+			if (w->cargo_type != v->cargo_type || w->cargo_subtype != subtype) {
+				CommandCost refit_cost = DoCommand(0, w->index, v->cargo_type | 1U << 25 | (subtype << 8), DC_EXEC, GetCmdRefitVeh(v));
+				if (refit_cost.Succeeded()) cost.AddCost(refit_cost);
+			}
+
+			if (w->IsGroundVehicle() && w->HasArticulatedPart()) {
+				w = w->GetNextArticulatedPart();
+			} else {
+				break;
+			}
+
+			if (v->IsGroundVehicle() && v->HasArticulatedPart()) {
+				v = v->GetNextArticulatedPart();
+			} else {
+				break;
+			}
+		} while (v != nullptr);
+	} else if (refit_cargo != CT_NO_REFIT) {
 		byte subtype = GetBestFittingSubType(old_veh, new_veh, refit_cargo);
 
 		cost.AddCost(DoCommand(0, new_veh->index, refit_cargo | (subtype << 8), DC_EXEC, GetCmdRefitVeh(new_veh)));

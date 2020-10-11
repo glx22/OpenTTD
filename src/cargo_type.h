@@ -63,6 +63,7 @@ enum CargoType {
 
 	NUM_CARGO       = 64,   ///< Maximal number of cargo types in a game.
 
+	CT_RENEW_REFIT  = 0xFC, ///< Special case for auto-renew of articulated vehicles.
 	CT_AUTO_REFIT   = 0xFD, ///< Automatically choose cargo type when doing auto refitting.
 	CT_NO_REFIT     = 0xFE, ///< Do not refit cargo of a vehicle (used in vehicle orders and auto-replace/auto-new).
 	CT_INVALID      = 0xFF, ///< Invalid cargo type.
