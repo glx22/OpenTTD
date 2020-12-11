@@ -118,10 +118,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: brew install pkg-config lzo xz libpng freetype
-      env:
-        HOMEBREW_NO_AUTO_UPDATE: 1
+    - name: Prepare vcpkg (with cache)
+      uses: lukka/run-vcpkg@v4
+      with:
+        vcpkgDirectory: '/usr/local/share/vcpkg'
+        doNotUpdateVcpkg: true
+        vcpkgArguments: 'freetype liblzma lzo'
+        vcpkgTriplet: 'x64-osx'
 
     - name: Install OpenGFX
       run: |
@@ -132,7 +135,7 @@ jobs:
         rm -f opengfx-all.zip
 
     - name: CMake
-      run: mkdir build && cd build && cmake ..
+      run: mkdir build && cd build && cmake .. -DVCPKG_TARGET_TRIPLET=x64-osx -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake
 
     - uses: ammaraskar/gcc-problem-matcher@master
     - name: Build
