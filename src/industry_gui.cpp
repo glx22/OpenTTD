@@ -1245,7 +1245,7 @@ protected:
 	/* Runtime saved values */
 	static Listing last_sorting;
 
-	/* Constants for sorting stations */
+	/* Constants for sorting industries */
 	static const StringID sorter_names[];
 	static GUIIndustryList::SortFunction * const sorter_funcs[];
 
@@ -1256,6 +1256,7 @@ protected:
 	StringID cargo_filter_texts[NUM_CARGO + 3]; ///< Texts for filter_cargo, terminated by INVALID_STRING_ID
 	byte produced_cargo_filter_criteria;        ///< Selected produced cargo filter index
 	byte accepted_cargo_filter_criteria;        ///< Selected accepted cargo filter index
+	static CargoID produced_cargo_filter;
 
 	/**
 	 * Set cargo filter list item index.
@@ -1346,6 +1347,8 @@ protected:
 		                             this->cargo_filter[this->produced_cargo_filter_criteria]);
 
 		this->industries.Filter(filter);
+
+		this->produced_cargo_filter = this->cargo_filter[this->produced_cargo_filter_criteria];
 		this->industries.Sort();
 
 		this->vscroll->SetCount((uint)this->industries.size()); // Update scrollbar as well.
@@ -1408,9 +1411,20 @@ protected:
 	static bool IndustryProductionSorter(const Industry * const &a, const Industry * const &b)
 	{
 		uint prod_a = 0, prod_b = 0;
+		CargoID filter = IndustryDirectoryWindow::produced_cargo_filter;
 		for (uint i = 0; i < lengthof(a->produced_cargo); i++) {
-			if (a->produced_cargo[i] != CT_INVALID) prod_a += a->last_month_production[i];
-			if (b->produced_cargo[i] != CT_INVALID) prod_b += b->last_month_production[i];
+			switch (filter) {
+				case CF_NONE:
+					break;
+				case CF_ANY:
+					if (a->produced_cargo[i] != CT_INVALID) prod_a += a->last_month_production[i];
+					if (b->produced_cargo[i] != CT_INVALID) prod_b += b->last_month_production[i];
+					break;
+				default:
+					if (a->produced_cargo[i] == filter) prod_a += a->last_month_production[i];
+					if (b->produced_cargo[i] == filter) prod_b += b->last_month_production[i];
+					break;
+			}
 		}
 		int r = prod_a - prod_b;
 
@@ -1722,6 +1736,7 @@ const StringID IndustryDirectoryWindow::sorter_names[] = {
 	INVALID_STRING_ID
 };
 
+CargoID IndustryDirectoryWindow::produced_cargo_filter = CF_ANY;
 
 /** Window definition of the industry directory gui */
 static WindowDesc _industry_directory_desc(
