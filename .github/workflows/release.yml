@@ -337,6 +337,7 @@ jobs:
         cmake ${GITHUB_WORKSPACE} \
           -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_INSTALL_BINDIR=games \
           # EOF
         echo "::endgroup::"
 
