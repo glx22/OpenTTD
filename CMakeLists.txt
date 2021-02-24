@@ -249,7 +249,7 @@ if(NOT OPTION_DEDICATED)
     link_package(Fontconfig TARGET Fontconfig::Fontconfig)
     link_package(ICU_lx)
     link_package(ICU_i18n)
-    link_package(OpenGL TARGET OpenGL::GL)
+    link_package(OpenGL TARGET OpenGL::GL INCLUDE SDL_FOUND OR SDL2_FOUND)
 endif()
 
 if(APPLE)
