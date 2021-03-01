@@ -39,7 +39,7 @@ find_path(ZSTD_INCLUDE_DIR
 )
 
 find_library(ZSTD_LIBRARY
-    NAMES zstd
+    NAMES zstd zstd_static
     PATHS ${PC_ZSTD_LIBRARY_DIRS}
 )
 
@@ -50,11 +50,6 @@ find_library(ZSTD_LIBRARY
 # when not using vcpkg, but this is non-trivial to fix, as we have no idea
 # what the paths are. With vcpkg we do. And we only official support vcpkg
 # with Windows.
-#
-# NOTE: this is based on the assumption that the debug file has the same
-# name as the optimized file. This is not always the case, but so far
-# experiences has shown that in those case vcpkg CMake files do the right
-# thing.
 if(VCPKG_TOOLCHAIN AND ZSTD_LIBRARY)
     if(ZSTD_LIBRARY MATCHES "/debug/")
         set(ZSTD_LIBRARY_DEBUG ${ZSTD_LIBRARY})
@@ -62,6 +57,8 @@ if(VCPKG_TOOLCHAIN AND ZSTD_LIBRARY)
     else()
         set(ZSTD_LIBRARY_RELEASE ${ZSTD_LIBRARY})
         string(REPLACE "/lib/" "/debug/lib/" ZSTD_LIBRARY_DEBUG ${ZSTD_LIBRARY})
+        # Also fix the name of debug file
+        string(REPLACE "." "d." ZSTD_LIBRARY_DEBUG ${ZSTD_LIBRARY_DEBUG})
     endif()
     include(SelectLibraryConfigurations)
     select_library_configurations(ZSTD)
