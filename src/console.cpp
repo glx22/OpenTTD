@@ -24,7 +24,12 @@ static const uint ICON_TOKEN_COUNT = 20;     ///< Maximum number of tokens in on
 static const uint ICON_MAX_RECURSE = 10;     ///< Maximum number of recursion
 
 /* console parser */
-IConsoleCmd   *_iconsole_cmds;    ///< list of registered commands
+/* static */ IConsole::CommandList &IConsole::Commands()
+{
+	static IConsole::CommandList cmds;
+	return cmds;
+}
+
 IConsoleAlias *_iconsole_aliases; ///< list of registered aliases
 
 FILE *_iconsole_output_file;
@@ -242,15 +247,11 @@ static std::string &RemoveUnderscores(std::string &name)
  * @param name name of the command that will be used
  * @param proc function that will be called upon execution of command
  */
-void IConsoleCmdRegister(std::string name, IConsoleCmdProc *proc, IConsoleHook *hook)
+/* static */ void IConsole::CmdRegister(std::string name, IConsoleCmdProc *proc, IConsoleHook *hook)
 {
-	IConsoleCmd *item_new = new IConsoleCmd();
-	item_new->name = RemoveUnderscores(name);
-	item_new->next = nullptr;
-	item_new->proc = proc;
-	item_new->hook = hook;
-
-	IConsoleAddSorted(&_iconsole_cmds, item_new);
+	/* Duplicate name as key, so we can remove underscores from it, while they are still displayed in command list. */
+	std::string key(name);
+	IConsole::Commands().try_emplace(RemoveUnderscores(key), name, proc, hook);
 }
 
 /**
@@ -258,14 +259,10 @@ void IConsoleCmdRegister(std::string name, IConsoleCmdProc *proc, IConsoleHook *
  * @param name command to be found
  * @return return Cmdstruct of the found command, or nullptr on failure
  */
-IConsoleCmd *IConsoleCmdGet(std::string name)
+/* static */ IConsoleCmd *IConsole::CmdGet(std::string name)
 {
-	RemoveUnderscores(name);
-	IConsoleCmd *item;
-
-	for (item = _iconsole_cmds; item != nullptr; item = item->next) {
-		if (item->name == name) return item;
-	}
+	auto item = IConsole::Commands().find(RemoveUnderscores(name));
+	if (item != IConsole::Commands().end()) return &item->second;
 	return nullptr;
 }
 
@@ -486,7 +483,7 @@ void IConsoleCmdExec(const char *cmdstr, const uint recurse_count)
 	 * First try commands, then aliases. Execute
 	 * the found action taking into account its hooking code
 	 */
-	IConsoleCmd *cmd = IConsoleCmdGet(tokens[0]);
+	IConsoleCmd *cmd = IConsole::CmdGet(tokens[0]);
 	if (cmd != nullptr) {
 		ConsoleHookResult chr = (cmd->hook == nullptr ? CHR_ALLOW : cmd->hook(true));
 		switch (chr) {
