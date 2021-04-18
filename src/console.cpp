@@ -222,8 +222,9 @@ static std::string &RemoveUnderscores(std::string &name)
 /* static */ void IConsole::CmdRegister(std::string name, IConsoleCmdProc *proc, IConsoleHook *hook)
 {
 	/* Duplicate name as key, so we can remove underscores from it, while they are still displayed in command list. */
-	std::string key(name);
-	IConsole::Commands().try_emplace(RemoveUnderscores(key), name, proc, hook);
+	std::string name_normalised(name);
+	RemoveUnderscores(name_normalised);
+	IConsole::Commands().try_emplace(name_normalised, name_normalised, proc, hook);
 }
 
 /**
@@ -246,8 +247,9 @@ static std::string &RemoveUnderscores(std::string &name)
 /* static */ void IConsole::AliasRegister(std::string name, std::string cmd)
 {
 	/* Duplicate name as key, so we can remove underscores from it, while they are still displayed in alias list. */
-	std::string key(name);
-	auto result = IConsole::Aliases().try_emplace(RemoveUnderscores(key), name, cmd);
+	std::string name_normalised(name);
+	RemoveUnderscores(name_normalised);
+	auto result = IConsole::Aliases().try_emplace(name_normalised, name_normalised, cmd);
 	if (!result.second) IConsoleError("an alias with this name already exists; insertion aborted");
 }
 
