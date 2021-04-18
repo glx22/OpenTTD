@@ -521,9 +521,10 @@ void ParseGameConnectionString(const char **company, const char **port, char *co
 	/* Register the login */
 	_network_clients_connected++;
 
-	SetWindowDirty(WC_CLIENT_LIST, 0);
 	ServerNetworkGameSocketHandler *cs = new ServerNetworkGameSocketHandler(s);
 	cs->client_address = address; // Save the IP of the client
+
+	InvalidateWindowData(WC_CLIENT_LIST, 0);
 }
 
 /**
@@ -574,6 +575,11 @@ void NetworkClose(bool close_admins)
 /* Initializes the network (cleans sockets and stuff) */
 static void NetworkInitialize(bool close_admins = true)
 {
+	/* Make sure we always have a name. */
+	if (StrEmpty(_settings_client.network.client_name)) {
+		strecpy(_settings_client.network.client_name, "Player", lastof(_settings_client.network.client_name));
+	}
+
 	InitializeNetworkPools(close_admins);
 	NetworkUDPInitialize();
 
@@ -710,7 +716,7 @@ void NetworkClientConnectGame(NetworkAddress address, CompanyID join_as, const c
 static void NetworkInitGameInfo()
 {
 	if (StrEmpty(_settings_client.network.server_name)) {
-		seprintf(_settings_client.network.server_name, lastof(_settings_client.network.server_name), "Unnamed Server");
+		strecpy(_settings_client.network.server_name, "Unnamed Server", lastof(_settings_client.network.server_name));
 	}
 
 	/* The server is a client too */
