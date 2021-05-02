@@ -126,6 +126,6 @@ static void Load_CAPA()
 }
 
 /** Chunk handlers related to cargo packets. */
-extern const ChunkHandler _cargopacket_chunk_handlers[] = {
-	{ 'CAPA', Save_CAPA, Load_CAPA, nullptr, nullptr, CH_ARRAY | CH_LAST},
+extern const ChunkHandlerList _cargopacket_chunk_handlers = {
+	{ 'CAPA', Save_CAPA, Load_CAPA, nullptr, nullptr, CH_ARRAY },
 };
