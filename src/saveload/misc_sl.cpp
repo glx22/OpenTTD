@@ -145,7 +145,7 @@ static void SaveLoad_VIEW()
 	SlGlobList(_view_desc);
 }
 
-extern const ChunkHandler _misc_chunk_handlers[] = {
-	{ 'DATE', SaveLoad_DATE, SaveLoad_DATE, nullptr, Check_DATE, CH_RIFF},
-	{ 'VIEW', SaveLoad_VIEW, SaveLoad_VIEW, nullptr, nullptr,    CH_RIFF | CH_LAST},
+static const ChunkHandler _misc_chunk_handlers[] = {
+	{ 'DATE', SaveLoad_DATE, SaveLoad_DATE, nullptr, Check_DATE, CH_RIFF },
+	{ 'VIEW', SaveLoad_VIEW, SaveLoad_VIEW, nullptr, nullptr,    CH_RIFF },
 };

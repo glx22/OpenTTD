@@ -55,6 +55,6 @@ static void Load_ANIT()
  * "Definition" imported by the saveload code to be able to load and save
  * the animated tile table.
  */
-extern const ChunkHandler _animated_tile_chunk_handlers[] = {
-	{ 'ANIT', Save_ANIT, Load_ANIT, nullptr, nullptr, CH_RIFF | CH_LAST},
+static const ChunkHandler _animated_tile_chunk_handlers[] = {
+	{ 'ANIT', Save_ANIT, Load_ANIT, nullptr, nullptr, CH_RIFF },
 };

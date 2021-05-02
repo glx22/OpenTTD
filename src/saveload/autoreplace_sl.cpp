@@ -55,6 +55,6 @@ static void Ptrs_ERNW()
 	}
 }
 
-extern const ChunkHandler _autoreplace_chunk_handlers[] = {
-	{ 'ERNW', Save_ERNW, Load_ERNW, Ptrs_ERNW, nullptr, CH_ARRAY | CH_LAST},
+static const ChunkHandler _autoreplace_chunk_handlers[] = {
+	{ 'ERNW', Save_ERNW, Load_ERNW, Ptrs_ERNW, nullptr, CH_ARRAY },
 };
