@@ -519,7 +519,7 @@ public:
 	void SetShaded(bool make_shaded);
 
 	void InvalidateData(int data = 0, bool gui_scope = true);
-	void ProcessScheduledInvalidations();
+	bool ProcessScheduledInvalidations();
 	void ProcessHighlightedInvalidations();
 
 	/*** Event handling ***/
@@ -731,8 +731,9 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	virtual void OnInvalidateData(int data = 0, bool gui_scope = true) {}
+	virtual bool OnInvalidateData(int data = 0, bool gui_scope = true) { return false; }
 
 	/**
 	 * The user clicked some place on the map when a tile highlight mode

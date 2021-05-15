@@ -106,7 +106,7 @@ public:
 	void DrawWidget(const Rect &r, int widget) const override;
 	bool OnTooltip(Point pt, int widget, TooltipCloseCondition close_cond) override;
 	void OnClick(Point pt, int widget, int click_count) override;
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override;
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override;
 
 private:
 	LinkGraphOverlay *overlay;

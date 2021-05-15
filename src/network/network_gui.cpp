@@ -769,11 +769,13 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		this->servers.ForceRebuild();
 		this->SetDirty();
+		return false;
 	}
 
 	EventState OnKeyPress(WChar key, uint16 keycode) override
@@ -1994,12 +1996,14 @@ public:
 		this->FinishInitNested(window_number);
 	}
 
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		this->RebuildList();
 
 		/* Currently server information is not sync'd to clients, so we cannot show it on clients. */
 		this->GetWidget<NWidgetStacked>(WID_CL_SERVER_SELECTOR)->SetDisplayedPlane(_network_server ? 0 : SZSP_HORIZONTAL);
+
+		return false;
 	}
 
 	void UpdateWidgetSize(int widget, Dimension *size, const Dimension &padding, Dimension *fill, Dimension *resize) override

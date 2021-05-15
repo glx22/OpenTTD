@@ -223,20 +223,23 @@ struct AIListWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (_game_mode == GM_NORMAL && Company::IsValidID(this->slot)) {
 			delete this;
-			return;
+			return true;
 		}
 
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		this->vscroll->SetCount((int)this->info_list->size() + 1);
 
 		/* selected goes from -1 .. length of ai list - 1. */
 		this->selected = std::min(this->selected, this->vscroll->GetCount() - 2);
+
+		return false;
 	}
 };
 
@@ -579,12 +582,14 @@ struct AISettingsWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		this->RebuildVisibleSettings();
 		HideDropDownMenu(this);
 		DeleteChildWindows(WC_QUERY_STRING);
+		return false;
 	}
 
 private:
@@ -651,14 +656,15 @@ struct ScriptTextfileWindow : public TextfileWindow {
 		}
 	}
 
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		const char *textfile = GetConfig(slot)->GetTextfile(file_type, slot);
 		if (textfile == nullptr) {
 			delete this;
-		} else {
-			this->LoadTextfile(textfile, (slot == OWNER_DEITY) ? GAME_DIR : AI_DIR);
+			return true;
 		}
+		this->LoadTextfile(textfile, (slot == OWNER_DEITY) ? GAME_DIR : AI_DIR);
+		return false;
 	}
 };
 
@@ -946,14 +952,15 @@ struct AIConfigWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (!IsEditable(this->selected_slot)) {
 			this->selected_slot = INVALID_COMPANY;
 		}
 
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		this->SetWidgetDisabledState(WID_AIC_DECREASE, GetGameSettings().difficulty.max_no_competitors == 0);
 		this->SetWidgetDisabledState(WID_AIC_INCREASE, GetGameSettings().difficulty.max_no_competitors == MAX_COMPANIES - 1);
@@ -965,6 +972,8 @@ struct AIConfigWindow : public Window {
 		for (TextfileType tft = TFT_BEGIN; tft < TFT_END; tft++) {
 			this->SetWidgetDisabledState(WID_AIC_TEXTFILE + tft, this->selected_slot == INVALID_COMPANY || (GetConfig(this->selected_slot)->GetTextfile(tft, this->selected_slot) == nullptr));
 		}
+
+		return false;
 	}
 };
 
@@ -1354,8 +1363,9 @@ struct AIDebugWindow : public Window {
 	 * @param data Information about the changed data.
 	 *             This is the company ID of the AI/GS which wrote a new log message, or -1 in other cases.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		/* If the log message is related to the active company tab, check the break string.
 		 * This needs to be done in gameloop-scope, so the AI is suspended immediately. */
@@ -1387,7 +1397,7 @@ struct AIDebugWindow : public Window {
 			}
 		}
 
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		this->SelectValidDebugCompany();
 
@@ -1411,6 +1421,8 @@ struct AIDebugWindow : public Window {
 		this->SetWidgetDisabledState(WID_AID_RELOAD_TOGGLE, ai_debug_company == INVALID_COMPANY || ai_debug_company == OWNER_DEITY || ai_debug_company == _local_company);
 		this->SetWidgetDisabledState(WID_AID_CONTINUE_BTN, ai_debug_company == INVALID_COMPANY ||
 				(ai_debug_company == OWNER_DEITY ? !Game::IsPaused() : !AI::IsPaused(ai_debug_company)));
+
+		return false;
 	}
 
 	void OnResize() override

@@ -869,10 +869,11 @@ public:
 	 *   -1     Rebuild page list and refresh current page;
 	 *   >= 0   Id of the page that needs to be refreshed. If it is not the current page, nothing happens.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		/* If added/removed page, force rebuild. Sort order never change so just a
 		 * re-sort is never needed.
@@ -903,6 +904,7 @@ public:
 		} else if (data >= 0 && this->selected_page_id == data) {
 			this->RefreshSelectedPage();
 		}
+		return false;
 	}
 
 	void OnTimeout() override

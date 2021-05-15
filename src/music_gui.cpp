@@ -471,15 +471,17 @@ struct MusicTrackSelectionWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		for (int i = 0; i < 6; i++) {
 			this->SetWidgetLoweredState(WID_MTS_ALL + i, i == _settings_client.music.playlist);
 		}
 		this->SetWidgetDisabledState(WID_MTS_CLEAR, _settings_client.music.playlist <= 3);
 		this->SetDirty();
+		return false;
 	}
 
 	void UpdateWidgetSize(int widget, Dimension *size, const Dimension &padding, Dimension *fill, Dimension *resize) override
@@ -753,10 +755,11 @@ struct MusicWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		for (int i = 0; i < 6; i++) {
 			this->SetWidgetLoweredState(WID_M_ALL + i, i == _settings_client.music.playlist);
 		}
@@ -764,6 +767,7 @@ struct MusicWindow : public Window {
 		UpdateDisabledButtons();
 
 		this->SetDirty();
+		return false;
 	}
 
 	void OnClick(Point pt, int widget, int click_count) override

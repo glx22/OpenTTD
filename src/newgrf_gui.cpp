@@ -469,10 +469,11 @@ struct NewGRFParametersWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		if (!this->action14present) {
 			this->SetWidgetDisabledState(WID_NP_NUMPAR_DEC, !this->editable || this->grf_config->num_params == 0);
 			this->SetWidgetDisabledState(WID_NP_NUMPAR_INC, !this->editable || this->grf_config->num_params >= this->grf_config->num_valid_params);
@@ -483,6 +484,7 @@ struct NewGRFParametersWindow : public Window {
 			this->clicked_row = UINT_MAX;
 			DeleteChildWindows(WC_QUERY_STRING);
 		}
+		return false;
 	}
 
 	void OnRealtimeTick(uint delta_ms) override
@@ -1204,10 +1206,11 @@ struct NewGRFWindow : public Window, NewGRFScanCallback {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data. @see GameOptionsInvalidationData
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		switch (data) {
 			default:
 				/* Nothing important to do */
@@ -1316,6 +1319,8 @@ struct NewGRFWindow : public Window, NewGRFScanCallback {
 		this->GetWidget<NWidgetCore>(WID_NS_CONTENT_DOWNLOAD2)->tool_tip    = tool_tip;
 
 		this->SetWidgetDisabledState(WID_NS_PRESET_SAVE, has_missing);
+
+		return false;
 	}
 
 	EventState OnKeyPress(WChar key, uint16 keycode) override

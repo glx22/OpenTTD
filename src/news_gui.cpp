@@ -524,14 +524,16 @@ struct NewsWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		/* The chatbar has notified us that is was either created or closed */
 		int newtop = this->top + this->chat_height - data;
 		this->chat_height = data;
 		this->SetWindowTop(newtop);
+		return false;
 	}
 
 	void OnRealtimeTick(uint delta_ms) override
@@ -1192,11 +1194,13 @@ struct MessageHistoryWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		this->vscroll->SetCount(_total_news);
+		return false;
 	}
 
 	void OnClick(Point pt, int widget, int click_count) override

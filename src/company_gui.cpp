@@ -1008,10 +1008,11 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		if (data != -1) {
 			/* data contains a VehicleType, rebuild list if it displayed */
@@ -1027,7 +1028,7 @@ public:
 
 				this->SetDirty();
 			}
-			return;
+			return false;
 		}
 
 		this->SetWidgetsDisabledState(true, WID_SCL_CLASS_RAIL, WID_SCL_CLASS_ROAD, WID_SCL_CLASS_SHIP, WID_SCL_CLASS_AIRCRAFT, WIDGET_LIST_END);
@@ -1048,6 +1049,8 @@ public:
 			Point pt = {0, 0};
 			this->OnClick(pt, WID_SCL_CLASS_GENERAL, 1);
 		}
+
+		return false;
 	}
 };
 
@@ -2061,13 +2064,15 @@ struct CompanyInfrastructureWindow : Window
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		this->UpdateRailRoadTypes();
 		this->ReInit();
+		return false;
 	}
 };
 
@@ -2658,10 +2663,11 @@ struct CompanyWindow : Window
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (this->window_number == _local_company) return;
+		if (this->window_number == _local_company) return false;
 
 		if (_settings_game.economy.allow_shares) { // Shares are allowed
 			const Company *c = Company::Get(this->window_number);
@@ -2681,6 +2687,8 @@ struct CompanyWindow : Window
 			this->DisableWidget(WID_C_BUY_SHARE);
 			this->DisableWidget(WID_C_SELL_SHARE);
 		}
+
+		return false;
 	}
 };
 

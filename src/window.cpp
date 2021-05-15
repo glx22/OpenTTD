@@ -3038,7 +3038,7 @@ void UpdateWindows()
 
 	/* Process invalidations before anything else. */
 	for (Window *w : Window::Iterate()) {
-		w->ProcessScheduledInvalidations();
+		if (w->ProcessScheduledInvalidations()) continue;
 		w->ProcessHighlightedInvalidations();
 	}
 
@@ -3144,14 +3144,15 @@ void Window::InvalidateData(int data, bool gui_scope)
 
 /**
  * Process all scheduled invalidations.
+ * @return True iff window has been self deleted.
  */
-void Window::ProcessScheduledInvalidations()
+bool Window::ProcessScheduledInvalidations()
 {
 	for (int data : this->scheduled_invalidation_data) {
-		if (this->window_class == WC_INVALID) break;
-		this->OnInvalidateData(data, true);
+		if (this->OnInvalidateData(data, true)) return true;
 	}
 	this->scheduled_invalidation_data.clear();
+	return false;
 }
 
 /**

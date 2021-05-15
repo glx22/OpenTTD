@@ -186,11 +186,13 @@ void TextfileWindow::SetupScrollbars(bool force_reflow)
 	this->SetupScrollbars(false);
 }
 
-/* virtual */ void TextfileWindow::OnInvalidateData(int data, bool gui_scope)
+/* virtual */ bool TextfileWindow::OnInvalidateData(int data, bool gui_scope)
 {
-	if (!gui_scope) return;
+	if (!gui_scope) return false;
 
 	this->SetupScrollbars(true);
+
+	return false;
 }
 
 /* virtual */ void TextfileWindow::Reset()

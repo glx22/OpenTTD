@@ -1494,10 +1494,11 @@ struct BuildVehicleWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		/* When switching to original acceleration model for road vehicles, clear the selected sort criteria if it is not available now. */
 		if (this->vehicle_type == VEH_ROAD &&
 				_settings_game.vehicle.roadveh_acceleration_model == AM_ORIGINAL &&
@@ -1506,6 +1507,7 @@ struct BuildVehicleWindow : Window {
 			_engine_sort_last_criteria[VEH_ROAD] = 0;
 		}
 		this->eng_list.ForceRebuild();
+		return false;
 	}
 
 	void SetStringParameters(int widget) const override

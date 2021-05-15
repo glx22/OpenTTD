@@ -617,16 +617,18 @@ struct NewGRFInspectWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		if (this->HasChainIndex()) {
 			this->ValidateChainIndex();
 			this->SetWidgetDisabledState(WID_NGRFI_VEH_PREV, this->chain_index == 0);
 			Vehicle *v = Vehicle::Get(this->GetFeatureIndex());
 			this->SetWidgetDisabledState(WID_NGRFI_VEH_NEXT, v == nullptr || v->Next() == nullptr);
 		}
+		return false;
 	}
 };
 
@@ -1013,15 +1015,17 @@ struct SpriteAlignerWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		if (data == 1) {
 			/* Sprite picker finished */
 			this->RaiseWidget(WID_SA_PICKER);
 			this->vscroll->SetCount((uint)_newgrf_debug_sprite_picker.sprites.size());
 		}
+		return false;
 	}
 
 	void OnResize() override

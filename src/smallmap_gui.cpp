@@ -1532,10 +1532,11 @@ int SmallMapWindow::GetPositionOnLegend(Point pt)
  * - data = 1: Companies have changed.
  * - data = 2: Cheat changing the maximum heightlevel has been used, rebuild our heightlevel-to-colour index
  * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+ * @return True iff window has been self deleted.
  */
-/* virtual */ void SmallMapWindow::OnInvalidateData(int data, bool gui_scope)
+/* virtual */ bool SmallMapWindow::OnInvalidateData(int data, bool gui_scope)
 {
-	if (!gui_scope) return;
+	if (!gui_scope) return false;
 
 	switch (data) {
 		case 1:
@@ -1560,6 +1561,7 @@ int SmallMapWindow::GetPositionOnLegend(Point pt)
 		default: NOT_REACHED();
 	}
 	this->SetDirty();
+	return false;
 }
 
 /* virtual */ bool SmallMapWindow::OnRightClick(Point pt, int widget)

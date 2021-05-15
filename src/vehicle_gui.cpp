@@ -891,8 +891,9 @@ struct RefitWindow : public Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		switch (data) {
 			case VIWD_AUTOREPLACE: // Autoreplace replaced the vehicle; selected_vehicle became invalid.
@@ -936,6 +937,7 @@ struct RefitWindow : public Window {
 				this->RefreshScrollbar();
 				break;
 		}
+		return false;
 	}
 
 	int GetClickPosition(int click_x)
@@ -1920,15 +1922,16 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (!gui_scope && HasBit(data, 31) && this->vli.type == VL_SHARED_ORDERS) {
 			/* Needs to be done in command-scope, so everything stays valid */
 			this->vli.index = GB(data, 0, 20);
 			this->window_number = this->vli.Pack();
 			this->vehgroups.ForceRebuild();
-			return;
+			return false;
 		}
 
 		if (data == 0) {
@@ -1937,6 +1940,7 @@ public:
 		} else {
 			this->vehgroups.ForceResort();
 		}
+		return false;
 	}
 };
 
@@ -2106,15 +2110,16 @@ struct VehicleDetailsWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (data == VIWD_AUTOREPLACE) {
 			/* Autoreplace replaced the vehicle.
 			 * Nothing to do for this window. */
-			return;
+			return false;
 		}
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		const Vehicle *v = Vehicle::Get(this->window_number);
 		if (v->type == VEH_ROAD) {
 			const NWidgetBase *nwid_info = this->GetWidget<NWidgetBase>(WID_VD_MIDDLE_DETAILS);
@@ -2124,6 +2129,7 @@ struct VehicleDetailsWindow : Window {
 				this->ReInit();
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -3025,16 +3031,18 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (data == VIWD_AUTOREPLACE) {
 			/* Autoreplace replaced the vehicle.
 			 * Nothing to do for this window. */
-			return;
+			return false;
 		}
 
 		this->UpdateButtonStatus();
+		return false;
 	}
 
 	bool IsNewGRFInspectable() const override

@@ -646,8 +646,9 @@ void LinkGraphLegendWindow::OnClick(Point pt, int widget, int click_count)
  * Invalidate the data of this window if the cargoes or companies have changed.
  * @param data ignored
  * @param gui_scope ignored
- */
-void LinkGraphLegendWindow::OnInvalidateData(int data, bool gui_scope)
+ * @return True iff window has been self deleted.
+*/
+/* virtual */ bool LinkGraphLegendWindow::OnInvalidateData(int data, bool gui_scope)
 {
 	/* Disable the companies who are not active */
 	for (CompanyID i = COMPANY_FIRST; i < MAX_COMPANIES; i++) {
@@ -656,4 +657,5 @@ void LinkGraphLegendWindow::OnInvalidateData(int data, bool gui_scope)
 	for (CargoID i = 0; i < NUM_CARGO; i++) {
 		this->SetWidgetDisabledState(i + WID_LGL_CARGO_FIRST, !CargoSpec::Get(i)->IsValid());
 	}
+	return false;
 }

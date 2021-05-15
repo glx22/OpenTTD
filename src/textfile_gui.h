@@ -46,7 +46,7 @@ struct TextfileWindow : public Window, MissingGlyphSearcher {
 	void OnClick(Point pt, int widget, int click_count) override;
 	void DrawWidget(const Rect &r, int widget) const override;
 	void OnResize() override;
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override;
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override;
 
 	void Reset() override;
 	FontSize DefaultSize() override;

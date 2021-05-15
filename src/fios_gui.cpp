@@ -800,8 +800,9 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		switch (data) {
 			case SLIWD_RESCAN_FILES:
@@ -877,6 +878,8 @@ public:
 				this->vscroll->SetCount(items_shown_count);
 				break;
 		}
+
+		return false;
 	}
 
 	void OnEditboxChanged(int wid) override

@@ -601,10 +601,11 @@ struct GameOptionsWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data. @see GameOptionsInvalidationData
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		this->SetWidgetLoweredState(WID_GO_FULLSCREEN_BUTTON, _fullscreen);
 		this->SetWidgetLoweredState(WID_GO_VIDEO_ACCEL_BUTTON, _video_hw_accel);
 
@@ -624,6 +625,8 @@ struct GameOptionsWindow : Window {
 
 		missing_files = BaseMusic::GetUsedSet()->GetNumInvalid() == 0;
 		this->GetWidget<NWidgetCore>(WID_GO_BASE_MUSIC_STATUS)->SetDataTip(missing_files ? STR_EMPTY : STR_GAME_OPTIONS_BASE_MUSIC_STATUS, STR_NULL);
+
+		return false;
 	}
 };
 
@@ -2411,9 +2414,9 @@ struct GameSettingsWindow : Window {
 		}
 	}
 
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		/* Update which settings are to be visible. */
 		RestrictionMode min_level = (this->filter.mode <= RM_ALL) ? this->filter.mode : RM_BASIC;
@@ -2439,6 +2442,8 @@ struct GameSettingsWindow : Window {
 		GetSettingsTree().GetFoldingState(all_folded, all_unfolded);
 		this->SetWidgetDisabledState(WID_GS_EXPAND_ALL, all_unfolded);
 		this->SetWidgetDisabledState(WID_GS_COLLAPSE_ALL, all_folded);
+
+		return false;
 	}
 
 	void OnEditboxChanged(int wid) override

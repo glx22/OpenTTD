@@ -91,14 +91,16 @@ struct GraphLegendWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
-		if (Company::IsValidID(data)) return;
+		if (!gui_scope) return false;
+		if (Company::IsValidID(data)) return false;
 
 		SetBit(_legend_excluded_companies, data);
 		this->RaiseWidget(data + WID_GL_FIRST_COMPANY);
+		return false;
 	}
 };
 
@@ -557,11 +559,13 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		this->UpdateStatistics(true);
+		return false;
 	}
 
 	/**
@@ -1035,11 +1039,13 @@ struct PaymentRatesGraphWindow : BaseGraphWindow {
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		this->OnHundredthTick();
+		return false;
 	}
 
 	void OnHundredthTick() override
@@ -1262,8 +1268,9 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		if (data == 0) {
 			/* This needs to be done in command-scope to enforce rebuilding before resorting invalid data */
@@ -1271,6 +1278,7 @@ public:
 		} else {
 			this->companies.ForceResort();
 		}
+		return false;
 	}
 };
 
@@ -1496,10 +1504,11 @@ struct PerformanceRatingDetailWindow : Window {
 	 * Some data on this window has become invalid.
 	 * @param data the company ID of the company that is going to be removed
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		/* Disable the companies who are not active */
 		for (CompanyID i = COMPANY_FIRST; i < MAX_COMPANIES; i++) {
 			this->SetWidgetDisabledState(i + WID_PRD_COMPANY_FIRST, !Company::IsValidID(i));
@@ -1521,6 +1530,8 @@ struct PerformanceRatingDetailWindow : Window {
 
 		/* Make sure the widget is lowered */
 		this->LowerWidget(this->company + WID_PRD_COMPANY_FIRST);
+
+		return false;
 	}
 };
 

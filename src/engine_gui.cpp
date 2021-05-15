@@ -133,12 +133,16 @@ struct EnginePreviewWindow : Window {
 		}
 	}
 
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		EngineID engine = this->window_number;
-		if (Engine::Get(engine)->preview_company != _local_company) delete this;
+		if (Engine::Get(engine)->preview_company != _local_company) {
+			delete this;
+			return true;
+		}
+		return false;
 	}
 };
 

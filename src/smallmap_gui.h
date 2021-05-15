@@ -183,7 +183,7 @@ public:
 	void OnPaint() override;
 	void DrawWidget(const Rect &r, int widget) const override;
 	void OnClick(Point pt, int widget, int click_count) override;
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override;
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override;
 	bool OnRightClick(Point pt, int widget) override;
 	void OnMouseWheel(int wheel) override;
 	void OnRealtimeTick(uint delta_ms) override;

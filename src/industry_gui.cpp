@@ -760,15 +760,17 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		this->SetupArrays();
 
 		const IndustrySpec *indsp = (this->selected_type == INVALID_INDUSTRYTYPE) ? nullptr : GetIndustrySpec(this->selected_type);
 		if (indsp == nullptr) this->enabled[this->selected_index] = _settings_game.difficulty.industry_density != ID_FUND_ONLY;
 		this->SetButtons();
+		return false;
 	}
 };
 
@@ -1137,10 +1139,11 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		const Industry *i = Industry::Get(this->window_number);
 		if (IsProductionAlterable(i)) {
 			const IndustrySpec *ind = GetIndustrySpec(i->type);
@@ -1148,6 +1151,7 @@ public:
 		} else {
 			this->editable = EA_NONE;
 		}
+		return false;
 	}
 
 	bool IsNewGRFInspectable() const override
@@ -1747,8 +1751,9 @@ public:
 	 * Some data on this window has become invalid.
 	 * @param data Information about the changed data.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
 		switch (data) {
 			case IDIWD_FORCE_REBUILD:
@@ -1764,6 +1769,7 @@ public:
 				this->industries.ForceResort();
 				break;
 		}
+		return false;
 	}
 };
 
@@ -2849,20 +2855,22 @@ struct IndustryCargoesWindow : public Window {
 	 * - data = 0 .. NUM_INDUSTRYTYPES - 1: Display the chain around the given industry.
 	 * - data = NUM_INDUSTRYTYPES: Stop sending updates to the smallmap window.
 	 * @param gui_scope Whether the call is done from GUI scope. You may not do everything when not in GUI scope. See #InvalidateWindowData() for details.
+	 * @return True iff window has been self deleted.
 	 */
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 		if (data == NUM_INDUSTRYTYPES) {
 			if (this->IsWidgetLowered(WID_IC_NOTIFY)) {
 				this->RaiseWidget(WID_IC_NOTIFY);
 				this->SetWidgetDirty(WID_IC_NOTIFY);
 			}
-			return;
+			return false;
 		}
 
 		assert(data >= 0 && data < NUM_INDUSTRYTYPES);
 		this->ComputeIndustryDisplay(data);
+		return false;
 	}
 
 	void DrawWidget(const Rect &r, int widget) const override

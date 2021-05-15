@@ -499,11 +499,13 @@ public:
 		this->SetDirty();
 	}
 
-	void OnInvalidateData(int data = 0, bool gui_scope = true) override
+	bool OnInvalidateData(int data = 0, bool gui_scope = true) override
 	{
-		if (!gui_scope) return;
+		if (!gui_scope) return false;
 
 		this->BuildObjectClassesAvailable();
+
+		return false;
 	}
 
 	void OnResize() override
