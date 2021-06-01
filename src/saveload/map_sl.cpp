@@ -295,7 +295,7 @@ static void Save_MAP8()
 
 
 static const ChunkHandler _map_chunk_handlers[] = {
-	{ 'MAPS', Save_MAPS, Load_MAPS, nullptr, Check_MAPS, CH_RIFF },
+	{ 'MAPS', Save_MAPS, Load_MAPS, nullptr, Check_MAPS, CH_RIFF, ChunkHandler::SETTINGS },
 	{ 'MAPT', Save_MAPT, Load_MAPT, nullptr, nullptr,    CH_RIFF },
 	{ 'MAPH', Save_MAPH, Load_MAPH, nullptr, nullptr,    CH_RIFF },
 	{ 'MAPO', Save_MAP1, Load_MAP1, nullptr, nullptr,    CH_RIFF },

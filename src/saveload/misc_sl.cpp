@@ -146,6 +146,6 @@ static void SaveLoad_VIEW()
 }
 
 static const ChunkHandler _misc_chunk_handlers[] = {
-	{ 'DATE', SaveLoad_DATE, SaveLoad_DATE, nullptr, Check_DATE, CH_RIFF },
+	{ 'DATE', SaveLoad_DATE, SaveLoad_DATE, nullptr, Check_DATE, CH_RIFF, ChunkHandler::SETTINGS },
 	{ 'VIEW', SaveLoad_VIEW, SaveLoad_VIEW, nullptr, nullptr,    CH_RIFF },
 };

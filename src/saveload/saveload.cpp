@@ -233,17 +233,16 @@ static const ChunkHandler *SlFindChunkHandler(uint32 id)
 	return nullptr;
 }
 
-ChunkHandler::ChunkHandler(uint32 id, ChunkSaveLoadProc *save_proc, ChunkSaveLoadProc *load_proc, ChunkSaveLoadProc *ptrs_proc, ChunkSaveLoadProc *load_check_proc, ChunkType type)
-	: id(id), save_proc(save_proc), load_proc(load_proc), ptrs_proc(ptrs_proc), load_check_proc(load_check_proc), type(type)
+ChunkHandler::ChunkHandler(uint32 id, ChunkSaveLoadProc *save_proc, ChunkSaveLoadProc *load_proc, ChunkSaveLoadProc *ptrs_proc, ChunkSaveLoadProc *load_check_proc, ChunkType type, ChunkPriority priority)
+	: id(id), save_proc(save_proc), load_proc(load_proc), ptrs_proc(ptrs_proc), load_check_proc(load_check_proc), type(type), priority(priority)
 {
 	if (_chunk_handlers == nullptr) _chunk_handlers = new std::vector<const ChunkHandler *>();
-	if (SlFindChunkHandler(id) != nullptr) error("%c%c%c%c ChunkHandler already defined.", id >> 24, id >> 16, id >> 8, id);
-	_chunk_handlers->push_back(this);
-}
+	auto it = _chunk_handlers->begin();
+	for (; it != _chunk_handlers->end(); it++) {
+		if (this->priority < (*it)->priority || (this->priority == (*it)->priority && this->id < (*it)->id)) break;
+	}
 
-ChunkHandler::~ChunkHandler()
-{
-	_chunk_handlers->erase(std::find(_chunk_handlers->begin(), _chunk_handlers->end(), this));
+	_chunk_handlers->insert(it, this);
 }
 
 /** Null all pointers (convert index -> nullptr) */

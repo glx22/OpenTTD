@@ -169,5 +169,5 @@ static void Check_GLOG()
 }
 
 static const ChunkHandler _gamelog_chunk_handlers[] = {
-	{ 'GLOG', Save_GLOG, Load_GLOG, nullptr, Check_GLOG, CH_RIFF }
+	{ 'GLOG', Save_GLOG, Load_GLOG, nullptr, Check_GLOG, CH_RIFF, ChunkHandler::GAMELOG }
 };

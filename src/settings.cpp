@@ -2086,8 +2086,8 @@ static void Save_PATS()
 }
 
 static const ChunkHandler _setting_chunk_handlers[] = {
-	{ 'OPTS', nullptr,   Load_OPTS, nullptr, nullptr,    CH_RIFF },
-	{ 'PATS', Save_PATS, Load_PATS, nullptr, Check_PATS, CH_RIFF },
+	{ 'OPTS', nullptr,   Load_OPTS, nullptr, nullptr,    CH_RIFF, ChunkHandler::SETTINGS },
+	{ 'PATS', Save_PATS, Load_PATS, nullptr, Check_PATS, CH_RIFF, ChunkHandler::SETTINGS },
 };
 
 static bool IsSignedVarMemType(VarType vt)

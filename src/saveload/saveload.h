@@ -387,8 +387,13 @@ enum ChunkType {
 
 /** Handlers and description of chunk. */
 struct ChunkHandler {
-	ChunkHandler(uint32 id, ChunkSaveLoadProc *save_proc, ChunkSaveLoadProc *load_proc, ChunkSaveLoadProc *ptrs_proc, ChunkSaveLoadProc *load_check_proc, ChunkType type);
-	~ChunkHandler();
+	enum ChunkPriority : uint8 {
+		GAMELOG,
+		SETTINGS,
+		NORMAL
+	};
+
+	ChunkHandler(uint32 id, ChunkSaveLoadProc *save_proc, ChunkSaveLoadProc *load_proc, ChunkSaveLoadProc *ptrs_proc, ChunkSaveLoadProc *load_check_proc, ChunkType type, ChunkPriority priority = NORMAL);
 
 	uint32 id;                          ///< Unique ID (4 letters).
 	ChunkSaveLoadProc *save_proc;       ///< Save procedure of the chunk.
@@ -396,6 +401,7 @@ struct ChunkHandler {
 	ChunkSaveLoadProc *ptrs_proc;       ///< Manipulate pointers in the chunk.
 	ChunkSaveLoadProc *load_check_proc; ///< Load procedure for game preview.
 	ChunkType type;                     ///< Type of the chunk. @see ChunkType
+	ChunkPriority priority;
 };
 
 /** Type of reference (#SLE_REF, #SLE_CONDREF). */

@@ -112,5 +112,5 @@ static void Check_NGRF()
 }
 
 static const ChunkHandler _newgrf_chunk_handlers[] = {
-	{ 'NGRF', Save_NGRF, Load_NGRF, nullptr, Check_NGRF, CH_ARRAY }
+	{ 'NGRF', Save_NGRF, Load_NGRF, nullptr, Check_NGRF, CH_ARRAY, ChunkHandler::SETTINGS }
 };
