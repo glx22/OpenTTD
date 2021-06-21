@@ -121,16 +121,16 @@ CommandCost CmdBuildVehicle(TileIndex tile, DoCommandFlag flags, uint32 p1, uint
 	}
 	if (!Vehicle::CanAllocateItem(num_vehicles)) return_cmd_error(STR_ERROR_TOO_MANY_VEHICLES_IN_GAME);
 
-	/* Check whether we can allocate a unit number. Autoreplace does not allocate
-	 * an unit number as it will (always) reuse the one of the replaced vehicle
-	 * and (train) wagons don't have an unit number in any scenario. */
-	UnitID unit_num = (flags & DC_AUTOREPLACE || (type == VEH_TRAIN && e->u.rail.railveh_type == RAILVEH_WAGON)) ? 0 : GetFreeUnitNumber(type);
-	if (unit_num == UINT16_MAX) return_cmd_error(STR_ERROR_TOO_MANY_VEHICLES_IN_GAME);
-
 	/* If we are refitting we need to temporarily purchase the vehicle to be able to
 	 * test it. */
 	DoCommandFlag subflags = flags;
 	if (refitting && !(flags & DC_EXEC)) subflags |= DC_EXEC | DC_AUTOREPLACE;
+
+	/* Check whether we can allocate a unit number. Autoreplace does not allocate
+	 * an unit number as it will (always) reuse the one of the replaced vehicle
+	 * and (train) wagons don't have an unit number in any scenario. */
+	UnitID unit_num = (subflags & DC_AUTOREPLACE || (type == VEH_TRAIN && e->u.rail.railveh_type == RAILVEH_WAGON)) ? 0 : GetFreeUnitNumber(type);
+	if (unit_num == UINT16_MAX) return_cmd_error(STR_ERROR_TOO_MANY_VEHICLES_IN_GAME);
 
 	/* Vehicle construction needs random bits, so we have to save the random
 	 * seeds to prevent desyncs. */
