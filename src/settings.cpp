@@ -1710,14 +1710,14 @@ static const SettingDesc *GetSettingFromName(const std::string_view name, const 
 	/* First check all full names */
 	for (auto &sd : settings) {
 		if (!SlIsObjectCurrentlyValid(sd->save.version_from, sd->save.version_to)) continue;
-		if (sd->name == name) return sd.get();
+		if (sd->name == name) return sd;
 	}
 
 	/* Then check the shortcut variant of the name. */
 	std::string short_name_suffix = std::string{ "." }.append(name);
 	for (auto &sd : settings) {
 		if (!SlIsObjectCurrentlyValid(sd->save.version_from, sd->save.version_to)) continue;
-		if (StrEndsWith(sd->name, short_name_suffix)) return sd.get();
+		if (StrEndsWith(sd->name, short_name_suffix)) return sd;
 	}
 
 	return nullptr;
