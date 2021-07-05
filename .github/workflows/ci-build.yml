@@ -77,7 +77,7 @@ jobs:
           libsdl: libsdl1.2-dev
         - compiler: gcc
           cxxcompiler: g++
-          extra-cmake-parameters: -DOPTION_DEDICATED=ON
+          extra-cmake-parameters: -DOPTION_DEDICATED=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
     runs-on: ubuntu-20.04
     env:
