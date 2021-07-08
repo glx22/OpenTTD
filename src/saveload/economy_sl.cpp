@@ -121,15 +121,10 @@ struct CAPYChunkHandler : ChunkHandler {
 	}
 };
 
-static const CAPYChunkHandler CAPY;
-static const PRICChunkHandler PRIC;
-static const CAPRChunkHandler CAPR;
-static const ECMYChunkHandler ECMY;
-static const ChunkHandlerRef economy_chunk_handlers[] = {
-	CAPY,
-	PRIC,
-	CAPR,
-	ECMY,
-};
-
-extern const ChunkHandlerTable _economy_chunk_handlers(economy_chunk_handlers);
+extern void RegisterEconomyChunks()
+{
+	static const CAPYChunkHandler CAPY;
+	static const PRICChunkHandler PRIC;
+	static const CAPRChunkHandler CAPR;
+	static const ECMYChunkHandler ECMY;
+}

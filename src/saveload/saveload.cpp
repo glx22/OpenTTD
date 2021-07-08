@@ -216,91 +216,81 @@ struct SaveLoadParams {
 
 static SaveLoadParams _sl; ///< Parameters used for/at saveload.
 
-static const std::vector<ChunkHandlerRef> &ChunkHandlers()
+/* static */ std::vector<ChunkHandler::Ref> ChunkHandler::handlers;
+/* static */ const std::vector<ChunkHandler::Ref> &ChunkHandler::Handlers()
 {
 	/* These define the chunks */
-	extern const ChunkHandlerTable _gamelog_chunk_handlers;
-	extern const ChunkHandlerTable _map_chunk_handlers;
-	extern const ChunkHandlerTable _misc_chunk_handlers;
-	extern const ChunkHandlerTable _name_chunk_handlers;
-	extern const ChunkHandlerTable _cheat_chunk_handlers;
-	extern const ChunkHandlerTable _setting_chunk_handlers;
-	extern const ChunkHandlerTable _company_chunk_handlers;
-	extern const ChunkHandlerTable _engine_chunk_handlers;
-	extern const ChunkHandlerTable _veh_chunk_handlers;
-	extern const ChunkHandlerTable _waypoint_chunk_handlers;
-	extern const ChunkHandlerTable _depot_chunk_handlers;
-	extern const ChunkHandlerTable _order_chunk_handlers;
-	extern const ChunkHandlerTable _town_chunk_handlers;
-	extern const ChunkHandlerTable _sign_chunk_handlers;
-	extern const ChunkHandlerTable _station_chunk_handlers;
-	extern const ChunkHandlerTable _industry_chunk_handlers;
-	extern const ChunkHandlerTable _economy_chunk_handlers;
-	extern const ChunkHandlerTable _subsidy_chunk_handlers;
-	extern const ChunkHandlerTable _cargomonitor_chunk_handlers;
-	extern const ChunkHandlerTable _goal_chunk_handlers;
-	extern const ChunkHandlerTable _story_page_chunk_handlers;
-	extern const ChunkHandlerTable _ai_chunk_handlers;
-	extern const ChunkHandlerTable _game_chunk_handlers;
-	extern const ChunkHandlerTable _animated_tile_chunk_handlers;
-	extern const ChunkHandlerTable _newgrf_chunk_handlers;
-	extern const ChunkHandlerTable _group_chunk_handlers;
-	extern const ChunkHandlerTable _cargopacket_chunk_handlers;
-	extern const ChunkHandlerTable _autoreplace_chunk_handlers;
-	extern const ChunkHandlerTable _labelmaps_chunk_handlers;
-	extern const ChunkHandlerTable _linkgraph_chunk_handlers;
-	extern const ChunkHandlerTable _airport_chunk_handlers;
-	extern const ChunkHandlerTable _object_chunk_handlers;
-	extern const ChunkHandlerTable _persistent_storage_chunk_handlers;
+	extern void RegisterGamelogChunks();
+	extern void RegisterMapChunks();
+	extern void RegisterMiscChunks();
+	extern void RegisterStringsChunks();
+	extern void RegisterCheatChunks();
+	extern void RegisterSettingsChunks();
+	extern void RegisterCompanyChunks();
+	extern void RegisterEngineChunks();
+	extern void RegisterVehicleChunks();
+	extern void RegisterWaypointChunks();
+	extern void RegisterDepotChunks();
+	extern void RegisterOrderChunks();
+	extern void RegisterTownChunks();
+	extern void RegisterSignsChunks();
+	extern void RegisterStationChunks();
+	extern void RegisterIndustryChunks();
+	extern void RegisterEconomyChunks();
+	extern void RegisterSubsidyChunks();
+	extern void RegisterCargomonitorChunks();
+	extern void RegisterGoalChunks();
+	extern void RegisterStoryChunks();
+	extern void RegisterAiChunks();
+	extern void RegisterGameChunks();
+	extern void RegisterAnimatedTileChunks();
+	extern void RegisterNewgrfChunks();
+	extern void RegisterGroupChunks();
+	extern void RegisterCargopacketChunks();
+	extern void RegisterAutoreplaceChunks();
+	extern void RegisterLabelmapsChunks();
+	extern void RegisterLinkgraphChunks();
+	extern void RegisterAirportChunks();
+	extern void RegisterObjectChunks();
+	extern void RegisterStorageChunks();
 
-	/** List of all chunks in a savegame. */
-	static const ChunkHandlerTable _chunk_handler_tables[] = {
-		_gamelog_chunk_handlers,
-		_map_chunk_handlers,
-		_misc_chunk_handlers,
-		_name_chunk_handlers,
-		_cheat_chunk_handlers,
-		_setting_chunk_handlers,
-		_veh_chunk_handlers,
-		_waypoint_chunk_handlers,
-		_depot_chunk_handlers,
-		_order_chunk_handlers,
-		_industry_chunk_handlers,
-		_economy_chunk_handlers,
-		_subsidy_chunk_handlers,
-		_cargomonitor_chunk_handlers,
-		_goal_chunk_handlers,
-		_story_page_chunk_handlers,
-		_engine_chunk_handlers,
-		_town_chunk_handlers,
-		_sign_chunk_handlers,
-		_station_chunk_handlers,
-		_company_chunk_handlers,
-		_ai_chunk_handlers,
-		_game_chunk_handlers,
-		_animated_tile_chunk_handlers,
-		_newgrf_chunk_handlers,
-		_group_chunk_handlers,
-		_cargopacket_chunk_handlers,
-		_autoreplace_chunk_handlers,
-		_labelmaps_chunk_handlers,
-		_linkgraph_chunk_handlers,
-		_airport_chunk_handlers,
-		_object_chunk_handlers,
-		_persistent_storage_chunk_handlers,
-	};
-
-	static std::vector<ChunkHandlerRef> _chunk_handlers;
-
-	if (_chunk_handlers.empty()) {
-		for (auto &chunk_handler_table : _chunk_handler_tables) {
-			for (auto &chunk_handler : chunk_handler_table) {
-				_chunk_handlers.push_back(chunk_handler);
-			}
-		}
+	if (ChunkHandler::handlers.empty()) {
+		RegisterGamelogChunks();
+		RegisterMapChunks();
+		RegisterMiscChunks();
+		RegisterStringsChunks();
+		RegisterCheatChunks();
+		RegisterSettingsChunks();
+		RegisterCompanyChunks();
+		RegisterEngineChunks();
+		RegisterVehicleChunks();
+		RegisterWaypointChunks();
+		RegisterDepotChunks();
+		RegisterOrderChunks();
+		RegisterTownChunks();
+		RegisterSignsChunks();
+		RegisterStationChunks();
+		RegisterIndustryChunks();
+		RegisterEconomyChunks();
+		RegisterSubsidyChunks();
+		RegisterCargomonitorChunks();
+		RegisterGoalChunks();
+		RegisterStoryChunks();
+		RegisterAiChunks();
+		RegisterGameChunks();
+		RegisterAnimatedTileChunks();
+		RegisterNewgrfChunks();
+		RegisterGroupChunks();
+		RegisterCargopacketChunks();
+		RegisterAutoreplaceChunks();
+		RegisterLabelmapsChunks();
+		RegisterLinkgraphChunks();
+		RegisterAirportChunks();
+		RegisterObjectChunks();
+		RegisterStorageChunks();
 	}
 
-	return _chunk_handlers;
+	return ChunkHandler::handlers;
 }
 
 /** Null all pointers (convert index -> nullptr) */
@@ -313,7 +303,7 @@ static void SlNullPointers()
 	 * pointers from other pools. */
 	_sl_version = SAVEGAME_VERSION;
 
-	for (const ChunkHandler &ch : ChunkHandlers()) {
+	for (const ChunkHandler &ch : ChunkHandler::Handlers()) {
 		Debug(sl, 3, "Nulling pointers for {:c}{:c}{:c}{:c}", ch.id >> 24, ch.id >> 16, ch.id >> 8, ch.id);
 		ch.FixPointers();
 	}
@@ -2272,7 +2262,7 @@ static void SlSaveChunk(const ChunkHandler &ch)
 /** Save all chunks */
 static void SlSaveChunks()
 {
-	for (auto &ch : ChunkHandlers()) {
+	for (auto &ch : ChunkHandler::Handlers()) {
 		SlSaveChunk(ch);
 	}
 
@@ -2288,7 +2278,7 @@ static void SlSaveChunks()
  */
 static const ChunkHandler *SlFindChunkHandler(uint32 id)
 {
-	for (const ChunkHandler &ch : ChunkHandlers()) if (ch.id == id) return &ch;
+	for (const ChunkHandler &ch : ChunkHandler::Handlers()) if (ch.id == id) return &ch;
 	return nullptr;
 }
 
@@ -2327,7 +2317,7 @@ static void SlFixPointers()
 {
 	_sl.action = SLA_PTRS;
 
-	for (const ChunkHandler &ch : ChunkHandlers()) {
+	for (const ChunkHandler &ch : ChunkHandler::Handlers()) {
 		Debug(sl, 3, "Fixing pointers for {:c}{:c}{:c}{:c}", ch.id >> 24, ch.id >> 16, ch.id >> 8, ch.id);
 		ch.FixPointers();
 	}

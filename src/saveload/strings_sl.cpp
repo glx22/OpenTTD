@@ -131,9 +131,7 @@ struct NAMEChunkHandler : ChunkHandler {
 	}
 };
 
-static const NAMEChunkHandler NAME;
-static const ChunkHandlerRef name_chunk_handlers[] = {
-	NAME,
-};
-
-extern const ChunkHandlerTable _name_chunk_handlers(name_chunk_handlers);
+extern void RegisterStringsChunks()
+{
+	static const NAMEChunkHandler NAME;
+}

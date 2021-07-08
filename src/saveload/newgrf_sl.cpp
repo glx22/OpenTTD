@@ -123,9 +123,7 @@ struct NGRFChunkHandler : ChunkHandler {
 	}
 };
 
-static const NGRFChunkHandler NGRF;
-static const ChunkHandlerRef newgrf_chunk_handlers[] = {
-	NGRF,
-};
-
-extern const ChunkHandlerTable _newgrf_chunk_handlers(newgrf_chunk_handlers);
+extern void RegisterNewgrfChunks()
+{
+	static const NGRFChunkHandler NGRF;
+}

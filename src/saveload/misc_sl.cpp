@@ -160,11 +160,8 @@ struct VIEWChunkHandler : ChunkHandler {
 	}
 };
 
-static const DATEChunkHandler DATE;
-static const VIEWChunkHandler VIEW;
-static const ChunkHandlerRef misc_chunk_handlers[] = {
-	DATE,
-	VIEW,
-};
-
-extern const ChunkHandlerTable _misc_chunk_handlers(misc_chunk_handlers);
+extern void RegisterMiscChunks()
+{
+	static const DATEChunkHandler DATE;
+	static const VIEWChunkHandler VIEW;
+}

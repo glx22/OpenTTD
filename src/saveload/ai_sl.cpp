@@ -131,9 +131,7 @@ struct AIPLChunkHandler : ChunkHandler {
 	}
 };
 
-static const AIPLChunkHandler AIPL;
-static const ChunkHandlerRef ai_chunk_handlers[] = {
-	AIPL,
-};
-
-extern const ChunkHandlerTable _ai_chunk_handlers(ai_chunk_handlers);
+extern void RegisterAiChunks()
+{
+	static const AIPLChunkHandler AIPL;
+}

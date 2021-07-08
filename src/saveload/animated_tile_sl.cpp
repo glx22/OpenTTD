@@ -66,10 +66,7 @@ struct ANITChunkHandler : ChunkHandler {
 	}
 };
 
-
-static const ANITChunkHandler ANIT;
-static const ChunkHandlerRef animated_tile_chunk_handlers[] = {
-	ANIT,
-};
-
-extern const ChunkHandlerTable _animated_tile_chunk_handlers(animated_tile_chunk_handlers);
+extern void RegisterAnimatedTileChunks()
+{
+	static const ANITChunkHandler ANIT;
+}

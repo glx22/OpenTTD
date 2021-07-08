@@ -131,10 +131,7 @@ struct RAILChunkHandler : ChunkHandler {
 	}
 };
 
-static const RAILChunkHandler RAIL;
-static const ChunkHandlerRef labelmaps_chunk_handlers[] = {
-	RAIL,
-};
-
-extern const ChunkHandlerTable _labelmaps_chunk_handlers(labelmaps_chunk_handlers);
-
+extern void RegisterLabelmapsChunks()
+{
+	static const RAILChunkHandler RAIL;
+}

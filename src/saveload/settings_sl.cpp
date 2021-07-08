@@ -204,11 +204,8 @@ struct PATSChunkHandler : ChunkHandler {
 	}
 };
 
-static const OPTSChunkHandler OPTS;
-static const PATSChunkHandler PATS;
-static const ChunkHandlerRef setting_chunk_handlers[] = {
-	OPTS,
-	PATS,
-};
-
-extern const ChunkHandlerTable _setting_chunk_handlers(setting_chunk_handlers);
+extern void RegisterSettingsChunks()
+{
+	static const OPTSChunkHandler OPTS;
+	static const PATSChunkHandler PATS;
+}

@@ -1066,9 +1066,7 @@ struct VEHSChunkHandler : ChunkHandler {
 	}
 };
 
-static const VEHSChunkHandler VEHS;
-static const ChunkHandlerRef veh_chunk_handlers[] = {
-	VEHS,
-};
-
-extern const ChunkHandlerTable _veh_chunk_handlers(veh_chunk_handlers);
+extern void RegisterVehicleChunks()
+{
+	static const VEHSChunkHandler VEHS;
+}

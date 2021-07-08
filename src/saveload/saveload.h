@@ -406,7 +406,10 @@ struct ChunkHandler {
 	uint32 id;                          ///< Unique ID (4 letters).
 	ChunkType type;                     ///< Type of the chunk. @see ChunkType
 
-	ChunkHandler(uint32 id, ChunkType type) : id(id), type(type) {}
+	ChunkHandler(uint32 id, ChunkType type) : id(id), type(type)
+	{
+		this->handlers.push_back(*this);
+	}
 
 	virtual ~ChunkHandler() {}
 
@@ -436,13 +439,19 @@ struct ChunkHandler {
 	 * @param len Number of bytes to skip.
 	 */
 	virtual void LoadCheck(size_t len = 0) const;
+
+	/** A reference to ChunkHandler. */
+	using Ref = std::reference_wrapper<const ChunkHandler>;
+
+	/**
+	 * Register chunk handlers and return the list.
+	 * @return The list of all registered chunk handlers.
+	 */
+	static const std::vector<ChunkHandler::Ref> &Handlers();
+
+private:
+	static std::vector<ChunkHandler::Ref> handlers; ///< List of registered chunk handlers. 
 };
-
-/** A reference to ChunkHandler. */
-using ChunkHandlerRef = std::reference_wrapper<const ChunkHandler>;
-
-/** A table of ChunkHandler entries. */
-using ChunkHandlerTable = span<const ChunkHandlerRef>;
 
 /** A table of SaveLoad entries. */
 using SaveLoadTable = span<const struct SaveLoad>;

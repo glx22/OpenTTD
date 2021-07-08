@@ -196,11 +196,8 @@ struct GSTRChunkHandler : ChunkHandler {
 	}
 };
 
-static const GSTRChunkHandler GSTR;
-static const GSDTChunkHandler GSDT;
-static const ChunkHandlerRef game_chunk_handlers[] = {
-	GSTR,
-	GSDT,
-};
-
-extern const ChunkHandlerTable _game_chunk_handlers(game_chunk_handlers);
+extern void RegisterGameChunks()
+{
+	static const GSTRChunkHandler GSTR;
+	static const GSDTChunkHandler GSDT;
+}

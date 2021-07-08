@@ -326,13 +326,9 @@ struct LGRSChunkHandler : ChunkHandler {
 	}
 };
 
-static const LGRPChunkHandler LGRP;
-static const LGRJChunkHandler LGRJ;
-static const LGRSChunkHandler LGRS;
-static const ChunkHandlerRef linkgraph_chunk_handlers[] = {
-	LGRP,
-	LGRJ,
-	LGRS,
-};
-
-extern const ChunkHandlerTable _linkgraph_chunk_handlers(linkgraph_chunk_handlers);
+extern void RegisterLinkgraphChunks()
+{
+	static const LGRPChunkHandler LGRP;
+	static const LGRJChunkHandler LGRJ;
+	static const LGRSChunkHandler LGRS;
+}

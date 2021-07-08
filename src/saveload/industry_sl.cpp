@@ -192,17 +192,11 @@ struct ITBLChunkHandler : ChunkHandler {
 	}
 };
 
-static const INDYChunkHandler INDY;
-static const IIDSChunkHandler IIDS;
-static const TIDSChunkHandler TIDS;
-static const IBLDChunkHandler IBLD;
-static const ITBLChunkHandler ITBL;
-static const ChunkHandlerRef industry_chunk_handlers[] = {
-	INDY,
-	IIDS,
-	TIDS,
-	IBLD,
-	ITBL,
-};
-
-extern const ChunkHandlerTable _industry_chunk_handlers(industry_chunk_handlers);
+extern void RegisterIndustryChunks()
+{
+	static const INDYChunkHandler INDY;
+	static const IIDSChunkHandler IIDS;
+	static const TIDSChunkHandler TIDS;
+	static const IBLDChunkHandler IBLD;
+	static const ITBLChunkHandler ITBL;
+}

@@ -65,9 +65,7 @@ struct ERNWChunkHandler : ChunkHandler {
 	}
 };
 
-static const ERNWChunkHandler ERNW;
-static const ChunkHandlerRef autoreplace_chunk_handlers[] = {
-	ERNW,
-};
-
-extern const ChunkHandlerTable _autoreplace_chunk_handlers(autoreplace_chunk_handlers);
+extern void RegisterAutoreplaceChunks()
+{
+	static const ERNWChunkHandler ERNW;
+}

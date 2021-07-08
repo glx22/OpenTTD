@@ -53,9 +53,7 @@ struct PSACChunkHandler : ChunkHandler {
 	}
 };
 
-static const PSACChunkHandler PSAC;
-static const ChunkHandlerRef persistent_storage_chunk_handlers[] = {
-	PSAC,
-};
-
-extern const ChunkHandlerTable _persistent_storage_chunk_handlers(persistent_storage_chunk_handlers);
+extern void RegisterStorageChunks()
+{
+	static const PSACChunkHandler PSAC;
+}

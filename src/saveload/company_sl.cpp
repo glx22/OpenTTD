@@ -562,9 +562,7 @@ struct PLYRChunkHandler : ChunkHandler {
 	}
 };
 
-static const PLYRChunkHandler PLYR;
-static const ChunkHandlerRef company_chunk_handlers[] = {
-	PLYR,
-};
-
-extern const ChunkHandlerTable _company_chunk_handlers(company_chunk_handlers);
+extern void RegisterCompanyChunks()
+{
+	static const PLYRChunkHandler PLYR;
+}
