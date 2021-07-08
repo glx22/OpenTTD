@@ -310,13 +310,9 @@ struct BKORChunkHandler : ChunkHandler {
 	}
 };
 
-static const BKORChunkHandler BKOR;
-static const ORDRChunkHandler ORDR;
-static const ORDLChunkHandler ORDL;
-static const ChunkHandlerRef order_chunk_handlers[] = {
-	BKOR,
-	ORDR,
-	ORDL,
-};
-
-extern const ChunkHandlerTable _order_chunk_handlers(order_chunk_handlers);
+extern void RegisterOrderChunks()
+{
+	static const BKORChunkHandler BKOR;
+	static const ORDRChunkHandler ORDR;
+	static const ORDLChunkHandler ORDL;
+}

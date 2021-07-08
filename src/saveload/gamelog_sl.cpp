@@ -405,9 +405,7 @@ struct GLOGChunkHandler : ChunkHandler {
 	}
 };
 
-static const GLOGChunkHandler GLOG;
-static const ChunkHandlerRef gamelog_chunk_handlers[] = {
-	GLOG,
-};
-
-extern const ChunkHandlerTable _gamelog_chunk_handlers(gamelog_chunk_handlers);
+extern void RegisterGamelogChunks()
+{
+	static const GLOGChunkHandler GLOG;
+}

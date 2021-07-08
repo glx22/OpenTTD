@@ -74,9 +74,7 @@ struct CHTSChunkHandler : ChunkHandler {
 	}
 };
 
-static const CHTSChunkHandler CHTS;
-static const ChunkHandlerRef cheat_chunk_handlers[] = {
-	CHTS,
-};
-
-extern const ChunkHandlerTable _cheat_chunk_handlers(cheat_chunk_handlers);
+extern void RegisterCheatChunks()
+{
+	static const CHTSChunkHandler CHTS;
+}

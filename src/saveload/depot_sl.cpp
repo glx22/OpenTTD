@@ -66,9 +66,7 @@ struct DEPTChunkHandler : ChunkHandler {
 	}
 };
 
-static const DEPTChunkHandler DEPT;
-static const ChunkHandlerRef depot_chunk_handlers[] = {
-	DEPT,
-};
-
-extern const ChunkHandlerTable _depot_chunk_handlers(depot_chunk_handlers);
+extern void RegisterDepotChunks()
+{
+	static const DEPTChunkHandler DEPT;
+}

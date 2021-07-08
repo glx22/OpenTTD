@@ -113,11 +113,8 @@ struct STPAChunkHandler : ChunkHandler {
 	}
 };
 
-static const STPEChunkHandler STPE;
-static const STPAChunkHandler STPA;
-static const ChunkHandlerRef story_page_chunk_handlers[] = {
-	STPE,
-	STPA,
-};
-
-extern const ChunkHandlerTable _story_page_chunk_handlers(story_page_chunk_handlers);
+extern void RegisterStoryChunks()
+{
+	static const STPEChunkHandler STPE;
+	static const STPAChunkHandler STPA;
+}

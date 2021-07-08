@@ -228,9 +228,7 @@ struct CHKPChunkHandler : ChunkHandler {
 	}
 };
 
-static const CHKPChunkHandler CHKP;
-static const ChunkHandlerRef waypoint_chunk_handlers[] = {
-	CHKP,
-};
-
-extern const ChunkHandlerTable _waypoint_chunk_handlers(waypoint_chunk_handlers);
+extern void RegisterWaypointChunks()
+{
+	static const CHKPChunkHandler CHKP;
+}

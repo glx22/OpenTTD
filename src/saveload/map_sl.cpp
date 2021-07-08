@@ -353,29 +353,17 @@ struct MAP8ChunkHandler : ChunkHandler {
 	}
 };
 
-static const MAPSChunkHandler MAPS;
-static const MAPTChunkHandler MAPT;
-static const MAPHChunkHandler MAPH;
-static const MAPOChunkHandler MAPO;
-static const MAP2ChunkHandler MAP2;
-static const M3LOChunkHandler M3LO;
-static const M3HIChunkHandler M3HI;
-static const MAP5ChunkHandler MAP5;
-static const MAPEChunkHandler MAPE;
-static const MAP7ChunkHandler MAP7;
-static const MAP8ChunkHandler MAP8;
-static const ChunkHandlerRef map_chunk_handlers[] = {
-	MAPS,
-	MAPT,
-	MAPH,
-	MAPO,
-	MAP2,
-	M3LO,
-	M3HI,
-	MAP5,
-	MAPE,
-	MAP7,
-	MAP8,
-};
-
-extern const ChunkHandlerTable _map_chunk_handlers(map_chunk_handlers);
+extern void RegisterMapChunks()
+{
+	static const MAPSChunkHandler MAPS;
+	static const MAPTChunkHandler MAPT;
+	static const MAPHChunkHandler MAPH;
+	static const MAPOChunkHandler MAPO;
+	static const MAP2ChunkHandler MAP2;
+	static const M3LOChunkHandler M3LO;
+	static const M3HIChunkHandler M3HI;
+	static const MAP5ChunkHandler MAP5;
+	static const MAPEChunkHandler MAPE;
+	static const MAP7ChunkHandler MAP7;
+	static const MAP8ChunkHandler MAP8;
+}

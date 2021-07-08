@@ -63,9 +63,7 @@ struct GRPSChunkHandler : ChunkHandler {
 	}
 };
 
-static const GRPSChunkHandler GRPS;
-static const ChunkHandlerRef group_chunk_handlers[] = {
-	GRPS,
-};
-
-extern const ChunkHandlerTable _group_chunk_handlers(group_chunk_handlers);
+extern void RegisterGroupChunks()
+{
+	static const GRPSChunkHandler GRPS;
+}

@@ -732,13 +732,9 @@ struct ROADChunkHandler : ChunkHandler {
 	}
 };
 
-static const STNSChunkHandler STNS;
-static const STNNChunkHandler STNN;
-static const ROADChunkHandler ROAD;
-static const ChunkHandlerRef station_chunk_handlers[] = {
-	STNS,
-	STNN,
-	ROAD,
-};
-
-extern const ChunkHandlerTable _station_chunk_handlers(station_chunk_handlers);
+extern void RegisterStationChunks()
+{
+	static const STNSChunkHandler STNS;
+	static const STNNChunkHandler STNN;
+	static const ROADChunkHandler ROAD;
+}

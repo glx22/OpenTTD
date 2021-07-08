@@ -132,11 +132,8 @@ struct CMPUChunkHandler : ChunkHandler {
 };
 
 /** Chunk definition of the cargomonitoring maps. */
-static const CMDLChunkHandler CMDL;
-static const CMPUChunkHandler CMPU;
-static const ChunkHandlerRef cargomonitor_chunk_handlers[] = {
-	CMDL,
-	CMPU,
-};
-
-extern const ChunkHandlerTable _cargomonitor_chunk_handlers(cargomonitor_chunk_handlers);
+extern void RegisterCargomonitorChunks()
+{
+	static const CMDLChunkHandler CMDL;
+	static const CMPUChunkHandler CMPU;
+}

@@ -22,11 +22,8 @@ struct ATIDChunkHandler : NewGRFMappingChunkHandler {
 	ATIDChunkHandler() : NewGRFMappingChunkHandler('ATID', _airporttile_mngr) {}
 };
 
-static const ATIDChunkHandler ATID;
-static const APIDChunkHandler APID;
-static const ChunkHandlerRef airport_chunk_handlers[] = {
-	ATID,
-	APID,
-};
-
-extern const ChunkHandlerTable _airport_chunk_handlers(airport_chunk_handlers);
+extern void RegisterAirportChunks()
+{
+	static const ATIDChunkHandler ATID;
+	static const APIDChunkHandler APID;
+}

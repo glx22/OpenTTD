@@ -54,9 +54,7 @@ struct SUBSChunkHandler : ChunkHandler {
 	}
 };
 
-static const SUBSChunkHandler SUBS;
-static const ChunkHandlerRef subsidy_chunk_handlers[] = {
-	SUBS,
-};
-
-extern const ChunkHandlerTable _subsidy_chunk_handlers(subsidy_chunk_handlers);
+extern void RegisterSubsidyChunks()
+{
+	static const SUBSChunkHandler SUBS;
+}

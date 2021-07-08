@@ -69,9 +69,7 @@ struct SIGNChunkHandler : ChunkHandler {
 	}
 };
 
-static const SIGNChunkHandler SIGN;
-static const ChunkHandlerRef sign_chunk_handlers[] = {
-	SIGN,
-};
-
-extern const ChunkHandlerTable _sign_chunk_handlers(sign_chunk_handlers);
+extern void RegisterSignsChunks()
+{
+	static const SIGNChunkHandler SIGN;
+}

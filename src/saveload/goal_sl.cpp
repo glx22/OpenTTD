@@ -50,9 +50,7 @@ struct GOALChunkHandler : ChunkHandler {
 	}
 };
 
-static const GOALChunkHandler GOAL;
-static const ChunkHandlerRef goal_chunk_handlers[] = {
-	GOAL,
-};
-
-extern const ChunkHandlerTable _goal_chunk_handlers(goal_chunk_handlers);
+extern void RegisterGoalChunks()
+{
+	static const GOALChunkHandler GOAL;
+}

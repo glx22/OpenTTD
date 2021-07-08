@@ -126,9 +126,7 @@ struct CAPAChunkHandler : ChunkHandler {
 	}
 };
 
-static const CAPAChunkHandler CAPA;
-static const ChunkHandlerRef cargopacket_chunk_handlers[] = {
-	CAPA,
-};
-
-extern const ChunkHandlerTable _cargopacket_chunk_handlers(cargopacket_chunk_handlers);
+extern void RegisterCargopacketChunks()
+{
+	static const CAPAChunkHandler CAPA;
+}

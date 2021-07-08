@@ -315,11 +315,8 @@ struct CITYChunkHandler : ChunkHandler {
 	}
 };
 
-static const HIDSChunkHandler HIDS;
-static const CITYChunkHandler CITY;
-static const ChunkHandlerRef town_chunk_handlers[] = {
-	HIDS,
-	CITY,
-};
-
-extern const ChunkHandlerTable _town_chunk_handlers(town_chunk_handlers);
+extern void RegisterTownChunks()
+{
+	static const HIDSChunkHandler HIDS;
+	static const CITYChunkHandler CITY;
+}

@@ -211,13 +211,9 @@ struct EIDSChunkHandler : ChunkHandler {
 	}
 };
 
-static const EIDSChunkHandler EIDS;
-static const ENGNChunkHandler ENGN;
-static const ENGSChunkHandler ENGS;
-static const ChunkHandlerRef engine_chunk_handlers[] = {
-	EIDS,
-	ENGN,
-	ENGS,
-};
-
-extern const ChunkHandlerTable _engine_chunk_handlers(engine_chunk_handlers);
+extern void RegisterEngineChunks()
+{
+	static const EIDSChunkHandler EIDS;
+	static const ENGNChunkHandler ENGN;
+	static const ENGSChunkHandler ENGS;
+}

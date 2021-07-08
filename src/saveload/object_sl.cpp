@@ -70,11 +70,8 @@ struct OBIDChunkHandler : NewGRFMappingChunkHandler {
 	OBIDChunkHandler() : NewGRFMappingChunkHandler('OBID', _object_mngr) {}
 };
 
-static const OBIDChunkHandler OBID;
-static const OBJSChunkHandler OBJS;
-static const ChunkHandlerRef object_chunk_handlers[] = {
-	OBID,
-	OBJS,
-};
-
-extern const ChunkHandlerTable _object_chunk_handlers(object_chunk_handlers);
+extern void RegisterObjectChunks()
+{
+	static const OBIDChunkHandler OBID;
+	static const OBJSChunkHandler OBJS;
+}
