@@ -23,6 +23,8 @@ class ScriptListSorter;
  */
 class ScriptList : public ScriptObject {
 public:
+	friend class ScriptInstance;
+
 	/** Type of sorter */
 	enum SorterType {
 		SORT_BY_VALUE, ///< Sort the list based on the value of the item.

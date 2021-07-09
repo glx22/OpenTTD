@@ -21,6 +21,7 @@
 #include "api/script_controller.hpp"
 #include "api/script_error.hpp"
 #include "api/script_event.hpp"
+#include "api/script_list.hpp"
 #include "api/script_log.hpp"
 
 #include "../company_base.h"
@@ -338,6 +339,7 @@ enum SQSaveLoadType {
 	SQSL_TABLE           = 0x03, ///< The following data is an table.
 	SQSL_BOOL            = 0x04, ///< The following data is a boolean.
 	SQSL_NULL            = 0x05, ///< A null variable.
+	SQSL_LIST            = 0x06, ///< A ScriptList
 	SQSL_ARRAY_TABLE_END = 0xFF, ///< Marks the end of an array or table, no data follows.
 };
 
@@ -455,6 +457,66 @@ static const SaveLoad _script_byte[] = {
 				_script_sl_byte = SQSL_NULL;
 				SlObject(nullptr, _script_byte);
 			}
+			return true;
+		}
+
+		case OT_INSTANCE: {
+			if (!test) {
+				_script_sl_byte = SQSL_LIST;
+				SlObject(nullptr, _script_byte);
+			}
+			HSQOBJECT instance;
+
+			sq_getstackobj(vm, index, &instance);
+
+			/* Validate if it is an AIList or GSList instance. */
+			sq_pushroottable(vm);
+			char *classname = "AIList";
+			sq_pushstring(vm, classname, -1);
+			if (SQ_FAILED(sq_get(vm, -2))) {
+				classname = "GSList";
+				sq_pushstring(vm, classname, -1);
+				sq_get(vm, -2);
+			}
+			sq_pushobject(vm, instance);
+			if (sq_instanceof(vm) != SQTrue) {
+				sq_pop(vm, 3);
+				ScriptLog::Error("You tried to save an unsupported type. No data saved.");
+				return false;
+			};
+			sq_pop(vm, 3);
+
+			/* Save classname. */
+			sq_pushstring(vm, classname, -1);
+			SaveObject(vm, -1, max_depth - 1, test);
+			sq_pop(vm, 1);
+
+			/* Get the 'real' instance of this class. */
+			SQUserPointer real_instance = nullptr;
+			sq_getinstanceup(vm, index, &real_instance, nullptr);
+			ScriptList *list = static_cast<ScriptList *>(real_instance);
+
+			/* Save sorting infos. */
+			sq_pushinteger(vm, list->sorter_type);
+			sq_pushbool(vm, list->sort_ascending);
+			SaveObject(vm, -2, max_depth - 1, test);
+			SaveObject(vm, -1, max_depth - 1, test);
+			sq_pop(vm, 2);
+
+			/* Save the content. */
+			for (int64 item = list->Begin(); !list->IsEnd(); item = list->Next()) {
+				sq_pushinteger(vm, item);
+				sq_pushinteger(vm, list->GetValue(item));
+				SaveObject(vm, -2, max_depth - 1, test);
+				SaveObject(vm, -1, max_depth - 1, test);
+				sq_pop(vm, 2);
+			}
+
+			if (!test) {
+				_script_sl_byte = SQSL_ARRAY_TABLE_END;
+				SlObject(nullptr, _script_byte);
+			}
+
 			return true;
 		}
 
@@ -606,6 +668,49 @@ bool ScriptInstance::IsPaused()
 
 		case SQSL_NULL: {
 			if (vm != nullptr) sq_pushnull(vm);
+			return true;
+		}
+
+		case SQSL_LIST: {
+			ScriptList *list = nullptr;
+			if (vm != nullptr) sq_pushroottable(vm); // Push the root table.
+			LoadObjects(vm); // Load classname.
+			if (vm != nullptr) {
+				sq_get(vm, -2); // Get the class from the root table.
+				sq_pushroottable(vm); // Push the root table as instance object, this is what squirrel does for meta-functions.
+				sq_call(vm, 1, SQTrue, SQFalse); // Create an instance of classname.
+				sq_remove(vm, -2); // Remove the class.
+				sq_remove(vm, -2); // Remove the root table.
+
+				/* Get the 'real' instance of this class. */
+				SQUserPointer real_instance = nullptr;
+				sq_getinstanceup(vm, -1, &real_instance, nullptr);
+				list = static_cast<ScriptList *>(real_instance);
+			}
+
+			/* Load sorting info. */
+			LoadObjects(vm);
+			LoadObjects(vm);
+			if (vm != nullptr) {
+				SQInteger sorting_type;
+				SQBool sort_ascending;
+				sq_getinteger(vm, -2, &sorting_type);
+				sq_getbool(vm, -1, &sort_ascending);
+				sq_pop(vm, 2);
+				list->Sort(static_cast<ScriptList::SorterType>(sorting_type), sort_ascending == SQTrue);
+			}
+
+			/* Load the content. */
+			while (LoadObjects(vm)) {
+				LoadObjects(vm);
+				if (vm != nullptr) {
+					SQInteger item, value;
+					sq_getinteger(vm, -2, &item);
+					sq_getinteger(vm, -1, &value);
+					sq_pop(vm, 2);
+					list->AddItem(item, value);
+				}
+			}
 			return true;
 		}
 
