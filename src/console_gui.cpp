@@ -128,7 +128,7 @@ struct IConsoleLine {
 
 
 /* ** main console cmd buffer ** */
-static Textbuf _iconsole_cmdline(ICON_CMDLN_SIZE);
+static Textbuf _iconsole_cmdline(ICON_CMDLN_SIZE, UINT16_MAX, FS_MONO);
 static char *_iconsole_history[ICON_HISTORY_SIZE];
 static int _iconsole_historypos;
 IConsoleModes _iconsole_mode;
@@ -177,8 +177,8 @@ struct IConsoleWindow : Window
 	IConsoleWindow() : Window(&_console_window_desc)
 	{
 		_iconsole_mode = ICONSOLE_OPENED;
-		this->line_height = FONT_HEIGHT_NORMAL + ICON_LINE_SPACING;
-		this->line_offset = GetStringBoundingBox("] ").width + 5;
+		this->line_height = FONT_HEIGHT_MONO + ICON_LINE_SPACING;
+		this->line_offset = GetStringBoundingBox("] ", FS_MONO).width + 5;
 
 		this->InitNested(0);
 		this->truncate_timer.SetInterval(3000);
@@ -211,23 +211,23 @@ struct IConsoleWindow : Window
 		int ypos = this->height - this->line_height;
 		for (const IConsoleLine *print = IConsoleLine::Get(IConsoleWindow::scroll); print != nullptr; print = print->previous) {
 			SetDParamStr(0, print->buffer);
-			ypos = DrawStringMultiLine(5, right, -this->line_height, ypos, STR_JUST_RAW_STRING, print->colour, SA_LEFT | SA_BOTTOM | SA_FORCE) - ICON_LINE_SPACING;
+			ypos = DrawStringMultiLine(5, right, -this->line_height, ypos, STR_JUST_RAW_STRING, print->colour, SA_LEFT | SA_BOTTOM | SA_FORCE, false, FS_MONO) - ICON_LINE_SPACING;
 			if (ypos < 0) break;
 		}
 		/* If the text is longer than the window, don't show the starting ']' */
 		int delta = this->width - this->line_offset - _iconsole_cmdline.pixels - ICON_RIGHT_BORDERWIDTH;
 		if (delta > 0) {
-			DrawString(5, right, this->height - this->line_height, "]", (TextColour)CC_COMMAND, SA_LEFT | SA_FORCE);
+			DrawString(5, right, this->height - this->line_height, "]", (TextColour)CC_COMMAND, SA_LEFT | SA_FORCE, false, FS_MONO);
 			delta = 0;
 		}
 
 		/* If we have a marked area, draw a background highlight. */
 		if (_iconsole_cmdline.marklength != 0) GfxFillRect(this->line_offset + delta + _iconsole_cmdline.markxoffs, this->height - this->line_height, this->line_offset + delta + _iconsole_cmdline.markxoffs + _iconsole_cmdline.marklength, this->height - 1, PC_DARK_RED);
 
-		DrawString(this->line_offset + delta, right, this->height - this->line_height, _iconsole_cmdline.buf, (TextColour)CC_COMMAND, SA_LEFT | SA_FORCE);
+		DrawString(this->line_offset + delta, right, this->height - this->line_height, _iconsole_cmdline.buf, (TextColour)CC_COMMAND, SA_LEFT | SA_FORCE, false, FS_MONO);
 
 		if (_focused_window == this && _iconsole_cmdline.caret) {
-			DrawString(this->line_offset + delta + _iconsole_cmdline.caretxoffs, right, this->height - this->line_height, "_", TC_WHITE, SA_LEFT | SA_FORCE);
+			DrawString(this->line_offset + delta + _iconsole_cmdline.caretxoffs, right, this->height - this->line_height, "_", TC_WHITE, SA_LEFT | SA_FORCE, false, FS_MONO);
 		}
 	}
 
@@ -357,8 +357,8 @@ struct IConsoleWindow : Window
 	{
 		int delta = std::min<int>(this->width - this->line_offset - _iconsole_cmdline.pixels - ICON_RIGHT_BORDERWIDTH, 0);
 
-		Point p1 = GetCharPosInString(_iconsole_cmdline.buf, from, FS_NORMAL);
-		Point p2 = from != to ? GetCharPosInString(_iconsole_cmdline.buf, from) : p1;
+		Point p1 = GetCharPosInString(_iconsole_cmdline.buf, from, FS_MONO);
+		Point p2 = from != to ? GetCharPosInString(_iconsole_cmdline.buf, from, FS_MONO) : p1;
 
 		Rect r = {this->line_offset + delta + p1.x, this->height - this->line_height, this->line_offset + delta + p2.x, this->height};
 		return r;
@@ -370,7 +370,7 @@ struct IConsoleWindow : Window
 
 		if (!IsInsideMM(pt.y, this->height - this->line_height, this->height)) return nullptr;
 
-		return GetCharAtPosition(_iconsole_cmdline.buf, pt.x - delta);
+		return GetCharAtPosition(_iconsole_cmdline.buf, pt.x - delta, FS_MONO);
 	}
 
 	void OnMouseWheel(int wheel) override

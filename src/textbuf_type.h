@@ -13,6 +13,7 @@
 #include "string_type.h"
 #include "strings_type.h"
 #include "string_base.h"
+#include "gfx_type.h"
 
 /**
  * Return values for Textbuf::HandleKeypress
@@ -43,7 +44,7 @@ struct Textbuf {
 	uint16 markxoffs;         ///< the start position of the marked area in pixels
 	uint16 marklength;        ///< the length of the marked area in pixels
 
-	explicit Textbuf(uint16 max_bytes, uint16 max_chars = UINT16_MAX);
+	explicit Textbuf(uint16 max_bytes, uint16 max_chars = UINT16_MAX, FontSize fontsize = FS_NORMAL);
 	~Textbuf();
 
 	void Assign(StringID string);
@@ -68,6 +69,7 @@ struct Textbuf {
 
 private:
 	StringIterator *char_iter;
+	FontSize fontsize;
 
 	bool CanDelChar(bool backspace);
 

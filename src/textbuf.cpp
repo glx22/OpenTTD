@@ -290,21 +290,21 @@ void Textbuf::UpdateStringIter()
 /** Update pixel width of the text. */
 void Textbuf::UpdateWidth()
 {
-	this->pixels = GetStringBoundingBox(this->buf, FS_NORMAL).width;
+	this->pixels = GetStringBoundingBox(this->buf, this->fontsize).width;
 }
 
 /** Update pixel position of the caret. */
 void Textbuf::UpdateCaretPosition()
 {
-	this->caretxoffs = this->chars > 1 ? GetCharPosInString(this->buf, this->buf + this->caretpos, FS_NORMAL).x : 0;
+	this->caretxoffs = this->chars > 1 ? GetCharPosInString(this->buf, this->buf + this->caretpos, this->fontsize).x : 0;
 }
 
 /** Update pixel positions of the marked text area. */
 void Textbuf::UpdateMarkedText()
 {
 	if (this->markend != 0) {
-		this->markxoffs  = GetCharPosInString(this->buf, this->buf + this->markpos, FS_NORMAL).x;
-		this->marklength = GetCharPosInString(this->buf, this->buf + this->markend, FS_NORMAL).x - this->markxoffs;
+		this->markxoffs  = GetCharPosInString(this->buf, this->buf + this->markpos, this->fontsize).x;
+		this->marklength = GetCharPosInString(this->buf, this->buf + this->markend, this->fontsize).x - this->markxoffs;
 	} else {
 		this->markxoffs = this->marklength = 0;
 	}
@@ -368,8 +368,8 @@ bool Textbuf::MovePos(uint16 keycode)
  * @param max_bytes maximum size in bytes, including terminating '\0'
  * @param max_chars maximum size in chars, including terminating '\0'
  */
-Textbuf::Textbuf(uint16 max_bytes, uint16 max_chars)
-	: buf(MallocT<char>(max_bytes))
+Textbuf::Textbuf(uint16 max_bytes, uint16 max_chars, FontSize fontsize)
+	: buf(MallocT<char>(max_bytes)), fontsize(fontsize)
 {
 	assert(max_bytes != 0);
 	assert(max_chars != 0);
