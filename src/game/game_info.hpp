@@ -40,10 +40,16 @@ public:
 
 	bool IsDeveloperOnly() const override { return this->is_developer_only; }
 
+	/**
+	 * Does this Game want events?
+	 */
+	bool WantsEvents() const { return this->wants_events; }
+
 private:
 	int min_loadable_version; ///< The Game can load savegame data if the version is equal or greater than this.
 	bool is_developer_only;   ///< Is the script selectable by non-developers?
 	const char *api_version;  ///< API version used by this Game.
+	bool wants_events;        ///< Does this Game wants events?
 };
 
 /** All static information from an Game library like name, version, etc. */

@@ -48,10 +48,16 @@ public:
 	 */
 	const char *GetAPIVersion() const { return this->api_version; }
 
+	/**
+	 * Does this AI want events?
+	 */
+	bool WantsEvents() const { return this->wants_events; }
+
 private:
 	int min_loadable_version; ///< The AI can load savegame data if the version is equal or greater than this.
 	bool use_as_random;       ///< Should this AI be used when the user wants a "random AI"?
 	const char *api_version;  ///< API version used by this AI.
+	bool wants_events;        ///< Does this AI wants events?
 };
 
 /** All static information from an AI library like name, version, etc. */

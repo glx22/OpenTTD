@@ -155,6 +155,13 @@
 		return;
 	}
 
+	/* Don't queue events if the Game doesn't care. */
+	const GameInfo *info = Game::GetInfo();
+	if (!info->WantsEvents()) {
+		event->Release();
+		return;
+	}
+
 	/* Queue the event */
 	Backup<CompanyID> cur_company(_current_company, OWNER_DEITY, FILE_LINE);
 	Game::instance->InsertEvent(event);

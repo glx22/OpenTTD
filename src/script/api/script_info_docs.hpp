@@ -144,6 +144,17 @@ public:
 	bool IsDeveloperOnly();
 
 	/**
+	 * Does this script wants to receive events.
+	 *
+	 * The idea behind this function is to prevent the creation of an event stack
+	 * if the script won't handle events. This is to reduce memory footprint.
+	 *
+	 * @return True if the Script wants to receive events.
+	 * @note This function is required since API version 1.12.
+	 */
+	bool WantsEvents();
+
+	/**
 	 * Gets the name of main class of the Script so OpenTTD knows
 	 * what class to instantiate. For libraries, this name is also
 	 * used when other scripts import it using ScriptController::Import.

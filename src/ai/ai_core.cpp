@@ -248,6 +248,13 @@
 		return;
 	}
 
+	/* Don't queue events if the AI doesn't care. */
+	const AIInfo *info = Company::Get(company)->ai_info;
+	if (!info->WantsEvents()) {
+		event->Release();
+		return;
+	}
+
 	/* Queue the event */
 	Backup<CompanyID> cur_company(_current_company, company, FILE_LINE);
 	Company::Get(_current_company)->ai_instance->InsertEvent(event);

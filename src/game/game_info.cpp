@@ -79,6 +79,19 @@ template <> const char *GetClassName<GameInfo, ST_GS>() { return "GSInfo"; }
 		return SQ_ERROR;
 	}
 
+	/* Convert API version to an integer. */
+	char *end;
+	int api_version = std::strtoul(info->api_version, &end, 10) * 100;
+	end++; // skip the '.'
+	api_version += std::strtoul(end, nullptr, 10);
+
+	if (api_version >= 112) {
+		if (!info->CheckMethod("WantsEvents")) return SQ_ERROR;
+		if (!info->engine->CallBoolMethod(*info->SQ_instance, "WantsEvents", &info->wants_events, MAX_GET_OPS)) return SQ_ERROR;
+	} else {
+		info->wants_events = true;
+	}
+
 	/* Remove the link to the real instance, else it might get deleted by RegisterGame() */
 	sq_setinstanceup(vm, 2, nullptr);
 	/* Register the Game to the base system */

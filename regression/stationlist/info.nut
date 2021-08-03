@@ -8,6 +8,7 @@ class StationList extends AIInfo {
 	function GetDate()        { return "2007-03-18"; }
 	function CreateInstance() { return "StationList"; }
 	function UseAsRandomAI()  { return false; }
+	function WantsEvents()    { return false; }
 }
 
 RegisterAI(StationList());

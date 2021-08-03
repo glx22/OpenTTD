@@ -17,6 +17,9 @@
  *
  * This version is not yet released. The following changes are not set in stone yet.
  *
+ * Other changes:
+ * \li WantsEvent() was added as required function to info.nut
+ *
  * \b 1.11.0
  *
  * API additions:
