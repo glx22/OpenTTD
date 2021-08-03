@@ -541,6 +541,7 @@ void Squirrel::Initialize()
 	this->crashed = false;
 	this->overdrawn_ops = 0;
 	this->vm = sq_open(1024);
+	this->events_enabled = false;
 
 	/* Handle compile-errors ourself, so we can display it nicely */
 	sq_setcompilererrorhandler(this->vm, &Squirrel::CompileError);
@@ -816,4 +817,14 @@ bool Squirrel::CanSuspend()
 SQInteger Squirrel::GetOpsTillSuspend()
 {
 	return this->vm->_ops_till_suspend;
+}
+
+void Squirrel::EnableEvents()
+{
+	this->events_enabled = true;
+}
+
+bool Squirrel::EventsEnabled()
+{
+	return this->events_enabled;
 }

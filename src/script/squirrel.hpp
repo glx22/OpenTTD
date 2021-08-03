@@ -32,6 +32,7 @@ private:
 	bool crashed;            ///< True if the squirrel script made an error.
 	int overdrawn_ops;       ///< The amount of operations we have overdrawn.
 	const char *APIName;     ///< Name of the API used for this squirrel.
+	bool events_enabled;     ///< True if events are enabled for the squirrel script.
 	std::unique_ptr<ScriptAllocator> allocator; ///< Allocator object used by this script.
 
 	/**
@@ -280,6 +281,16 @@ public:
 	 * Get number of bytes allocated by this VM.
 	 */
 	size_t GetAllocatedMemory() const noexcept;
+
+	/**
+	 * Enable the event stack for the squirrel script.
+	 */
+	void EnableEvents();
+
+	/**
+	 * Is the event stack enabled for the squirrel script?
+	 */
+	bool EventsEnabled();
 };
 
 

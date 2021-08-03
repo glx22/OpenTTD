@@ -16,6 +16,7 @@
 #include "sqvm.h"
 #include "sqtable.h"
 
+#include "../../../script/squirrel.hpp"
 #include "../../../string_func.h"
 
 #include "../../../safeguards.h"
@@ -547,7 +548,11 @@ public:
 					_fs->AddInstruction(_OP_GETPARENT, _fs->PushTarget(), src);
 				}
 				else {
-					_fs->AddInstruction(_OP_LOAD, _fs->PushTarget(), _fs->GetConstant(Expect(TK_IDENTIFIER)));
+					SQObject id = Expect(TK_IDENTIFIER);
+					if (_string(id) == _string(_fs->CreateString("GetNextEvent"))) {
+						static_cast<Squirrel *>(sq_getforeignptr(_vm))->EnableEvents();
+					}
+					_fs->AddInstruction(_OP_LOAD, _fs->PushTarget(), _fs->GetConstant(id));
 					if(NeedGet()) Emit2ArgsOP(_OP_GET);
 				}
 				_exst._deref = DEREF_FIELD;

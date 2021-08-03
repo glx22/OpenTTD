@@ -712,6 +712,8 @@ bool ScriptInstance::DoCommandCallback(const CommandCost &result, TileIndex tile
 
 void ScriptInstance::InsertEvent(class ScriptEvent *event)
 {
+	if (this->engine == nullptr || !this->engine->EventsEnabled()) return;
+
 	ScriptObject::ActiveInstance active(this);
 
 	ScriptEventController::InsertEvent(event);
