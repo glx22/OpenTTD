@@ -34,6 +34,7 @@
 #include "framerate_type.h"
 #include "industry.h"
 #include "industry_map.h"
+#include "pathfinder/viewport_pfoverlay.h"
 
 #include "table/strings.h"
 
@@ -485,6 +486,8 @@ static Track ChooseShipTrack(Ship *v, TileIndex tile, DiagDirection enterdir, Tr
 			/* Cached path is invalid so continue with pathfinder. */
 			v->path.clear();
 		}
+
+		_viewport_pf_overlay.SetTracking(v->name == "x");
 
 		switch (_settings_game.pf.pathfinder_for_ships) {
 			case VPF_NPF: track = NPFShipChooseTrack(v, path_found); break;

@@ -5,4 +5,6 @@ add_files(
     follow_track.hpp
     pathfinder_func.h
     pathfinder_type.h
+    viewport_pfoverlay.cpp
+    viewport_pfoverlay.h
 )

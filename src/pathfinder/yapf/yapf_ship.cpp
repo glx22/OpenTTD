@@ -11,6 +11,7 @@
 #include "../../ship.h"
 #include "../../industry.h"
 #include "../../vehicle_func.h"
+#include "../viewport_pfoverlay.h"
 
 #include "yapf.hpp"
 #include "yapf_node_ship.hpp"
@@ -138,6 +139,8 @@ public:
 
 	static Trackdir ChooseShipTrack(const Ship *v, TileIndex tile, DiagDirection enterdir, TrackBits tracks, bool &path_found, ShipPathCache &path_cache)
 	{
+		_viewport_pf_overlay.Clear();
+
 		/* handle special case - when next tile is destination tile */
 		if (tile == v->dest_tile) {
 			/* convert tracks to trackdirs */

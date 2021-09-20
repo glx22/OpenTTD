@@ -88,6 +88,7 @@
 #include "command_func.h"
 #include "network/network_func.h"
 #include "framerate_type.h"
+#include "pathfinder/viewport_pfoverlay.h"
 
 #include <forward_list>
 #include <map>
@@ -1769,6 +1770,8 @@ void ViewportDoDraw(const Viewport *vp, int left, int top, int right, int bottom
 		dp.top = y;
 		vp->overlay->Draw(&dp);
 	}
+
+	_viewport_pf_overlay.Draw(&dp, vp);
 
 	if (_vd.string_sprites_to_draw.size() != 0) {
 		/* translate to world coordinates */

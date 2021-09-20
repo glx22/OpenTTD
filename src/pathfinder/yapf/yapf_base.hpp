@@ -12,6 +12,7 @@
 
 #include "../../debug.h"
 #include "../../settings_type.h"
+#include "../viewport_pfoverlay.h"
 
 /**
  * CYapfBaseT - A-star type path finder base class.
@@ -293,6 +294,7 @@ public:
 		/* the new node is really new
 		 * add it to the open list */
 		m_nodes.InsertOpenNode(n);
+		_viewport_pf_overlay.AddTile(n.m_parent->GetTile(), n.GetTile(), n.GetCost());
 		if (set_intermediate) m_pBestIntermediateNode = &n;
 	}
 

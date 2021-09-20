@@ -229,6 +229,7 @@ struct MainWindow : Window
 
 	void OnRealtimeTick(uint delta_ms) override
 	{
+		this->GetWidget<NWidgetBase>(WID_M_VIEWPORT)->SetDirty(this);
 		if (!this->refresh.Elapsed(delta_ms)) return;
 
 		this->refresh.SetInterval(LINKGRAPH_REFRESH_PERIOD);
