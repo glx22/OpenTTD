@@ -19,6 +19,7 @@
 class ViewportPfOverlay {
 	std::unordered_map<TileIndex, TileIndex> arrows;
 	std::unordered_map<TileIndex, int> costs;
+	std::unordered_map<TileIndex, int> visit_count;
 	int maxcost = 1;
 	bool enable_tracking = false;
 

@@ -29,7 +29,6 @@ Point GetTileMiddle(const Viewport *vp, TileIndex t)
 void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 {
 	if (this->arrows.empty()) return;
-	//Debug(misc, 0, "PF OVERLAY: DPI ({}, {}) {}x{} z={} // VP ({}, {}) {}x{}", dpi->left, dpi->top, dpi->width, dpi->height, dpi->zoom, vp->virtual_left, vp->virtual_top, vp->virtual_width, vp->virtual_height);
 	int minx = INT_MAX, miny = INT_MAX;
 	int maxx = INT_MIN, maxy = INT_MIN;
 	for (auto tp : this->arrows) {
@@ -39,11 +38,15 @@ void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 		const int colour = _colour_gradient[COLOUR_PINK][cost * 8 / this->maxcost];
 		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, 5, 0);
 	}
-	//Debug(misc, 0, "PF OVERLAY: MIN ({}, {}) MAX ({}, {})", minx, miny, maxx, maxy);
 	for (auto tc : this->costs) {
 		Point pt = GetTileMiddle(vp, tc.first);
 		std::string s = std::to_string(tc.second);
 		DrawString(pt.x - 100, pt.x + 100, pt.y, s, TC_WHITE, SA_CENTER, false, FS_SMALL);
+	}
+	for (auto tc : this->visit_count) {
+		Point pt = GetTileMiddle(vp, tc.first);
+		std::string s = std::to_string(tc.second);
+		DrawString(pt.x - 100, pt.x + 100, pt.y + FONT_HEIGHT_SMALL, s, TC_YELLOW, SA_CENTER, false, FS_SMALL);
 	}
 }
 
@@ -52,6 +55,7 @@ void ViewportPfOverlay::Clear()
 	if (!this->enable_tracking) return;
 	this->arrows.clear();
 	this->costs.clear();
+	this->visit_count.clear();
 	this->maxcost = 1;
 }
 
@@ -64,6 +68,7 @@ void ViewportPfOverlay::AddTile(TileIndex from, TileIndex to, int cost)
 	} else {
 		this->costs[to] = std::min(this->costs[to], cost);
 	}
+	this->visit_count[to] += 1;
 	if (cost > this->maxcost) this->maxcost = cost;
 }
 
