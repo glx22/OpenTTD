@@ -1771,7 +1771,12 @@ void ViewportDoDraw(const Viewport *vp, int left, int top, int right, int bottom
 		vp->overlay->Draw(&dp);
 	}
 
-	_viewport_pf_overlay.Draw(&dp, vp);
+	{
+		/* translate to window coordinates */
+		dp.left = x;
+		dp.top = y;
+		_viewport_pf_overlay.Draw(&dp, vp);
+	}
 
 	if (_vd.string_sprites_to_draw.size() != 0) {
 		/* translate to world coordinates */

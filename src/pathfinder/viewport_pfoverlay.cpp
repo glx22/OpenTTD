@@ -20,8 +20,8 @@ Point GetTileMiddle(const Viewport *vp, TileIndex t)
 	int z = GetSlopePixelZ(Clamp(x, 0, MapSizeX() * TILE_SIZE - 1), Clamp(y, 0, MapSizeY() * TILE_SIZE - 1));
 
 	Point p = RemapCoords(x, y, z);
-	p.x = UnScaleByZoom(p.x, vp->zoom);
-	p.y = UnScaleByZoom(p.y, vp->zoom);
+	p.x = UnScaleByZoom(p.x - vp->virtual_left, vp->zoom) + vp->left;
+	p.y = UnScaleByZoom(p.y - vp->virtual_top, vp->zoom) + vp->top;
 	return p;
 }
 
