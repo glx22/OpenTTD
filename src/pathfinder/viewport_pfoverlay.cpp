@@ -59,7 +59,11 @@ void ViewportPfOverlay::AddTile(TileIndex from, TileIndex to, int cost)
 {
 	if (!this->enable_tracking) return;
 	this->arrows[to] = from;
-	this->costs[to] = cost;
+	if (this->costs.count(to) == 0) {
+		this->costs[to] = cost;
+	} else {
+		this->costs[to] = std::min(this->costs[to], cost);
+	}
 	if (cost > this->maxcost) this->maxcost = cost;
 }
 
