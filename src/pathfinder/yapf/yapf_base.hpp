@@ -294,7 +294,7 @@ public:
 		/* the new node is really new
 		 * add it to the open list */
 		m_nodes.InsertOpenNode(n);
-		_viewport_pf_overlay.AddTile(n.m_parent->GetTile(), n.GetTile(), n.GetCost());
+		_viewport_pf_overlay.AddTile(n.GetTile(), n.GetTrackdir(), n.GetCost());
 		if (set_intermediate) m_pBestIntermediateNode = &n;
 	}
 

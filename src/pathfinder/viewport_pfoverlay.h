@@ -14,19 +14,17 @@
 #include "../viewport_type.h"
 #include "../gfx_type.h"
 
-#include <unordered_map>
+#include <map>
 
 class ViewportPfOverlay {
-	std::unordered_map<TileIndex, TileIndex> arrows;
-	std::unordered_map<TileIndex, int> costs;
-	std::unordered_map<TileIndex, int> visit_count;
+	std::map<std::pair<TileIndex, Trackdir>, int> costs;
 	int maxcost = 1;
 	bool enable_tracking = false;
 
 public:
 	void Draw(const DrawPixelInfo *dpi, const Viewport *vp);
 	void Clear();
-	void AddTile(TileIndex from, TileIndex to, int cost);
+	void AddTile(TileIndex tile, Trackdir td, int cost);
 	void SetTracking(bool enabled);
 };
 
