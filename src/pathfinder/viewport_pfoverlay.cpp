@@ -20,8 +20,8 @@ static Point GetTileEdgeMiddle(const Viewport *vp, TileIndex t, DiagDirection dd
 	int x = TileX(t) * TILE_SIZE;
 	int y = TileY(t) * TILE_SIZE;
 	switch (dd) {
-		case DIAGDIR_NW: y += TILE_SIZE / 2; break;
-		case DIAGDIR_NE: x += TILE_SIZE / 2; break;
+		case DIAGDIR_NW: x += TILE_SIZE / 2; break;
+		case DIAGDIR_NE: y += TILE_SIZE / 2; break;
 		case DIAGDIR_SW: y += TILE_SIZE / 2; x += TILE_SIZE; break;
 		case DIAGDIR_SE: x += TILE_SIZE / 2; y += TILE_SIZE; break;
 	}
