@@ -347,7 +347,7 @@ static inline bool RequireTrackdirKey()
 	 * nodes means potentially more paths are tested, which would be wasteful if it's
 	 * not necessary.
 	 */
-	return _settings_game.pf.yapf.ship_curve45_penalty != _settings_game.pf.yapf.ship_curve90_penalty;
+	return false;// _settings_game.pf.yapf.ship_curve45_penalty != _settings_game.pf.yapf.ship_curve90_penalty;
 }
 
 /** Ship controller helper - path finder invoker */
