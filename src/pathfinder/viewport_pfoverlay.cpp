@@ -39,6 +39,24 @@ static DiagDirection TrackdirToEntrydir(Trackdir td)
 	return TrackdirToExitdir(ReverseTrackdir(td));
 }
 
+static std::pair<Point, Point> GetArrowPointEdge(Point pointy, Point shaft)
+{
+	/* Make vector from pointy end to shaft handle end,
+	 * rotate it by 20 degrees CCW, and finally shorten it to 24. */
+	const int cos_shr8 = 243; // (int)round(cos(-M_PI/9)*256)
+	const int sin_shr8 = -79; // (int)round(sin(-M_PI/9)*256)
+	const int target_len = 24;
+	Point rev_vec{ shaft.x - pointy.x, shaft.y - pointy.y };
+	Point rot_vec{ rev_vec.x * cos_shr8 / 256 - rev_vec.y * sin_shr8 / 256, rev_vec.x * sin_shr8 / 256 + rev_vec.y * cos_shr8 / 256 };
+	int rot_vec_len = IntSqrt(rot_vec.x * rot_vec.x + rot_vec.y * rot_vec.y);
+	return std::make_pair(
+		/* Arrow edge */
+		Point{ pointy.x + rot_vec.x * target_len / rot_vec_len, pointy.y + rot_vec.y * target_len / rot_vec_len },
+		/* Back edge */
+		Point{ pointy.x + rev_vec.x * target_len / rot_vec_len, pointy.y + rev_vec.y * target_len / rot_vec_len }
+	);
+}
+
 
 void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 {
@@ -53,13 +71,17 @@ void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 
 		Point pta = GetTileEdgeMiddle(vp, tile, TrackdirToEntrydir(td));
 		Point ptb = GetTileEdgeMiddle(vp, tile, TrackdirToExitdir(td));
+		std::pair<Point, Point> arrow = GetArrowPointEdge(ptb, pta);
 		Point ptm = { (pta.x + ptb.x) / 2, (pta.y + ptb.y) / 2 };
 
 		if ((pta.x < ptb.x) != (pta.y < ptb.y)) ptm.y += FONT_HEIGHT_SMALL;
 		//numbers.emplace_back(std::make_pair(ptm, cost));
 
 		const int colour = _colour_gradient[COLOUR_PINK][cost * 8 / this->maxcost];
-		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, 5, 0);
+		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, 3, 0);
+		GfxDrawLine(ptb.x, ptb.y, arrow.first.x, arrow.first.y, colour, 7, 0);
+		GfxDrawLine(arrow.first.x, arrow.first.y, arrow.second.x, arrow.second.y, colour, 3, 0);
+		//GfxFillPolygon({ ptb, arrow.first, arrow.second }, colour); // this is stupidly slow, don't use
 	}
 
 	for (auto nd : numbers) {
