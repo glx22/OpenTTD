@@ -95,14 +95,14 @@ void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 			pta.y += dir2; ptb.y += dir2;
 		}
 
-		std::pair<Point, Point> arrow = GetArrowPointEdge(ptb, pta, dpi->zoom);
+		std::pair<Point, Point> arrow = GetArrowPointEdge(ptb, pta, vp->zoom);
 		Point ptm = { (pta.x + ptb.x) / 2, (pta.y + ptb.y) / 2 };
 
 		//if ((pta.x < ptb.x) != (pta.y < ptb.y)) ptm.y += FONT_HEIGHT_SMALL;
 		//numbers.emplace_back(std::make_pair(ptm, cost));
 
 		const int colour = 42 + cost * 8 / this->maxcost;
-		const int width = (dpi->zoom < ZOOM_LVL_OUT_2X) ? 3 : 1;
+		const int width = (vp->zoom < ZOOM_LVL_OUT_4X) ? 3 : 1;
 
 		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, width, 0);
 		GfxDrawLine(ptb.x, ptb.y, arrow.first.x, arrow.first.y, colour, width, 0);
