@@ -39,13 +39,13 @@ static DiagDirection TrackdirToEntrydir(Trackdir td)
 	return TrackdirToExitdir(ReverseTrackdir(td));
 }
 
-static std::pair<Point, Point> GetArrowPointEdge(Point pointy, Point shaft)
+static std::pair<Point, Point> GetArrowPointEdge(Point pointy, Point shaft, ZoomLevel zoom)
 {
 	/* Make vector from pointy end to shaft handle end,
 	 * rotate it by 20 degrees CCW, and finally shorten it to 24. */
 	const int cos_shr8 = 243; // (int)round(cos(-M_PI/9)*256)
 	const int sin_shr8 = -79; // (int)round(sin(-M_PI/9)*256)
-	const int target_len = 24;
+	const int target_len = UnScaleByZoom(32, zoom);
 	Point rev_vec{ shaft.x - pointy.x, shaft.y - pointy.y };
 	Point rot_vec{ rev_vec.x * cos_shr8 / 256 - rev_vec.y * sin_shr8 / 256, rev_vec.x * sin_shr8 / 256 + rev_vec.y * cos_shr8 / 256 };
 	int rot_vec_len = IntSqrt(rot_vec.x * rot_vec.x + rot_vec.y * rot_vec.y);
@@ -71,16 +71,42 @@ void ViewportPfOverlay::Draw(const DrawPixelInfo *dpi, const Viewport *vp)
 
 		Point pta = GetTileEdgeMiddle(vp, tile, TrackdirToEntrydir(td));
 		Point ptb = GetTileEdgeMiddle(vp, tile, TrackdirToExitdir(td));
-		std::pair<Point, Point> arrow = GetArrowPointEdge(ptb, pta);
+
+		/* adjust arrows to not overlap in both directions */
+		if (pta.x == ptb.x) {
+			/* vertical */
+			if (pta.y < ptb.y) { // downwards?
+				pta.x -= 1; ptb.x -= 1;
+			} else {
+				pta.x += 1; ptb.x += 1;
+			}
+		} else if (pta.y == ptb.y) {
+			/* horizontal */
+			if (pta.x < ptb.x) { // rightwards?
+				pta.y += 1; ptb.y += 1;
+			} else {
+				pta.y -= 1; ptb.y -= 1;
+			}
+		} else {
+			/* diagonal */
+			const int dir1 = (int)(pta.y > ptb.y) * 2 - 1;
+			const int dir2 = (int)(pta.x < ptb.x) * 2 - 1;
+			pta.x += dir1; ptb.x += dir1;
+			pta.y += dir2; ptb.y += dir2;
+		}
+
+		std::pair<Point, Point> arrow = GetArrowPointEdge(ptb, pta, dpi->zoom);
 		Point ptm = { (pta.x + ptb.x) / 2, (pta.y + ptb.y) / 2 };
 
-		if ((pta.x < ptb.x) != (pta.y < ptb.y)) ptm.y += FONT_HEIGHT_SMALL;
+		//if ((pta.x < ptb.x) != (pta.y < ptb.y)) ptm.y += FONT_HEIGHT_SMALL;
 		//numbers.emplace_back(std::make_pair(ptm, cost));
 
-		const int colour = _colour_gradient[COLOUR_PINK][cost * 8 / this->maxcost];
-		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, 3, 0);
-		GfxDrawLine(ptb.x, ptb.y, arrow.first.x, arrow.first.y, colour, 7, 0);
-		GfxDrawLine(arrow.first.x, arrow.first.y, arrow.second.x, arrow.second.y, colour, 3, 0);
+		const int colour = 42 + cost * 8 / this->maxcost;
+		const int width = (dpi->zoom < ZOOM_LVL_OUT_2X) ? 3 : 1;
+
+		GfxDrawLine(pta.x, pta.y, ptb.x, ptb.y, colour, width, 0);
+		GfxDrawLine(ptb.x, ptb.y, arrow.first.x, arrow.first.y, colour, width, 0);
+		GfxDrawLine(arrow.first.x, arrow.first.y, arrow.second.x, arrow.second.y, colour, width, 0);
 		//GfxFillPolygon({ ptb, arrow.first, arrow.second }, colour); // this is stupidly slow, don't use
 	}
 
