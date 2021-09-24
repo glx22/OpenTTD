@@ -127,8 +127,16 @@ void ViewportPfOverlay::Clear()
 void ViewportPfOverlay::AddTile(TileIndex tile, Trackdir td, int cost)
 {
 	if (!this->enable_tracking) return;
-	this->costs[std::make_pair(tile, td)] = cost;
+	auto key = std::make_pair(tile, td);
+	assert(this->costs.find(key) == this->costs.end());
+	this->costs[key] = cost;
 	if (cost > this->maxcost) this->maxcost = cost;
+}
+
+void ViewportPfOverlay::RemoveTile(TileIndex tile, Trackdir td)
+{
+	if (!this->enable_tracking) return;
+	this->costs.erase(std::make_pair(tile, td));
 }
 
 void ViewportPfOverlay::SetTracking(bool enabled)

@@ -25,6 +25,7 @@ public:
 	void Draw(const DrawPixelInfo *dpi, const Viewport *vp);
 	void Clear();
 	void AddTile(TileIndex tile, Trackdir td, int cost);
+	void RemoveTile(TileIndex tile, Trackdir td);
 	void SetTracking(bool enabled);
 };
 

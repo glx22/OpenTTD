@@ -263,11 +263,13 @@ public:
 			/* another node exists with the same key in the open list
 			 * is it better than new one? */
 			if (n.GetCostEstimate() < openNode->GetCostEstimate()) {
+				_viewport_pf_overlay.RemoveTile(openNode->GetTile(), openNode->GetTrackdir());
 				/* update the old node by value from new one */
 				m_nodes.PopOpenNode(n.GetKey());
 				*openNode = n;
 				/* add the updated old node back to open list */
 				m_nodes.InsertOpenNode(*openNode);
+				_viewport_pf_overlay.AddTile(n.GetTile(), n.GetTrackdir(), n.GetCost());
 				if (set_intermediate) m_pBestIntermediateNode = openNode;
 			}
 			return;
