@@ -48,7 +48,7 @@ static std::pair<Point, Point> GetArrowPointEdge(Point pointy, Point shaft, Zoom
 	const int target_len = UnScaleByZoom(32, zoom);
 	Point rev_vec{ shaft.x - pointy.x, shaft.y - pointy.y };
 	Point rot_vec{ rev_vec.x * cos_shr8 / 256 - rev_vec.y * sin_shr8 / 256, rev_vec.x * sin_shr8 / 256 + rev_vec.y * cos_shr8 / 256 };
-	int rot_vec_len = IntSqrt(rot_vec.x * rot_vec.x + rot_vec.y * rot_vec.y);
+	int rot_vec_len = std::max(1u, IntSqrt(rot_vec.x * rot_vec.x + rot_vec.y * rot_vec.y));
 	return std::make_pair(
 		/* Arrow edge */
 		Point{ pointy.x + rot_vec.x * target_len / rot_vec_len, pointy.y + rot_vec.y * target_len / rot_vec_len },
