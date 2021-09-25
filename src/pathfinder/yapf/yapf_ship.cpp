@@ -353,6 +353,22 @@ static inline bool RequireTrackdirKey()
 /** Ship controller helper - path finder invoker */
 Track YapfShipChooseTrack(const Ship *v, TileIndex tile, DiagDirection enterdir, TrackBits tracks, bool &path_found, ShipPathCache &path_cache)
 {
+	if (v->name == "x") {
+		ShipPathCache path1;
+		ShipPathCache path2;
+		bool found1;
+		bool found2;
+		Trackdir td1 = CYapfShip1::ChooseShipTrack(v, tile, enterdir, tracks, found1, path1);
+		Trackdir td2 = CYapfShip2::ChooseShipTrack(v, tile, enterdir, tracks, found2, path2);
+
+		if (found1 == found2) {
+			assert(td1 == td2);
+			assert(path1.size() == path2.size());
+			for (int i = 0; i < path1.size(); i++) assert(path1[i] == path2[i]);
+		} else {
+			assert(found1 != found2); // useless but I needed a line to put a breakpoint
+		}
+	}
 	/* default is YAPF type 2 */
 	typedef Trackdir (*PfnChooseShipTrack)(const Ship*, TileIndex, DiagDirection, TrackBits, bool &path_found, ShipPathCache &path_cache);
 	PfnChooseShipTrack pfnChooseShipTrack = CYapfShip2::ChooseShipTrack; // default: ExitDir
