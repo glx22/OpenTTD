@@ -31,6 +31,7 @@ struct CmdStruct {
 
 extern void EmitSingleChar(Buffer *buffer, char *buf, int value);
 extern void EmitPlural(Buffer *buffer, char *buf, int value);
+extern void EmitPluralChar(Buffer *buffer, char *buf, int value);
 extern void EmitGender(Buffer *buffer, char *buf, int value);
 
 static const CmdStruct _cmd_structs[] = {
@@ -98,9 +99,9 @@ static const CmdStruct _cmd_structs[] = {
 	{"RAW_STRING",        EmitSingleChar, SCC_RAW_STRING_POINTER, 1, -1, C_NONE | C_GENDER},
 
 	/* Numbers */
-	{"COMMA",             EmitSingleChar, SCC_COMMA,              1,  0, C_NONE}, // Number with comma
+	{"COMMA",             EmitPluralChar, SCC_COMMA,              1,  0, C_NONE}, // Number with comma
 	{"DECIMAL",           EmitSingleChar, SCC_DECIMAL,            2,  0, C_NONE}, // Number with comma and fractional part. Second parameter is number of fractional digits, first parameter is number times 10**(second parameter).
-	{"NUM",               EmitSingleChar, SCC_NUM,                1,  0, C_NONE}, // Signed number
+	{"NUM",               EmitPluralChar, SCC_NUM,                1,  0, C_NONE}, // Signed number
 	{"ZEROFILL_NUM",      EmitSingleChar, SCC_ZEROFILL_NUM,       2,  0, C_NONE}, // Unsigned number with zero fill, e.g. "02". First parameter is number, second minimum length
 	{"BYTES",             EmitSingleChar, SCC_BYTES,              1,  0, C_NONE}, // Unsigned number with "bytes", i.e. "1.02 MiB or 123 KiB"
 	{"HEX",               EmitSingleChar, SCC_HEX,                1,  0, C_NONE}, // Hexadecimally printed number

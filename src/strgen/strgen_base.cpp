@@ -436,6 +436,32 @@ void EmitPlural(Buffer *buffer, char *buf, int value)
 }
 
 
+void EmitPluralChar(Buffer *buffer, char *buf, int value)
+{
+	if (*buf != '\0') {
+		char param[MAX_COMMAND_PARAM_SIZE];
+		char *s = param;
+		*s = '\0';
+
+		for(;;) {
+			char *w = ParseWord(&buf);
+			if (w == nullptr) break;
+			s = strecat(s, " \"", lastof(param));
+			if (*w != '\0') {
+				if (s + Utf8CharLen(value) >= lastof(param)) break;
+				s += Utf8Encode(s, value);
+				*s = '\0';
+				s = strecat(s, w, lastof(param));
+			}
+			s = strecat(s, "\"", lastof(param));
+		}
+		EmitPlural(buffer, param, value);
+	} else {
+		EmitSingleChar(buffer, buf, value);
+	}
+}
+
+
 void EmitGender(Buffer *buffer, char *buf, int value)
 {
 	int argidx = _cur_argidx;
