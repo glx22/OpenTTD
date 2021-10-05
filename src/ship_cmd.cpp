@@ -335,6 +335,18 @@ static Vehicle *EnsureNoMovingShipProc(Vehicle *v, void *data)
 	return v->type == VEH_SHIP && (v->vehstatus & (VS_HIDDEN | VS_STOPPED)) == 0 ? v : nullptr;
 }
 
+static bool CheckReverseShip(const Ship *v, Trackdir *trackdir = nullptr)
+{
+	/* Ask pathfinder for best direction */
+	bool reverse = false;
+	switch (_settings_game.pf.pathfinder_for_ships) {
+		case VPF_NPF: reverse = NPFShipCheckReverse(v); break;
+		case VPF_YAPF: reverse = YapfShipCheckReverse(v, trackdir); break;
+		default: NOT_REACHED();
+	}
+	return reverse;
+}
+
 static bool CheckShipLeaveDepot(Ship *v)
 {
 	if (!v->IsChainInDepot()) return false;
@@ -364,14 +376,7 @@ static bool CheckShipLeaveDepot(Ship *v)
 	TrackBits north_tracks = DiagdirReachesTracks(north_dir) & GetTileShipTrackStatus(north_neighbour);
 	TrackBits south_tracks = DiagdirReachesTracks(south_dir) & GetTileShipTrackStatus(south_neighbour);
 	if (north_tracks && south_tracks) {
-		/* Ask pathfinder for best direction */
-		bool reverse = false;
-		switch (_settings_game.pf.pathfinder_for_ships) {
-			case VPF_NPF: reverse = NPFShipCheckReverse(v); break;
-			case VPF_YAPF: reverse = YapfShipCheckReverse(v); break;
-			default: NOT_REACHED();
-		}
-		if (reverse) north_tracks = TRACK_BIT_NONE;
+		if (CheckReverseShip(v)) north_tracks = TRACK_BIT_NONE;
 	}
 
 	if (north_tracks) {
@@ -632,7 +637,21 @@ static void ShipController(Ship *v)
 
 	if (v->vehstatus & VS_STOPPED) return;
 
-	ProcessOrders(v);
+	if (ProcessOrders(v)) {
+		Trackdir trackdir = INVALID_TRACKDIR;
+		if (CheckReverseShip(v, &trackdir) && trackdir != INVALID_TRACKDIR) {
+			static const Direction _trackdir_to_direction[] = {
+				DIR_NE, DIR_SE, DIR_E, DIR_E, DIR_S, DIR_S, INVALID_DIR, INVALID_DIR,
+				DIR_SW, DIR_NW, DIR_W, DIR_W, DIR_N, DIR_N, INVALID_DIR, INVALID_DIR,
+			};
+			v->direction = _trackdir_to_direction[trackdir];
+			assert(v->direction != INVALID_DIR);
+			/* Remember our current location to avoid movement glitch */
+			v->rotation_x_pos = v->x_pos;
+			v->rotation_y_pos = v->y_pos;
+		}
+	}
+
 	v->HandleLoading();
 
 	if (v->current_order.IsType(OT_LOADING)) return;
