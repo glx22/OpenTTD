@@ -224,9 +224,7 @@ Money Ship::GetRunningCost() const
 
 void Ship::OnNewDay()
 {
-	if ((++this->day_counter & 7) == 0) {
-		DecreaseVehicleValue(this);
-	}
+	if ((++this->day_counter & 7) == 0) this->DecreaseValue();
 
 	CheckVehicleBreakdown(this);
 	AgeVehicle(this);

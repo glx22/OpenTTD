@@ -1710,7 +1710,7 @@ void RoadVehicle::OnNewDay()
 
 	if (!this->IsFrontEngine()) return;
 
-	if ((++this->day_counter & 7) == 0) DecreaseVehicleValue(this);
+	if ((++this->day_counter & 7) == 0) this->DecreaseValue();
 	if (this->blocked_ctr == 0) CheckVehicleBreakdown(this);
 
 	CheckIfRoadVehNeedsService(this);

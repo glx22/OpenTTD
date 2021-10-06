@@ -442,7 +442,7 @@ void Aircraft::OnNewDay()
 {
 	if (!this->IsNormalAircraft()) return;
 
-	if ((++this->day_counter & 7) == 0) DecreaseVehicleValue(this);
+	if ((++this->day_counter & 7) == 0) this->DecreaseValue();
 
 	CheckOrders(this);
 

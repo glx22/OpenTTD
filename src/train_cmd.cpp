@@ -4119,7 +4119,7 @@ void Train::OnNewDay()
 {
 	AgeVehicle(this);
 
-	if ((++this->day_counter & 7) == 0) DecreaseVehicleValue(this);
+	if ((++this->day_counter & 7) == 0) this->DecreaseValue();
 
 	if (this->IsFrontEngine()) {
 		CheckVehicleBreakdown(this);

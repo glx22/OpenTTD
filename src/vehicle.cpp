@@ -1235,12 +1235,11 @@ Vehicle *CheckClickOnVehicle(const Viewport *vp, int x, int y)
 
 /**
  * Decrease the value of a vehicle.
- * @param v %Vehicle to devaluate.
  */
-void DecreaseVehicleValue(Vehicle *v)
+void Vehicle::DecreaseValue()
 {
-	v->value -= v->value >> 8;
-	SetWindowDirty(WC_VEHICLE_DETAILS, v->index);
+	this->value -= this->value >> 8;
+	SetWindowDirty(WC_VEHICLE_DETAILS, this->index);
 }
 
 static const byte _breakdown_chance[64] = {

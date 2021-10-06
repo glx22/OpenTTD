@@ -769,6 +769,7 @@ public:
 		this->profit_last_year = src->profit_last_year;
 	}
 
+	void DecreaseValue();
 
 	bool HandleBreakdown();
 
