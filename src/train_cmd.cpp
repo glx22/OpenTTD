@@ -2264,7 +2264,7 @@ static bool CheckTrainStayInDepot(Train *v)
 	SetDepotReservation(v->tile, true);
 	if (_settings_client.gui.show_track_reservation) MarkTileDirtyByTile(v->tile);
 
-	VehicleServiceInDepot(v);
+	v->ServiceInDepot();
 	SetWindowClassesDirty(WC_TRAINS_LIST);
 	v->PlayLeaveStationSound();
 
@@ -4076,7 +4076,7 @@ static void CheckIfTrainNeedsService(Train *v)
 {
 	if (Company::Get(v->owner)->settings.vehicle.servint_trains == 0 || !v->NeedsAutomaticServicing()) return;
 	if (v->IsChainInDepot()) {
-		VehicleServiceInDepot(v);
+		v->ServiceInDepot();
 		return;
 	}
 

@@ -774,6 +774,7 @@ public:
 
 	bool NeedsAutorenewing(const Company *c, bool use_renew_setting = true) const;
 
+	void ServiceInDepot();
 	bool NeedsServicing() const;
 	bool NeedsAutomaticServicing() const;
 

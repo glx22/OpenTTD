@@ -171,7 +171,7 @@ static void CheckIfShipNeedsService(Vehicle *v)
 {
 	if (Company::Get(v->owner)->settings.vehicle.servint_ships == 0 || !v->NeedsAutomaticServicing()) return;
 	if (v->IsChainInDepot()) {
-		VehicleServiceInDepot(v);
+		v->ServiceInDepot();
 		return;
 	}
 
@@ -393,7 +393,7 @@ static bool CheckShipLeaveDepot(Ship *v)
 	SetWindowDirty(WC_VEHICLE_DEPOT, v->tile);
 
 	v->PlayLeaveStationSound();
-	VehicleServiceInDepot(v);
+	v->ServiceInDepot();
 	InvalidateWindowData(WC_VEHICLE_DEPOT, v->tile);
 	SetWindowClassesDirty(WC_SHIPS_LIST);
 

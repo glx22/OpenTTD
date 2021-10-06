@@ -158,24 +158,21 @@ bool Vehicle::NeedsAutorenewing(const Company *c, bool use_renew_setting) const
 }
 
 /**
- * Service a vehicle and all subsequent vehicles in the consist
- *
- * @param *v The vehicle or vehicle chain being serviced
+ * Service the vehicle and all subsequent vehicles in the consist
  */
-void VehicleServiceInDepot(Vehicle *v)
+void Vehicle::ServiceInDepot()
 {
-	assert(v != nullptr);
-	SetWindowDirty(WC_VEHICLE_DETAILS, v->index); // ensure that last service date and reliability are updated
+	assert(this == this->First());
+	SetWindowDirty(WC_VEHICLE_DETAILS, this->index); // ensure that last service date and reliability are updated
 
-	do {
+	for (Vehicle *v = this; v != nullptr && v->HasEngineType(); v = v->Next()) {
 		v->date_of_last_service = TimerGameCalendar::date;
 		v->breakdowns_since_last_service = 0;
 		v->reliability = v->GetEngine()->reliability;
 		/* Prevent vehicles from breaking down directly after exiting the depot. */
 		v->breakdown_chance /= 4;
 		if (_settings_game.difficulty.vehicle_breakdowns == 1) v->breakdown_chance = 0; // on reduced breakdown
-		v = v->Next();
-	} while (v != nullptr && v->HasEngineType());
+	}
 }
 
 /**
@@ -1530,7 +1527,7 @@ void VehicleEnterDepot(Vehicle *v)
 	v->vehstatus |= VS_HIDDEN;
 	v->cur_speed = 0;
 
-	VehicleServiceInDepot(v);
+	v->ServiceInDepot();
 
 	/* After a vehicle trigger, the graphics and properties of the vehicle could change. */
 	TriggerVehicle(v, VEHICLE_TRIGGER_DEPOT);

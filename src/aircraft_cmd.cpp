@@ -409,7 +409,7 @@ static void CheckIfAircraftNeedsService(Aircraft *v)
 {
 	if (Company::Get(v->owner)->settings.vehicle.servint_aircraft == 0 || !v->NeedsAutomaticServicing()) return;
 	if (v->IsChainInDepot()) {
-		VehicleServiceInDepot(v);
+		v->ServiceInDepot();
 		return;
 	}
 
@@ -1469,7 +1469,7 @@ void AircraftLeaveHangar(Aircraft *v, Direction exit_dir)
 		}
 	}
 
-	VehicleServiceInDepot(v);
+	v->ServiceInDepot();
 	SetAircraftPosition(v, v->x_pos, v->y_pos, v->z_pos);
 	InvalidateWindowData(WC_VEHICLE_DEPOT, v->tile);
 	SetWindowClassesDirty(WC_AIRCRAFT_LIST);

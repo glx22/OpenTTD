@@ -1027,7 +1027,7 @@ bool RoadVehLeaveDepot(RoadVehicle *v, bool first)
 
 		if (RoadVehFindCloseTo(v, x, y, v->direction, false) != nullptr) return true;
 
-		VehicleServiceInDepot(v);
+		v->ServiceInDepot();
 
 		StartRoadVehSound(v);
 
@@ -1666,7 +1666,7 @@ static void CheckIfRoadVehNeedsService(RoadVehicle *v)
 	/* If we already got a slot at a stop, use that FIRST, and go to a depot later */
 	if (Company::Get(v->owner)->settings.vehicle.servint_roadveh == 0 || !v->NeedsAutomaticServicing()) return;
 	if (v->IsChainInDepot()) {
-		VehicleServiceInDepot(v);
+		v->ServiceInDepot();
 		return;
 	}
 
