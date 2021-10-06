@@ -1706,7 +1706,7 @@ static void CheckIfRoadVehNeedsService(RoadVehicle *v)
 
 void RoadVehicle::OnNewDay()
 {
-	AgeVehicle(this);
+	this->UpdateAge();
 
 	if (!this->IsFrontEngine()) return;
 

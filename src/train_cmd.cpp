@@ -4117,7 +4117,7 @@ static void CheckIfTrainNeedsService(Train *v)
 /** Update day counters of the train vehicle. */
 void Train::OnNewDay()
 {
-	AgeVehicle(this);
+	this->UpdateAge();
 
 	if ((++this->day_counter & 7) == 0) this->DecreaseValue();
 

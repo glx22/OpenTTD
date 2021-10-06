@@ -1361,34 +1361,33 @@ bool Vehicle::HandleBreakdown()
 }
 
 /**
- * Update age of a vehicle.
- * @param v Vehicle to update.
+ * Update age of the vehicle.
  */
-void AgeVehicle(Vehicle *v)
+void Vehicle::UpdateAge()
 {
-	if (v->age < MAX_DATE) {
-		v->age++;
-		if (v->IsPrimaryVehicle() && v->age == VEHICLE_PROFIT_MIN_AGE + 1) GroupStatistics::VehicleReachedMinAge(v);
+	if (this->age < MAX_DATE) {
+		this->age++;
+		if (this->IsPrimaryVehicle() && this->age == VEHICLE_PROFIT_MIN_AGE + 1) GroupStatistics::VehicleReachedMinAge(this);
 	}
 
-	if (!v->IsPrimaryVehicle() && (v->type != VEH_TRAIN || !Train::From(v)->IsEngine())) return;
+	if (!this->IsPrimaryVehicle() && (this->type != VEH_TRAIN || !Train::From(this)->IsEngine())) return;
 
-	int age = v->age - v->max_age;
+	int age = this->age - this->max_age;
 	if (age == DAYS_IN_LEAP_YEAR * 0 || age == DAYS_IN_LEAP_YEAR * 1 ||
 			age == DAYS_IN_LEAP_YEAR * 2 || age == DAYS_IN_LEAP_YEAR * 3 || age == DAYS_IN_LEAP_YEAR * 4) {
-		v->reliability_spd_dec <<= 1;
+		this->reliability_spd_dec <<= 1;
 	}
 
-	SetWindowDirty(WC_VEHICLE_DETAILS, v->index);
+	SetWindowDirty(WC_VEHICLE_DETAILS, this->index);
 
 	/* Don't warn about vehicles which are non-primary (e.g., part of an articulated vehicle), don't belong to us, are crashed, or are stopped */
-	if (v->Previous() != nullptr || v->owner != _local_company || (v->vehstatus & VS_CRASHED) != 0 || (v->vehstatus & VS_STOPPED) != 0) return;
+	if (this->Previous() != nullptr || this->owner != _local_company || (this->vehstatus & (VS_CRASHED | VS_STOPPED)) != 0) return;
 
-	const Company *c = Company::Get(v->owner);
+	const Company *c = Company::Get(this->owner);
 	/* Don't warn if a renew is active */
-	if (c->settings.engine_renew && v->GetEngine()->company_avail != 0) return;
+	if (c->settings.engine_renew && this->GetEngine()->company_avail != 0) return;
 	/* Don't warn if a replacement is active */
-	if (EngineHasReplacementForCompany(c, v->engine_type, v->group_id)) return;
+	if (EngineHasReplacementForCompany(c, this->engine_type, this->group_id)) return;
 
 	StringID str;
 	if (age == -DAYS_IN_LEAP_YEAR) {
@@ -1401,8 +1400,8 @@ void AgeVehicle(Vehicle *v)
 		return;
 	}
 
-	SetDParam(0, v->index);
-	AddVehicleAdviceNewsItem(str, v->index);
+	SetDParam(0, this->index);
+	AddVehicleAdviceNewsItem(str, this->index);
 }
 
 /**

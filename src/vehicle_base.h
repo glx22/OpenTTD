@@ -773,6 +773,8 @@ public:
 
 	bool HandleBreakdown();
 
+	void UpdateAge();
+
 	bool NeedsAutorenewing(const Company *c, bool use_renew_setting = true) const;
 
 	void ServiceInDepot();

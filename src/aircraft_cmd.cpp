@@ -447,7 +447,7 @@ void Aircraft::OnNewDay()
 	CheckOrders(this);
 
 	CheckVehicleBreakdown(this);
-	AgeVehicle(this);
+	this->UpdateAge();
 	CheckIfAircraftNeedsService(this);
 
 	if (this->running_ticks == 0) return;

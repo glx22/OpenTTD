@@ -60,7 +60,6 @@ void ShowNewGrfVehicleError(EngineID engine, StringID part1, StringID part2, GRF
 CommandCost TunnelBridgeIsFree(TileIndex tile, TileIndex endtile, const Vehicle *ignore = nullptr);
 
 void CheckVehicleBreakdown(Vehicle *v);
-void AgeVehicle(Vehicle *v);
 void VehicleEnteredDepotThisTick(Vehicle *v);
 
 UnitID GetFreeUnitNumber(VehicleType type);
