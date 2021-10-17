@@ -32,7 +32,7 @@ jobs:
     - name: Patch Emscripten to support LZMA
       run: |
         cd /emsdk/upstream/emscripten
-        patch -p1 < ${GITHUB_WORKSPACE}/os/emscripten/emsdk-liblzma.patch
+        sudo patch -p1 < ${GITHUB_WORKSPACE}/os/emscripten/emsdk-liblzma.patch
 
     - name: Build (host tools)
       run: |
