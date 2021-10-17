@@ -17,6 +17,7 @@ jobs:
     container:
       # If you change this version, change the number in the cache step too.
       image: emscripten/emsdk:2.0.31
+      options: -u 1001:121
 
     steps:
     - name: Checkout
@@ -66,6 +67,7 @@ jobs:
 
   linux:
     name: Linux
+    if: 0
 
     strategy:
       fail-fast: false
@@ -152,6 +154,7 @@ jobs:
 
   macos:
     name: Mac OS
+    if: 0
 
     strategy:
       fail-fast: false
@@ -233,6 +236,7 @@ jobs:
 
   windows:
     name: Windows
+    if: 0
 
     strategy:
       fail-fast: false
@@ -324,6 +328,7 @@ jobs:
 
   msys2:
     name: msys2
+    if: 0
 
     strategy:
       fail-fast: false
