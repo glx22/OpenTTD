@@ -736,6 +736,8 @@ int openttd_main(int argc, char *argv[])
 		}
 	}
 
+	const std::unique_ptr<uint32[]> buffer = DrawSpriteToRgbaBuffer(SPR_IMG_PAUSE);
+
 	if (videodriver.empty() && !_ini_videodriver.empty()) videodriver = _ini_videodriver;
 	DriverFactoryBase::SelectDriver(videodriver, Driver::DT_VIDEO);
 
