@@ -59,8 +59,12 @@ void GroundVehicle<T, Type>::PowerChanged()
 	max_te *= GROUND_ACCELERATION; // Tractive effort in (tonnes * 1000 * 9.8 =) N.
 	max_te /= 256;  // Tractive effort is a [0-255] coefficient.
 	if (this->gcache.cached_power != total_power || this->gcache.cached_max_te != max_te) {
-		/* Stop the vehicle if it has no power. */
-		if (total_power == 0) this->vehstatus |= VS_STOPPED;
+		/* Stop the vehicle if it has no power, or restart it if it recovered power before fully stopping. */
+		if (total_power == 0) {
+			this->vehstatus |= VS_STOPPED;
+		} else if (this->gcache.cached_power == 0 && this->cur_speed > 0) {
+			this->vehstatus &= ~VS_STOPPED;
+		}
 
 		this->gcache.cached_power = total_power;
 		this->gcache.cached_max_te = max_te;
