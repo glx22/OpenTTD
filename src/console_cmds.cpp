@@ -44,6 +44,7 @@
 #include "walltime_func.h"
 #include "company_cmd.h"
 #include "misc_cmd.h"
+#include "blitter/factory.hpp"
 
 #include "safeguards.h"
 
@@ -2431,12 +2432,40 @@ DEF_CONSOLE_CMD(ConDumpInfo)
 	return false;
 }
 
+
+DEF_CONSOLE_CMD(ConRGBA)
+{
+	if (argc != 3) {
+		IConsolePrint(CC_HELP, "Usage: 'rgba sprite_id filename'.");
+		return true;
+	}
+
+	SpriteID sprite_id = atoi(argv[1]);
+	Dimension dim = GetSpriteSize(sprite_id, nullptr, _settings_client.gui.zoom_min);
+	std::unique_ptr<uint32[]> buffer = DrawSpriteToRgbaBuffer(sprite_id, _settings_client.gui.zoom_min);
+	FILE* f = FioFOpenFile(argv[2], "w", SCREENSHOT_DIR);
+	if (f != nullptr) {
+		fprintf(f, "%s\n", BlitterFactory::GetCurrentBlitter()->GetName());
+		const uint32 *s = buffer.get();
+		for (uint y = 0; y < dim.height; y++) {
+			for (uint x = 0; x < dim.width; x++) {
+				fprintf(f, "%08X ", *s++);
+			}
+			fprintf(f, "\n");
+		}
+	}
+	FioFCloseFile(f);
+
+	return true;
+}
+
 /*******************************
  * console command registration
  *******************************/
 
 void IConsoleStdLibRegister()
 {
+	IConsole::CmdRegister("rgba",                    ConRGBA);
 	IConsole::CmdRegister("debug_level",             ConDebugLevel);
 	IConsole::CmdRegister("echo",                    ConEcho);
 	IConsole::CmdRegister("echoc",                   ConEchoC);
