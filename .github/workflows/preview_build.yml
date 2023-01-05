@@ -1,6 +1,14 @@
 name: Preview build
 
 on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'sha'
+        required: true
+      folder:
+        description: 'folder name'
+        required: true
   repository_dispatch:
     types:
     - Preview*
@@ -16,6 +24,7 @@ jobs:
 
     steps:
     - name: Update deployment status to in progress
+      if: false
       uses: octokit/request-action@v2.x
       with:
         route: POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses
@@ -33,12 +42,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        ref: ${{ github.event.client_payload.sha }}
+        ref: ${{ github.event.inputs.sha }}
 
     - name: Name branch
       run: |
         git config --add safe.directory ${GITHUB_WORKSPACE}
-        name=$(echo "${{ github.event.client_payload.folder }}")
+        name=$(echo "${{ github.event.inputs.folder }}")
         git checkout -b ${name}
 
     - name: Setup cache
@@ -87,6 +96,7 @@ jobs:
         echo "::endgroup::"
 
     - name: Publish preview
+      if: false
       run: |
         pip3 install awscli
 
@@ -102,6 +112,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Update deployment status to success
+      if: false
       uses: octokit/request-action@v2.x
       with:
         route: POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses
@@ -117,7 +128,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.PREVIEW_GITHUB_TOKEN }}
 
-    - if: failure()
+    - if: false || failure()
       name: Update deployment status to failure
       uses: octokit/request-action@v2.x
       with:
