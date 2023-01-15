@@ -2057,7 +2057,7 @@ CommandCost CmdBuildIndustry(DoCommandFlag flags, TileIndex tile, IndustryType i
 					/* Check now each layout, starting with the random one */
 					for (size_t j = 0; j < num_layouts; j++) {
 						layout = (layout + 1) % num_layouts;
-						ret = CreateNewIndustryHelper(tile, it, flags, indspec, layout, random_var8f, random_initial_bits, cur_company.GetOriginalValue(), _current_company == OWNER_DEITY ? IACT_RANDOMCREATION : IACT_PROSPECTCREATION, &ind);
+						ret = CreateNewIndustryHelper(tile, it, flags, indspec, layout, random_var8f, random_initial_bits, cur_company.GetOriginalValue(), deity_prospect ? IACT_RANDOMCREATION : IACT_PROSPECTCREATION, &ind);
 						if (ret.Succeeded()) break;
 					}
 					if (ret.Succeeded()) break;
