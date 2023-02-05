@@ -2084,7 +2084,7 @@ CommandCost CmdBuildIndustry(DoCommandFlag flags, TileIndex tile, IndustryType i
 		if (ret.Failed()) return ret;
 	}
 
-	if ((flags & DC_EXEC) && ind != nullptr && _game_mode != GM_EDITOR) {
+	if ((flags & DC_EXEC) && ind != nullptr && _game_mode != GM_EDITOR && !_generating_world) {
 		AdvertiseIndustryOpening(ind);
 	}
 
