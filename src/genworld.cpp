@@ -166,7 +166,7 @@ static void _GenerateWorld()
 					for (i = 0; i < 2500; i++) {
 						Game::GameLoop();
 						IncreaseGeneratingWorldProgress(GWP_RUNSCRIPT);
-						if (Game::GetInstance()->IsSleeping()) break;
+						if (Game::GetInstance()->IsDead() || Game::GetInstance()->IsSleeping()) break;
 					}
 					_generating_world = false;
 				}
