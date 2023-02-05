@@ -161,9 +161,10 @@ static void _GenerateWorld()
 				Game::StartNew();
 
 				if (Game::GetInstance() != nullptr) {
-					SetGeneratingWorldProgress(GWP_RUNSCRIPT, 2500);
+					uint nb_gameloops = Map::ScaleBySize1D(2500);
+					SetGeneratingWorldProgress(GWP_RUNSCRIPT, nb_gameloops);
 					_generating_world = true;
-					for (i = 0; i < 2500; i++) {
+					for (i = 0; i < nb_gameloops; i++) {
 						Game::GameLoop();
 						IncreaseGeneratingWorldProgress(GWP_RUNSCRIPT);
 						if (Game::GetInstance()->IsDead() || Game::GetInstance()->IsSleeping()) break;
