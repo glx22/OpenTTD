@@ -88,8 +88,8 @@ bool BaseSet<T, Tnum_files, Tsearch_in_tars>::FillSetDetails(IniFile *ini, const
 			continue;
 		}
 
-		const char *filename = item->value->c_str();
-		file->filename = str_fmt("%s%s", path, filename);
+		const std::string &filename = *item->value;
+		file->filename = stredup((std::string{ path } + filename).c_str());
 
 		/* Then find the MD5 checksum */
 		item = md5s->GetItem(filename, false);
