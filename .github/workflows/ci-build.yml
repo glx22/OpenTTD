@@ -281,29 +281,15 @@ jobs:
       id: key
       shell: powershell
       run: |
-        # Work around caching failure with GNU tar
-        New-Item -Type Junction -Path vcpkg -Target c:\vcpkg
-
         Write-Output "image=$env:ImageOS-$env:ImageVersion" >> $env:GITHUB_OUTPUT
 
     - name: Enable vcpkg cache
       uses: actions/cache@v3
       with:
-        path: vcpkg/installed
+        path: build/vcpkg_installed
         key: ${{ steps.key.outputs.image }}-vcpkg-${{ matrix.arch }}-1 # Increase the number whenever dependencies are modified
         restore-keys: |
           ${{ steps.key.outputs.image }}-vcpkg-${{ matrix.arch }}
-
-    - name: Prepare vcpkg
-      shell: bash
-      run: |
-        vcpkg install --triplet=${{ matrix.arch }}-windows-static \
-          breakpad \
-          liblzma \
-          libpng \
-          lzo \
-          zlib \
-          # EOF
 
     - name: Install OpenGFX
       shell: bash
@@ -334,7 +320,7 @@ jobs:
       env:
         NINJA_STATUS: "[%f/%t -- %e] " # [finished_edges/total_edges -- elapsed_time], default value is "[%f/%t] "
       run: |
-        mkdir build
+        mkdir -p build
         cd build
 
         echo "::group::CMake"

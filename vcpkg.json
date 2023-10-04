@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "dependencies": [
+    {
+      "name": "breakpad",
+      "platform": "(windows & static) & (x86 | x64)"
+    },
+    {
+      "name": "liblzma",
+      "platform": "(windows & static) & (x86 | x64 | arm64)"
+    },
+    {
+      "name": "libpng",
+      "platform": "(windows & static) & (x86 | x64 | arm64)"
+    },
+    {
+      "name": "lzo",
+      "platform": "(windows & static) & (x86 | x64 | arm64)"
+    },
+    {
+      "name": "zlib",
+      "platform": "(windows & static) & (x86 | x64 | arm64)"
+    }
+  ]
+}
