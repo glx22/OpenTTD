@@ -411,7 +411,7 @@ void CocoaDialog(const char *title, const char *message, const char *buttonLabel
 		[ alert setMessageText:[ NSString stringWithUTF8String:title ] ];
 		[ alert setInformativeText:[ NSString stringWithUTF8String:message ] ];
 		[ alert addButtonWithTitle: [ NSString stringWithUTF8String:buttonLabel ] ];
-		[ alert runModal ];
+		[ alert performSelectorOnMainThread:@selector(runModal) withObject:nil waitUntilDone:YES ];
 		[ alert release ];
 	}
 
