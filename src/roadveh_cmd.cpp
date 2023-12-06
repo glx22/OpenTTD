@@ -1662,6 +1662,15 @@ void RoadVehicle::SetDestTile(TileIndex tile)
 	this->dest_tile = tile;
 }
 
+uint32_t RoadVehicle::GetDepotSearchPenalty()
+{
+	switch (_settings_game.pf.pathfinder_for_roadvehs) {
+		case VPF_NPF:  return _settings_game.pf.npf.maximum_go_to_depot_penalty;
+		case VPF_YAPF: return _settings_game.pf.yapf.maximum_go_to_depot_penalty;
+		default: NOT_REACHED();
+	}
+}
+
 static void CheckIfRoadVehNeedsService(RoadVehicle *v)
 {
 	/* If we already got a slot at a stop, use that FIRST, and go to a depot later */
@@ -1671,12 +1680,7 @@ static void CheckIfRoadVehNeedsService(RoadVehicle *v)
 		return;
 	}
 
-	uint max_penalty;
-	switch (_settings_game.pf.pathfinder_for_roadvehs) {
-		case VPF_NPF:  max_penalty = _settings_game.pf.npf.maximum_go_to_depot_penalty;  break;
-		case VPF_YAPF: max_penalty = _settings_game.pf.yapf.maximum_go_to_depot_penalty; break;
-		default: NOT_REACHED();
-	}
+	uint max_penalty = v->GetDepotSearchPenalty();
 
 	FindDepotData rfdd = FindClosestRoadDepot(v, max_penalty);
 	/* Only go to the depot if it is not too far out of our way. */

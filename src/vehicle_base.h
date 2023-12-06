@@ -787,6 +787,8 @@ public:
 	 */
 	virtual ClosestDepot FindClosestDepot() { return {}; }
 
+	virtual uint32_t GetDepotSearchPenalty() { return 0; }
+
 	virtual void SetDestTile(TileIndex tile) { this->dest_tile = tile; }
 
 	CommandCost SendToDepot(DoCommandFlag flags, DepotCommand command);
