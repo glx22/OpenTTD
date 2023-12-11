@@ -117,6 +117,7 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 	EngineID first_engine = this->IsFrontEngine() ? this->engine_type : INVALID_ENGINE;
 	this->gcache.cached_total_length = 0;
 	this->powered_railtypes = RAILTYPES_NONE;
+	this->compatible_railtypes = INVALID_RAILTYPES;
 
 	bool train_can_tilt = true;
 	int min_curve_speed_mod = INT_MAX;
@@ -189,6 +190,8 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 				uint16_t speed = GetVehicleProperty(u, PROP_TRAIN_SPEED, rvi_u->max_speed);
 				if (speed != 0) max_speed = std::min(speed, max_speed);
 			}
+
+			this->compatible_railtypes &= GetRailTypeInfo(u->railtype)->compatible_railtypes;
 		}
 
 		uint16_t new_cap = e_u->DetermineCapacity(u);
