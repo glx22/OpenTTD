@@ -17,7 +17,7 @@ protected:
 public:
 	void SetDestination(const Train *v, bool override_rail_type = false)
 	{
-		m_compatible_railtypes = v->compatible_railtypes;
+		m_compatible_railtypes = v->powered_railtypes;
 		if (override_rail_type) m_compatible_railtypes |= GetRailTypeInfo(v->railtype)->compatible_railtypes;
 	}
 

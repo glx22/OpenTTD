@@ -1256,7 +1256,7 @@ FindDepotData NPFTrainFindNearestDepot(const Train *v, int max_penalty)
 	fstd.reserve_path = false;
 
 	assert(trackdir != INVALID_TRACKDIR);
-	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->compatible_railtypes, ROADTYPES_NONE, 0 };
+	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->powered_railtypes, ROADTYPES_NONE, 0 };
 	NPFFoundTargetData ftd = NPFRouteToDepotBreadthFirstTwoWay(v->tile, trackdir, false, last->tile, trackdir_rev, false, &fstd, &user, NPF_INFINITE_PENALTY, max_penalty);
 	if (ftd.best_bird_dist != 0) return FindDepotData();
 
@@ -1280,7 +1280,7 @@ bool NPFTrainFindNearestSafeTile(const Train *v, TileIndex tile, Trackdir trackd
 	start1.tile = tile;
 	start1.direction = trackdir;
 
-	RailTypes railtypes = v->compatible_railtypes;
+	RailTypes railtypes = v->powered_railtypes;
 	if (override_railtype) railtypes |= GetRailTypeInfo(v->railtype)->compatible_railtypes;
 
 	/* perform a breadth first search. Target is nullptr,
@@ -1302,7 +1302,7 @@ bool NPFTrainCheckReverse(const Train *v)
 	assert(trackdir != INVALID_TRACKDIR);
 	assert(trackdir_rev != INVALID_TRACKDIR);
 
-	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->compatible_railtypes, ROADTYPES_NONE, 0 };
+	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->powered_railtypes, ROADTYPES_NONE, 0 };
 	ftd = NPFRouteToStationOrTileTwoWay(v->tile, trackdir, false, last->tile, trackdir_rev, false, &fstd, &user);
 	/* If we didn't find anything, just keep on going straight ahead, otherwise take the reverse flag */
 	return ftd.best_bird_dist == 0 && NPFGetFlag(&ftd.node, NPF_FLAG_REVERSE);
@@ -1316,7 +1316,7 @@ Track NPFTrainChooseTrack(const Train *v, bool &path_found, bool reserve_track, 
 	PBSTileInfo origin = FollowTrainReservation(v);
 	assert(IsValidTrackdir(origin.trackdir));
 
-	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->compatible_railtypes, ROADTYPES_NONE, 0 };
+	AyStarUserData user = { v->owner, TRANSPORT_RAIL, v->powered_railtypes, ROADTYPES_NONE, 0 };
 	NPFFoundTargetData ftd = NPFRouteToStationOrTile(origin.tile, origin.trackdir, true, &fstd, &user);
 
 	if (target != nullptr) {
