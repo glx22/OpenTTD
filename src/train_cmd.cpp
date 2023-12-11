@@ -251,6 +251,7 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 		InvalidateWindowData(WC_VEHICLE_ORDERS, this->index, VIWD_CONSIST_CHANGED);
 		InvalidateNewGRFInspectWindow(GSF_TRAINS, this->index);
 	}
+	Debug(misc, 0, "Train {} powered {:016X} compatible {:016X}", this->unitnumber, this->powered_railtypes, this->compatible_railtypes);
 }
 
 /**
