@@ -117,6 +117,7 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 	EngineID first_engine = this->IsFrontEngine() ? this->engine_type : INVALID_ENGINE;
 	this->gcache.cached_total_length = 0;
 	this->compatible_railtypes = RAILTYPES_NONE;
+	RailTypes consist_railtypes = INVALID_RAILTYPES;
 
 	bool train_can_tilt = true;
 	int min_curve_speed_mod = INT_MAX;
@@ -176,6 +177,7 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 			if (rvi_u->power > 0) {
 				this->compatible_railtypes |= GetRailTypeInfo(u->railtype)->powered_railtypes;
 			}
+			consist_railtypes &= GetRailTypeInfo(u->railtype)->compatible_railtypes;
 
 			/* Some electric engines can be allowed to run on normal rail. It happens to all
 			 * existing electric engines when elrails are disabled and then re-enabled */
@@ -231,6 +233,12 @@ void Train::ConsistChanged(ConsistChangeFlags allowed_changes)
 		this->InvalidateNewGRFCache();
 		u->InvalidateNewGRFCache();
 	}
+
+	/* Reduce to common compatibility of whole consist. */
+	this->compatible_railtypes &= consist_railtypes;
+	/* If we are already on the track, keep going. */
+	RailType rt = GetTileRailType(this->tile);
+	if (rt != INVALID_RAILTYPE) SetBit(this->compatible_railtypes, rt);
 
 	/* store consist weight/max speed in cache */
 	this->vcache.cached_max_speed = max_speed;
