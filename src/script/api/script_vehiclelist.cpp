@@ -60,9 +60,13 @@ ScriptVehicleList::ScriptVehicleList(HSQUIRRELVM vm)
 		}
 
 		/* Call the function. Squirrel pops all parameters and pushes the return value. */
-		if (SQ_FAILED(sq_call(vm, nparam + 1, SQTrue, SQTrue))) {
+		if (SQ_FAILED(sq_call(vm, nparam + 1, SQTrue, SQTrue, 5000))) {
 			ScriptObject::SetAllowDoCommand(backup_allow);
 			throw sq_throwerror(vm, "failed to run filter");
+		}
+		if (sq_getvmstate(vm) == SQ_VMSTATE_SUSPENDED) {
+			ScriptObject::SetAllowDoCommand(backup_allow);
+			throw sq_throwerror(vm, "excessive CPU usage in filter function");
 		}
 
 		/* Retrieve the return value */
