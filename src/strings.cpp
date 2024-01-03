@@ -1112,7 +1112,7 @@ static void FormatString(StringBuilder &builder, const char *str_arg, StringPara
 					StringID string_id = args.GetNextParameter<StringID>();
 					if (game_script && GetStringTab(string_id) != TEXT_TAB_GAMESCRIPT_START) break;
 					/* It's prohibited for the included string to consume any arguments. */
-					StringParameters tmp_params(args, 0);
+					StringParameters tmp_params(args, game_script ? args.GetDataLeft() : 0);
 					GetStringWithArgs(builder, string_id, tmp_params, next_substr_case_index, game_script);
 					next_substr_case_index = 0;
 					break;
