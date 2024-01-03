@@ -1112,8 +1112,10 @@ static void FormatString(StringBuilder &builder, const char *str_arg, StringPara
 					StringID string_id = args.GetNextParameter<StringID>();
 					if (game_script && GetStringTab(string_id) != TEXT_TAB_GAMESCRIPT_START) break;
 					/* It's prohibited for the included string to consume any arguments. */
-					StringParameters tmp_params(args, game_script ? args.GetDataLeft() : 0);
-					GetStringWithArgs(builder, string_id, tmp_params, next_substr_case_index, game_script);
+					size_t offset = args.GetOffset();
+					StringParameters tmp_params(args, 0);
+					GetStringWithArgs(builder, string_id, game_script ? args : tmp_params, next_substr_case_index, game_script);
+					if (game_script) args.SetOffset(offset);
 					next_substr_case_index = 0;
 					break;
 				}
@@ -1132,8 +1134,10 @@ static void FormatString(StringBuilder &builder, const char *str_arg, StringPara
 					if (game_script && size > args.GetDataLeft()) {
 						builder += "(too many parameters)";
 					} else {
+						size_t offset = args.GetOffset();
 						StringParameters sub_args(args, size);
-						GetStringWithArgs(builder, string_id, sub_args, next_substr_case_index, game_script);
+						GetStringWithArgs(builder, string_id, game_script ? args : sub_args, next_substr_case_index, game_script);
+						if (game_script) args.SetOffset(offset + size);
 					}
 					next_substr_case_index = 0;
 					break;
@@ -1625,7 +1629,7 @@ static void FormatString(StringBuilder &builder, const char *str_arg, StringPara
 					break;
 			}
 		} catch (std::out_of_range &e) {
-			Debug(misc, 0, "FormatString: {}", e.what());
+			if (!game_script) Debug(misc, 0, "FormatString: {}", e.what());
 			builder += "(invalid parameter)";
 		}
 	}
