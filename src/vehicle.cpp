@@ -1784,7 +1784,7 @@ VehicleEnterTileStatus VehicleEnterTile(Vehicle *v, TileIndex tile, int x, int y
  * @param type type of vehicle
  * @param owner owner of vehicles
  */
-FreeUnitIDGenerator::FreeUnitIDGenerator(VehicleType type, CompanyID owner) : cache(nullptr), maxid(0), curid(0)
+FreeUnitIDGenerator::FreeUnitIDGenerator(VehicleType type, CompanyID owner) : maxid(0), curid(0)
 {
 	/* Find maximum */
 	for (const Vehicle *v : Vehicle::Iterate()) {
@@ -1798,7 +1798,7 @@ FreeUnitIDGenerator::FreeUnitIDGenerator(VehicleType type, CompanyID owner) : ca
 	/* Reserving 'maxid + 2' because we need:
 	 * - space for the last item (with v->unitnumber == maxid)
 	 * - one free slot working as loop terminator in FreeUnitIDGenerator::NextID() */
-	this->cache = CallocT<bool>(this->maxid + 2);
+	this->cache.resize(this->maxid + 2, false);
 
 	/* Fill the cache */
 	for (const Vehicle *v : Vehicle::Iterate()) {
