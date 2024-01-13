@@ -356,9 +356,11 @@ static std::vector<SCRIPT_ITEM> UniscribeItemizeString(UniscribeParagraphLayoutF
 		int num_chars = this->cur_range_offset;
 		int start_offs = this->cur_range_offset;
 		int last_cluster = this->cur_range_offset + 1;
-		for (std::vector<UniscribeRun>::iterator r = start_run; r != last_run; r++) {
+		for (std::vector<UniscribeRun>::iterator r = start_run; r != this->ranges.end(); r++) {
 			log_attribs.resize(r->pos - start_run->pos + r->len);
 			if (FAILED(ScriptBreak(this->text_buffer + r->pos + start_offs, r->len - start_offs, &r->sa, &log_attribs[r->pos - start_run->pos + start_offs]))) return nullptr;
+
+			if (r >= last_run) continue;
 
 			std::vector<int> dx(r->len);
 			ScriptGetLogicalWidths(&r->sa, r->len, (int)r->glyphs.size(), &r->advances[0], &r->char_to_glyph[0], &r->vis_attribs[0], &dx[0]);
@@ -378,6 +380,26 @@ static std::vector<SCRIPT_ITEM> UniscribeItemizeString(UniscribeParagraphLayoutF
 		if (num_chars == this->cur_range_offset) {
 			/* Didn't find any suitable word break point, just break on the last cluster boundary. */
 			num_chars = last_cluster;
+		} else {
+			/* If next line does not fit into the available width, ignore the found suitable breaking point. */
+			int next_width = 0;
+			int next_chars = 0;
+			start_offs = this->cur_range_offset;
+			for (std::vector<UniscribeRun>::iterator r = start_run; r != this->ranges.end(); r++) {
+				std::vector<int> dx(r->len);
+				ScriptGetLogicalWidths(&r->sa, r->len, (int)r->glyphs.size(), &r->advances[0], &r->char_to_glyph[0], &r->vis_attribs[0], &dx[0]);
+
+				/* Get width of next line until suitable breaking point. */
+				for (int c = start_offs; c < r->len && next_width <= max_width; c++, next_chars++) {
+					if (next_chars <= num_chars) continue;
+					if (log_attribs[next_chars].fSoftBreak || log_attribs[next_chars].fWhiteSpace) break;
+					next_width += dx[c];
+				}
+				if (next_chars < (int)log_attribs.size() && (log_attribs[next_chars].fSoftBreak || log_attribs[next_chars].fWhiteSpace)) break;
+
+				start_offs = 0;
+			}
+			if (next_width > max_width) num_chars = last_cluster;
 		}
 
 		/* Eat any whitespace characters before the breaking point. */
