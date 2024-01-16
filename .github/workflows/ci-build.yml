@@ -172,7 +172,7 @@ jobs:
         cd build
 
         echo "::group::CMake"
-        cmake .. -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake ${{ matrix.extra-cmake-parameters }}
+        cmake .. -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake ${{ matrix.extra-cmake-parameters }} -DCMAKE_BUILD_TYPE=RelWithDebInfo
         echo "::endgroup::"
 
         echo "::group::Build"
@@ -247,6 +247,8 @@ jobs:
           -DCMAKE_OSX_ARCHITECTURES=${{ matrix.full_arch }} \
           -DVCPKG_TARGET_TRIPLET=${{ matrix.arch }}-osx \
           -DCMAKE_TOOLCHAIN_FILE=/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
           # EOF
         echo "::endgroup::"
 
@@ -320,6 +322,7 @@ jobs:
           -GNinja \
           -DVCPKG_TARGET_TRIPLET=${{ matrix.arch }}-windows-static \
           -DCMAKE_TOOLCHAIN_FILE="c:\vcpkg\scripts\buildsystems\vcpkg.cmake" \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           # EOF
         echo "::endgroup::"
 
@@ -398,6 +401,7 @@ jobs:
         cmake .. \
           -GNinja \
           -DCMAKE_CXX_FLAGS="-fuse-ld=lld" \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
           # EOF
         echo "::endgroup::"
 

@@ -8,7 +8,9 @@
 /** @file town_cmd.cpp Handling of town tiles. */
 
 #include "stdafx.h"
+#pragma message(XSTR(assert(true)))
 #include "road.h"
+#pragma message(XSTR(assert(true)))
 #include "road_internal.h" /* Cleaning up road bits */
 #include "road_cmd.h"
 #include "landscape.h"

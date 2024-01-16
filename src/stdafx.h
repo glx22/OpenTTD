@@ -394,6 +394,9 @@ void NORETURN AssertFailedError(int line, const char *file, const char *expressi
 #	define assert(expression) if (unlikely(!(expression))) AssertFailedError(__LINE__, __FILE__, #expression);
 #endif
 
+#define XSTR(x) STR(x)
+#define STR(x) #x
+
 /* Define JSON_ASSERT, which is used by nlohmann-json. Otherwise the header-file
  * will re-include assert.h, and reset the assert macro. */
 #define JSON_ASSERT(x) assert(x)
