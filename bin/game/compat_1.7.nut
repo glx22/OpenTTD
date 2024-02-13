@@ -33,3 +33,10 @@ GSRoad.HasRoadType <- function(tile, road_type)
 	}
 	return false;
 }
+
+/* 14 adds hangar index to GetHangarOfAirport function */
+GSAirport._GetHangarOfAirport <- GSAirport.GetHangarOfAirport;
+GSAirport.GetHangarOfAirport <- function(tile)
+{
+	return GSAirport._GetHangarOfAirport(tile, 0);
+}

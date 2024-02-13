@@ -6,3 +6,10 @@
  */
 
 GSLog.Info("13 API compatibility in effect.");
+
+/* 14 adds hangar index to GetHangarOfAirport function */
+GSAirport._GetHangarOfAirport <- GSAirport.GetHangarOfAirport;
+GSAirport.GetHangarOfAirport <- function(tile)
+{
+	return GSAirport._GetHangarOfAirport(tile, 0);
+}

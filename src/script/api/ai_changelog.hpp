@@ -36,6 +36,7 @@
  * \li AITownList accepts an optional filter function
  * \li AIVehicleList accepts an optional filter function
  * \li AIInfo::AddSettings easy_value / medium_value / hard_value are replaced with default_value
+ * \li AIAircraft::GetHangarOfAirport adds an extra parameter for the index of the hangar
  *
  * \b 13.0
  *

@@ -19,3 +19,10 @@ AIRoad.HasRoadType <- function(tile, road_type)
 	}
 	return false;
 }
+
+/* 14 adds hangar index to GetHangarOfAirport function */
+AIAirport._GetHangarOfAirport <- AIAirport.GetHangarOfAirport;
+AIAirport.GetHangarOfAirport <- function(tile)
+{
+	return AIAirport._GetHangarOfAirport(tile, 0);
+}

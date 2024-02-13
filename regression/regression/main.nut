@@ -211,7 +211,7 @@ function Regression::Airport()
 
 	print("  IsHangarTile():       " + AIAirport.IsHangarTile(32116));
 	print("  IsAirportTile():      " + AIAirport.IsAirportTile(32116));
-	print("  GetHangarOfAirport(): " + AIAirport.GetHangarOfAirport(32116));
+	print("  GetHangarOfAirport(): " + AIAirport.GetHangarOfAirport(32116, 0));
 	print("  GetAirportType():     " + AIAirport.GetAirportType(32116));
 
 	for (local i = -1; i < 10; i++) {
@@ -229,7 +229,7 @@ function Regression::Airport()
 	print("  IsHangarTile():       " + AIAirport.IsHangarTile(32116));
 	print("  IsAirportTile():      " + AIAirport.IsAirportTile(32116));
 	print("  GetAirportType():     " + AIAirport.GetAirportType(32119));
-	print("  GetHangarOfAirport(): " + AIAirport.GetHangarOfAirport(32116));
+	print("  GetHangarOfAirport(): " + AIAirport.GetHangarOfAirport(32116, 0));
 	print("  IsHangarTile():       " + AIAirport.IsHangarTile(32119));
 	print("  IsAirportTile():      " + AIAirport.IsAirportTile(32119));
 	print("  GetAirportType():     " + AIAirport.GetAirportType(32119));

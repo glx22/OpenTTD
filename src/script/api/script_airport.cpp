@@ -102,18 +102,21 @@
 	return st->airport.GetNumHangars();
 }
 
-/* static */ TileIndex ScriptAirport::GetHangarOfAirport(TileIndex tile)
+/* static */ TileIndex ScriptAirport::GetHangarOfAirport(TileIndex tile, SQInteger index)
 {
 	EnforceDeityOrCompanyModeValid(INVALID_TILE);
 	if (!::IsValidTile(tile)) return INVALID_TILE;
 	if (!::IsTileType(tile, MP_STATION)) return INVALID_TILE;
-	if (GetNumHangars(tile) < 1) return INVALID_TILE;
+
+	const auto num_hangars = GetNumHangars(tile);
+	if (num_hangars < 1) return INVALID_TILE;
+	if (index < 0 || index >= num_hangars) return INVALID_TILE;
 
 	const Station *st = ::Station::GetByTile(tile);
 	if (st->owner != ScriptObject::GetCompany() && ScriptCompanyMode::IsValid()) return INVALID_TILE;
 	if ((st->facilities & FACIL_AIRPORT) == 0) return INVALID_TILE;
 
-	return st->airport.GetHangarTile(0);
+	return st->airport.GetHangarTile(index);
 }
 
 /* static */ ScriptAirport::AirportType ScriptAirport::GetAirportType(TileIndex tile)

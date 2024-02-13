@@ -102,6 +102,7 @@
  * \li GSTownList accepts an optional filter function
  * \li GSVehicleList accepts an optional filter function
  * \li GSInfo::AddSettings easy_value / medium_value / hard_value are replaced with default_value
+ * \li GSAircraft::GetHangarOfAirport adds an extra parameter for the index of the hangar
  *
  * \b 13.0
  *

@@ -123,16 +123,16 @@ public:
 	static SQInteger GetNumHangars(TileIndex tile);
 
 	/**
-	 * Get the first hangar tile of the airport.
+	 * Get the hangar tile of the airport with index.
 	 * @param tile Any tile of the airport.
+	 * @param index Hangar index of the airport.
 	 * @pre ScriptMap::IsValidTile(tile).
 	 * @pre GetNumHangars(tile) > 0.
-	 * @return The first hangar tile of the airport.
-	 * @note Possible there are more hangars, but you won't be able to find them
-	 *  without walking over all the tiles of the airport and using
-	 *  IsHangarTile() on them.
+	 * @pre index >= 0 && index < GetNumHangars(tile).
+	 * @return The hangar tile of the airport with the given index.
+	 * @note Hangar index starts from 0 for the first, 1 for the second and so on.
 	 */
-	static TileIndex GetHangarOfAirport(TileIndex tile);
+	static TileIndex GetHangarOfAirport(TileIndex tile, SQInteger index);
 
 	/**
 	 * Builds a airport with tile at the topleft corner.

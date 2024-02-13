@@ -6,3 +6,10 @@
  */
 
 AILog.Info("13 API compatibility in effect.");
+
+/* 14 adds hangar index to GetHangarOfAirport function */
+AIAirport._GetHangarOfAirport <- AIAirport.GetHangarOfAirport;
+AIAirport.GetHangarOfAirport <- function(tile)
+{
+	return AIAirport._GetHangarOfAirport(tile, 0);
+}
