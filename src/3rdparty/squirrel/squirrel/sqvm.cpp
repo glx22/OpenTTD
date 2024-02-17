@@ -1146,14 +1146,14 @@ bool SQVM::CallNative(SQNativeClosure *nclosure,SQInteger nargs,SQInteger stackb
 {
 	if (_nnativecalls + 1 > MAX_NATIVE_CALLS) { Raise_Error("Native stack overflow"); return false; }
 	SQInteger nparamscheck = nclosure->_nparamscheck;
+	SQInteger tcs = nclosure->_typecheck.size();
 	if(((nparamscheck > 0) && (nparamscheck != nargs))
-		|| ((nparamscheck < 0) && (nargs < (-nparamscheck)))) {
+		|| ((nparamscheck < 0) && (nargs < (-nparamscheck) || nargs > tcs))) {
 		Raise_Error("wrong number of parameters");
 		return false;
 		}
 
-	SQInteger tcs;
-	if((tcs = nclosure->_typecheck.size())) {
+	if((tcs != 0)) {
 		for(SQInteger i = 0; i < nargs && i < tcs; i++)
 			if((nclosure->_typecheck._vals[i] != -1) && !(type(_stack._vals[stackbase+i]) & nclosure->_typecheck[i])) {
                 Raise_ParamTypeError(i,nclosure->_typecheck._vals[i],type(_stack._vals[stackbase+i]));

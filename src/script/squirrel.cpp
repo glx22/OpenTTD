@@ -275,7 +275,7 @@ void Squirrel::PrintFunc(HSQUIRRELVM vm, const std::string &s)
 	}
 }
 
-void Squirrel::AddMethod(const char *method_name, SQFUNCTION proc, uint nparam, const char *params, void *userdata, int size)
+void Squirrel::AddMethod(const char *method_name, SQFUNCTION proc, int nparam, const char *params, void *userdata, int size)
 {
 	ScriptAllocatorScope alloc_scope(this);
 

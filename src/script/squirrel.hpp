@@ -96,7 +96,7 @@ public:
 	 * Adds a function to the stack. Depending on the current state this means
 	 *  either a method or a global function.
 	 */
-	void AddMethod(const char *method_name, SQFUNCTION proc, uint nparam = 0, const char *params = nullptr, void *userdata = nullptr, int size = 0);
+	void AddMethod(const char *method_name, SQFUNCTION proc, int nparam = 0, const char *params = nullptr, void *userdata = nullptr, int size = 0);
 
 	/**
 	 * Adds a const to the stack. Depending on the current state this means

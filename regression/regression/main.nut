@@ -791,14 +791,14 @@ function Regression::List()
 	}
 
 	local list2 = AIList();
-	list2.AddItem(1003, 0);
-	list2.AddItem(1004, 0);
+	list2.AddItem(1003);
+	list2.AddItem(1004);
 	list.RemoveList(list2);
 	print("  RemoveList({1003, 1004}):");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list2.AddItem(1005, 0);
+	list2.AddItem(1005);
 	list.KeepList(list2);
 	print("  KeepList({1003, 1004, 1005}):");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
@@ -2047,7 +2047,7 @@ function Regression::Start()
 	/* Check Valuate() is actually limited, MUST BE THE LAST TEST. */
 	print("--Valuate() with excessive CPU usage--")
 	local list = AIList();
-	list.AddItem(0, 0);
+	list.AddItem(0);
 	local Infinite = function(id) { while(true); }
 	list.Valuate(Infinite);
 }

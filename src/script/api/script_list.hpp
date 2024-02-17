@@ -154,16 +154,12 @@ public:
 	ScriptList();
 	~ScriptList();
 
-#ifdef DOXYGEN_API
 	/**
 	 * Add a single item to the list.
 	 * @param item the item to add. Should be unique, otherwise it is ignored.
 	 * @param value the value to assign.
 	 */
-	void AddItem(SQInteger item, SQInteger value);
-#else
 	void AddItem(SQInteger item, SQInteger value = 0);
-#endif /* DOXYGEN_API */
 
 	/**
 	 * Remove a single item from the list.
