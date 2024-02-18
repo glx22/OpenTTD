@@ -122,6 +122,7 @@ public:
 	 */
 	static SQInteger GetNumHangars(TileIndex tile);
 
+#ifdef DOXYGEN_API
 	/**
 	 * Get the hangar tile of the airport with index.
 	 * @param tile Any tile of the airport.
@@ -132,8 +133,13 @@ public:
 	 * @return The hangar tile of the airport with the given index.
 	 * @note Hangar index starts from 0 for the first, 1 for the second and so on.
 	 */
-	static TileIndex GetHangarOfAirport(TileIndex tile, SQInteger index);
-
+	static TileIndex GetHangarOfAirport(TileIndex tile, SQInteger index = 0);
+#else
+private:
+	static TileIndex _GetHangarOfAirport(TileIndex tile, SQInteger index);
+public:
+	static SQInteger GetHangarOfAirport(HSQUIRRELVM vm);
+#endif /* DOXYGEN_API */
 	/**
 	 * Builds a airport with tile at the topleft corner.
 	 * @param tile The topleft corner of the airport.

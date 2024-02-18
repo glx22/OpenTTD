@@ -102,7 +102,7 @@
 	return st->airport.GetNumHangars();
 }
 
-/* static */ TileIndex ScriptAirport::GetHangarOfAirport(TileIndex tile, SQInteger index)
+/* static */ TileIndex ScriptAirport::_GetHangarOfAirport(TileIndex tile, SQInteger index)
 {
 	EnforceDeityOrCompanyModeValid(INVALID_TILE);
 	if (!::IsValidTile(tile)) return INVALID_TILE;
@@ -117,6 +117,30 @@
 	if ((st->facilities & FACIL_AIRPORT) == 0) return INVALID_TILE;
 
 	return st->airport.GetHangarTile(index);
+}
+
+/* static */ SQInteger ScriptAirport::GetHangarOfAirport(HSQUIRRELVM vm)
+{
+	int nparam = sq_gettop(vm) - 1;
+	if (nparam < 1 || nparam > 2) {
+		throw sq_throwerror(vm, "Wrong number of parameters");
+	}
+
+	SQInteger sqtype;
+	if (SQ_FAILED(sq_getinteger(vm, 2, &sqtype))) {
+		throw sq_throwerror(vm, "Parameter 0 must be an integer");
+	}
+	TileIndex tile(sqtype);
+
+	SQInteger index = 0;
+	if (nparam == 2) {
+		if (SQ_FAILED(sq_getinteger(vm, 3, &index))) {
+			throw sq_throwerror(vm, "Parameter 1 must be an integer");
+		}
+	}
+
+	sq_pushinteger(vm, static_cast<int32_t>(_GetHangarOfAirport(tile, index).base()));
+	return 1;
 }
 
 /* static */ ScriptAirport::AirportType ScriptAirport::GetAirportType(TileIndex tile)
