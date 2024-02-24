@@ -10,14 +10,23 @@
 #ifndef ROAD_H
 #define ROAD_H
 
+#pragma message(XSTR(assert(true)))
 #include "road_type.h"
+#pragma message(XSTR(assert(true)))
 #include "gfx_type.h"
+#pragma message(XSTR(assert(true)))
 #include "core/bitmath_func.hpp"
+#pragma message(XSTR(assert(true)))
 #include "strings_type.h"
+#pragma message(XSTR(assert(true)))
 #include "timer/timer_game_calendar.h"
+#pragma message(XSTR(assert(true)))
 #include "core/enum_type.hpp"
+#pragma message(XSTR(assert(true)))
 #include "newgrf.h"
+#pragma message(XSTR(assert(true)))
 #include "economy_func.h"
+#pragma message(XSTR(assert(true)))
 
 
 enum RoadTramType : bool {

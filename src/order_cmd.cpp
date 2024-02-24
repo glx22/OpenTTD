@@ -8,7 +8,9 @@
 /** @file order_cmd.cpp Handling of orders. */
 
 #include "stdafx.h"
+#pragma message(XSTR(assert(true)))
 #include "debug.h"
+#pragma message(XSTR(assert(true)))
 #include "command_func.h"
 #include "company_func.h"
 #include "news_func.h"

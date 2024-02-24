@@ -3,8 +3,10 @@
  */
 
 #include "../../../stdafx.h"
+#pragma message(XSTR(assert(true)))
 
 #include "sqpcheader.h"
+#pragma message(XSTR(assert(true)))
 #include "sqopcodes.h"
 #include "sqvm.h"
 #include "sqfuncproto.h"
