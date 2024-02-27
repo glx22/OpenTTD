@@ -79,7 +79,7 @@ struct ScriptListWindow : public Window {
 
 		this->vscroll->SetCount(this->info_list->size() + 1);
 
-		/* Try if we can find the currently selected AI */
+		/* Try if we can find the currently selected Script. */
 		this->selected = -1;
 		if (GetConfig(slot)->HasScript()) {
 			ScriptInfo *info = GetConfig(slot)->GetInfo();
@@ -87,6 +87,7 @@ struct ScriptListWindow : public Window {
 			for (const auto &item : *this->info_list) {
 				if (item.second == info) {
 					this->selected = i;
+					this->vscroll->SetPosition(i);
 					break;
 				}
 
