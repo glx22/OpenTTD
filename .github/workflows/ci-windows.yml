@@ -51,6 +51,7 @@ jobs:
         echo "::endgroup::"
 
         rm -f opengfx-all.zip
+        exit 1
 
     - name: Install MSVC problem matcher
       uses: ammaraskar/msvc-problem-matcher@master
