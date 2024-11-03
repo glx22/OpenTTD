@@ -41,7 +41,7 @@ add_files(
 
 add_files(
     soundloader_opus.cpp
-    CONDITION OPUS_FOUND AND OPUSFILE_FOUND
+    CONDITION OpusFile_FOUND
 )
 
 add_files(
