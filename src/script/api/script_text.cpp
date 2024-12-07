@@ -232,6 +232,7 @@ void ScriptText::_GetEncodedText(std::back_insert_iterator<std::string> &output,
 	auto skip_args = [&](size_t nb) { idx += nb; };
 
 	for (const StringParam &cur_param : params) {
+		int i = 0;
 		try {
 			switch (cur_param.type) {
 				case StringParam::UNUSED:
