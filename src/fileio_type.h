@@ -155,6 +155,7 @@ enum Searchpath : unsigned {
 
 DECLARE_POSTFIX_INCREMENT(Searchpath)
 
+IGNORE_UNINITIALIZED_WARNING_START
 class FileHandle {
 public:
 	static std::optional<FileHandle> Open(const std::string &filename, const std::string &mode);
@@ -180,6 +181,7 @@ private:
 
 	FileHandle(FILE *f) : f(f) { assert(this->f != nullptr); }
 };
+IGNORE_UNINITIALIZED_WARNING_STOP
 
 /* Ensure has_value() is used consistently. */
 template <> constexpr std::optional<FileHandle>::operator bool() const noexcept = delete;
