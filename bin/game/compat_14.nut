@@ -6,3 +6,5 @@
  */
 
 GSLog.Info("14 API compatibility in effect.");
+
+GSText.SCRIPT_TEXT_MAX_PARAMETERS <- 20;

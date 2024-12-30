@@ -72,9 +72,10 @@ private:
  * @api game
  */
 class ScriptText : public Text {
-public:
+private:
 	static const int SCRIPT_TEXT_MAX_PARAMETERS = 20; ///< The maximum amount of parameters you can give to one object.
-
+public:
+	friend void RegisterGameTranslation(Squirrel *engine);
 #ifndef DOXYGEN_API
 	/**
 	 * The constructor wrapper from Squirrel.
@@ -127,6 +128,7 @@ public:
 	std::string GetEncodedText() override;
 
 private:
+	static std::optional<SQInteger> max_param;
 	using ScriptTextRef = ScriptObjectRef<ScriptText>;
 	using ScriptTextList = std::vector<ScriptText *>;
 	using Param = std::variant<SQInteger, std::string, ScriptTextRef>;

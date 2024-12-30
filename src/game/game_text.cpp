@@ -355,6 +355,7 @@ const std::string &GetGameStringName(uint id)
  */
 void RegisterGameTranslation(Squirrel *engine)
 {
+	ScriptText::max_param.reset();
 	delete _current_data;
 	_current_data = LoadTranslations();
 	if (_current_data == nullptr) return;
@@ -372,7 +373,14 @@ void RegisterGameTranslation(Squirrel *engine)
 		idx++;
 	}
 
-	sq_pop(vm, 2);
+	sq_pushstring(vm, "SCRIPT_TEXT_MAX_PARAMETERS", -1);
+	if (SQ_SUCCEEDED(sq_get(vm, -2))) {
+		SQInteger value;
+		sq_getinteger(vm, -1, &value);
+		ScriptText::max_param = value;
+	}
+
+	sq_pop(vm, 3);
 
 	ReconsiderGameScriptLanguage();
 }

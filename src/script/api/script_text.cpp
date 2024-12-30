@@ -291,3 +291,5 @@ const std::string Text::GetDecodedText()
 	::SetDParamStr(0, this->GetEncodedText());
 	return ::GetString(STR_JUST_RAW_STRING);
 }
+
+/* static */ std::optional<SQInteger> ScriptText::max_param{};
