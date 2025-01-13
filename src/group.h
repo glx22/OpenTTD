@@ -62,6 +62,9 @@ struct GroupStatistics {
 	static void UpdateAutoreplace(CompanyID company);
 };
 
+#if defined(_WIN32)
+#undef GF_END
+#endif /* _WIN32 */
 enum GroupFlags : uint8_t {
 	GF_REPLACE_PROTECTION,    ///< If set to true, the global autoreplace has no effect on the group
 	GF_REPLACE_WAGON_REMOVAL, ///< If set, autoreplace will perform wagon removal on vehicles in this group.
