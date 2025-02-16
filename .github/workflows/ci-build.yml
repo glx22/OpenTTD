@@ -30,9 +30,10 @@ jobs:
           cxxcompiler: clang++
           libraries: libsdl2-dev
         - name: GCC - SDL2
-          compiler: gcc
-          cxxcompiler: g++
+          compiler: gcc-14
+          cxxcompiler: g++-14
           libraries: libsdl2-dev
+          extra-cmake-parameters: -DCMAKE_BUILD_TYPE=RelWithDebInfo
         - name: GCC - Dedicated
           compiler: gcc
           cxxcompiler: g++

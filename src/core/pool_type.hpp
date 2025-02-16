@@ -316,6 +316,7 @@ public:
 		 * @param p memory to free
 		 * @note the item has to be allocated in the pool!
 		 */
+		IGNORE_UNINITIALIZED_WARNING_START
 		inline void operator delete(void *p)
 		{
 			if (p == nullptr) return;
@@ -323,6 +324,7 @@ public:
 			assert(pn == Tpool->Get(Pool::GetRawIndex(pn->index)));
 			Tpool->FreeItem(Pool::GetRawIndex(pn->index));
 		}
+		IGNORE_UNINITIALIZED_WARNING_STOP
 
 		/**
 		 * Allocates space for new Titem with given index
