@@ -21,7 +21,12 @@
  * \li GSEventVehicleCrashed::GetVictims
  * \li GSEventCompanyRenamed
  * \li GSEventPresidentRenamed
+ * \li GSEconomyDate
+ * \li GSCalendarDate
  *
+ * API removals:
+ * \li GSDate
+ * 
  * Other changes:
  * \li GSBridge::GetBridgeID renamed to GSBridge::GetBridgeType
  * \li GSWaypoint::GetWaypointID now returns the StationID of any type of waypoint
