@@ -66,6 +66,8 @@ struct GameStrings {
 	GameStrings(GameStrings &&) = delete;
 	GameStrings &operator=(const GameStrings &) = delete;
 	GameStrings &operator=(GameStrings &&) = delete;
+
+	static std::shared_ptr<GameStrings> data;
 };
 
 #endif /* GAME_TEXT_HPP */
