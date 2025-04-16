@@ -21,9 +21,9 @@ jobs:
   macos:
     name: CI
 
-    runs-on: macos-latest
-    env:
-      MACOSX_DEPLOYMENT_TARGET: 10.13
+    runs-on: macos-15
+    #env:
+    #  MACOSX_DEPLOYMENT_TARGET: 10.13
 
     steps:
     - name: Setup Xcode version
