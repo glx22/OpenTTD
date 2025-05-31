@@ -6,17 +6,39 @@ on:
       ref:
         description: 'Ref to build (for Pull Requests, use refs/pull/NNN/head)'
         required: true
-  repository_dispatch:
-    # client_payload should be the same as the inputs for workflow_dispatch.
-    types:
-    - Build*
   release:
     types:
     - published
+  schedule:
+  - cron: '0 5 * * *'
 
 jobs:
+  latest-ref:
+    name: Get latest nightly ref
+    if: github.event_name == 'schedule'
+
+    runs-on: ubuntu-latest
+
+    outputs:
+      latest_ref: ${{ steps.latest_ref.outputs.latest_ref }}
+
+    steps:
+    - name: Get latest nightly ref
+      id: latest_ref
+      run: |
+        LATEST_RELEASE=$(curl -s https://cdn.openttd.org/openttd-nightlies/latest.yaml | grep "\- version: " | cut -b 12-)
+        YEAR=$(echo "${LATEST_RELEASE}" | cut -b1-4)
+        LATEST_REF=$(curl -s https://cdn.openttd.org/openttd-nightlies/${YEAR}/${LATEST_RELEASE}/changelog.md | head -n 3 | tail -n 1 | cut -d\  -f1)
+
+        echo "Latest nightly ref: ${LATEST_REF}"
+        echo "Current ref of master: ${GITHUB_SHA}"
+
+        echo "latest_ref=${LATEST_REF}" >> $GITHUB_OUTPUT
+
   source:
     name: Source
+    needs: latest-ref
+    if: ${{ always() && (needs.latest-ref.result == 'skipped' || (needs.latest-ref.result == 'success' && !startsWith(github.sha, needs.latest-ref.outputs.latest_ref))) }}
 
     uses: ./.github/workflows/release-source.yml
     secrets: inherit
