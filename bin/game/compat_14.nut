@@ -81,3 +81,48 @@ GSTown.FoundTown <- function(tile, size, city, layout, name) { return GSTown.Fou
 
 GSVehicle.SetNameCompat14 <- GSVehicle.SetName;
 GSVehicle.SetName <- function(id, name) { return GSVehicle.SetNameCompat14(id, GSCompat14.Text(name)); }
+
+GSList.ValuateCompat14 <- GSList.Valuate;
+GSBridgeList.Valuate <-
+GSBridgeList_Length.Valuate <-
+GSCargoList.Valuate <-
+GSCargoList_IndustryAccepting.Valuate <-
+GSCargoList_IndustryProducing.Valuate <-
+GSCargoList_StationAccepting.Valuate <-
+GSClientList.Valuate <-
+GSClientList_Company.Valuate <-
+GSDepotList.Valuate <-
+GSEngineList.Valuate <-
+GSGroupList.Valuate <-
+GSIndustryList.Valuate <-
+GSIndustryList_CargoAccepting.Valuate <-
+GSIndustryList_CargoProducing.Valuate <-
+GSIndustryTypeList.Valuate <-
+GSList.Valuate <-
+GSNewGRFList.Valuate <-
+GSObjectTypeList.Valuate <-
+GSRailTypeList.Valuate <-
+GSRoadTypeList.Valuate <-
+GSSignList.Valuate <-
+GSStoryPageElementList.Valuate <-
+GSStoryPageList.Valuate <-
+GSStationList.Valuate <-
+GSStationList_Cargo.Valuate <-
+GSStationList_Vehicle.Valuate <-
+GSSubsidyList.Valuate <-
+GSTownList.Valuate <-
+GSTownEffectList.Valuate <-
+GSTileList.Valuate <-
+GSVehicleList.Valuate <-
+GSVehicleList_Station.Valuate <-
+GSVehicleList_Waypoint.Valuate <-
+GSVehicleList_Depot.Valuate <-
+GSVehicleList_SharedOrders.Valuate <-
+GSVehicleList_Group.Valuate <-
+GSVehicleList_DefaultGroup.Valuate <-
+GSWaypointList.Valuate <- function(valuator, ...)
+{
+	local args = [this, valuator];
+	for (local i = 0; i < vargc; i++) args.push(vargv[i]);
+	while(GSList.ValuateCompat14.acall(args));
+}

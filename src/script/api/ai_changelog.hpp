@@ -34,6 +34,7 @@
  * \li AIWaypoint::GetWaypointID now returns the StationID of any type of waypoint
  * \li AIList instances can now be saved
  * \li AIVehicleList_Station accepts an optional AIVehicle::VehicleType parameter
+ * \li AIList.Valuate is now resumable but runs for less opcodes
  *
  * \b 14.0
  *
