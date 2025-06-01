@@ -8,6 +8,7 @@
 /** @file script_list.cpp Implementation of ScriptList. */
 
 #include "../../stdafx.h"
+#include "script_controller.hpp"
 #include "script_list.hpp"
 #include "../../debug.h"
 #include "../../script/squirrel.hpp"
@@ -922,17 +923,71 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 		return sq_throwerror(vm, "parameter 1 has an invalid type (expected function)");
 	}
 
+	/* Get infos about the closure. */
+	sq_push(vm, 2);
+	sq_pushstring(vm, "getinfos");
+	if (SQ_FAILED(sq_get(vm, -2))) NOT_REACHED();
+	sq_push(vm, -2);
+	sq_pushbool(vm, SQTrue);
+	if (SQ_FAILED(sq_call(vm, 2, SQTrue, SQFalse))) NOT_REACHED();
+
+	/* Compare infos to the saved ones. */
+	if (this->resume_function.has_value()) {
+		SQInteger top = sq_gettop(vm);
+		try {
+			sq_pushobject(vm, this->resume_function.value());
+			if (sq_getsize(vm, -1) != sq_getsize(vm, -2)) throw std::exception();
+			sq_pushnull(vm);
+			while (SQ_SUCCEEDED(sq_next(vm, -2))) {
+				sq_push(vm, -2);
+				if (SQ_FAILED(sq_rawget(vm, -6))) throw std::exception();
+				if (sq_gettype(vm, -1) != sq_gettype(vm, -2)) throw std::exception();
+				if (sq_gettype(vm, -1) == OT_ARRAY) {
+					if (sq_getsize(vm, -1) != sq_getsize(vm, -2)) throw std::exception();
+					sq_pushnull(vm);
+					while (SQ_SUCCEEDED(sq_next(vm, -2))) {
+						sq_push(vm, -2);
+						if (SQ_FAILED(sq_rawget(vm, -6))) throw std::exception();
+						if (sq_cmp(vm) != 0) throw std::exception();
+						sq_pop(vm, 3);
+					}
+					sq_pop(vm, 1);
+				} else {
+					if (sq_cmp(vm) != 0) throw std::exception();
+				}
+				sq_pop(vm, 3);
+			}
+		} catch (...) {
+			/* Infos are different, erase saved ones. */
+			sq_release(vm, &this->resume_function.value());
+			this->resume_function.reset();
+		}
+		sq_settop(vm, top);
+	}
+
+	if (this->modifications != this->resume_modifications || !this->resume_function.has_value()) {
+		this->resume_iter = this->items.begin();
+		HSQOBJECT closure = this->resume_function.value_or({});
+		sq_release(vm, &closure);
+		sq_getstackobj(vm, -1, &closure);
+		sq_addref(vm, &closure);
+		this->resume_function = closure;
+	}
+
+	/* Remove closure, "getinfos" and the infos. */
+	sq_pop(vm, 3);
+
 	/* Don't allow docommand from a Valuator, as we can't resume in
 	 * mid C++-code. */
 	ScriptObject::DisableDoCommandScope disabler{};
 
 	/* Limit the total number of ops that can be consumed by a valuate operation */
-	SQOpsLimiter limiter(vm, MAX_VALUATE_OPS, "valuator function");
+	SQOpsLimiter limiter(vm, ScriptController::GetOpsTillSuspend(), "valuator function");
 
 	/* Push the function to call */
 	sq_push(vm, 2);
 
-	for (ScriptListMap::iterator iter = this->items.begin(); iter != this->items.end(); iter++) {
+	for (ScriptListMap::iterator iter = this->resume_iter; iter != this->items.end(); iter++) {
 		/* Check for changing of items. */
 		int previous_modification_count = this->modifications;
 
@@ -946,6 +1001,12 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 
 		/* Call the function. Squirrel pops all parameters and pushes the return value. */
 		if (SQ_FAILED(sq_call(vm, nparam + 1, SQTrue, SQFalse))) {
+			if (this->resume_iter != iter && Squirrel::IsOpsTillSuspendError(vm)) {
+				this->resume_iter = iter;
+				this->resume_modifications = this->modifications + 1;
+				sq_pushbool(vm, SQTrue);
+				return 1;
+			}
 			return SQ_ERROR;
 		}
 
@@ -994,5 +1055,10 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 	 * 4. The ScriptList instance object. */
 	sq_pop(vm, nparam + 3);
 
-	return 0;
+	this->resume_modifications = this->modifications;
+	assert(this->resume_function.has_value());
+	sq_release(vm, &this->resume_function.value());
+	this->resume_function.reset();
+	sq_pushbool(vm, SQFalse);
+	return 1;
 }

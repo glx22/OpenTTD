@@ -36,6 +36,7 @@
  * \li GSList instances can now be saved
  * \li GSVehicleList_Station accepts an optional GSVehicle::VehicleType parameter
  * \li GSList instances can now be cloned
+ * \li GSList.Valuate is now resumable but runs for less opcodes
  *
  * \b 14.0
  *

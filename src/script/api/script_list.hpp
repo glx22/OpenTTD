@@ -35,13 +35,19 @@ public:
 	/** Sort descending */
 	static const bool SORT_DESCENDING = false;
 
+	typedef std::set<SQInteger> ScriptItemList;                   ///< The list of items inside the bucket
+	typedef std::map<SQInteger, ScriptItemList> ScriptListBucket; ///< The bucket list per value
+	typedef std::map<SQInteger, SQInteger> ScriptListMap;         ///< List per item
+
 private:
 	std::unique_ptr<ScriptListSorter> sorter; ///< Sorting algorithm
 	SorterType sorter_type;       ///< Sorting type
 	bool sort_ascending;          ///< Whether to sort ascending or descending
 	bool initialized;             ///< Whether an iteration has been started
 	int modifications;            ///< Number of modification that has been done. To prevent changing data while valuating.
-
+	int resume_modifications;     ///< Number of modification expected on valuation resume.
+	std::optional<HSQOBJECT> resume_function; ///< The function expected on valuation resume.
+	ScriptListMap::iterator resume_iter; ///< Item to use on valuation start.
 protected:
 	/* Temporary helper functions to get the raw index from either strongly and non-strongly typed pool items. */
 	template <typename T>
@@ -154,10 +160,6 @@ protected:
 	void CopyList(const ScriptList *list);
 
 public:
-	typedef std::set<SQInteger> ScriptItemList;                   ///< The list of items inside the bucket
-	typedef std::map<SQInteger, ScriptItemList> ScriptListBucket; ///< The bucket list per value
-	typedef std::map<SQInteger, SQInteger> ScriptListMap;         ///< List per item
-
 	ScriptListMap items;           ///< The items in the list
 	ScriptListBucket buckets;      ///< The items in the list, sorted by value
 
@@ -382,6 +384,7 @@ public:
 	 * @param valuator_function The function which will be doing the valuation.
 	 * @param ... The params to give to the valuators (minus the first param,
 	 *  which is always the index-value we are valuating).
+	 * @return Whether there are any items not yet valuated.
 	 * @note You may not add, remove or change (setting the value of) items while
 	 *  valuating. You may also not (re)sort while valuating.
 	 * @note You can write your own valuators and use them. Just remember that
@@ -389,16 +392,17 @@ public:
 	 *  an integer.
 	 * @note Example:
 	 * @code
-	 *  list.Valuate(ScriptBridge.GetPrice, 5);
-	 *  list.Valuate(ScriptBridge.GetMaxLength);
+	 *  while(list.Valuate(ScriptBridge.GetPrice, 5));
+	 *  while(list.Valuate(ScriptBridge.GetMaxLength));
 	 *  function MyVal(bridge_id, myparam)
 	 *  {
 	 *    return myparam * bridge_id; // This is silly
 	 *  }
-	 *  list.Valuate(MyVal, 12);
+	 *  while(list.Valuate(MyVal, 12));
 	 * @endcode
 	 */
-	void Valuate(function valuator_function, ...);
+	bool Valuate(function valuator_function, ...);
+
 #endif /* DOXYGEN_API */
 };
 

@@ -36,3 +36,44 @@ AITown.FoundTown <- function(tile, size, city, layout, name) { return AITown.Fou
 
 AIVehicle.SetNameCompat14 <- AIVehicle.SetName;
 AIVehicle.SetName <- function(id, name) { return AIVehicle.SetNameCompat14(id, AICompat14.Text(name)); }
+
+AIList.ValuateCompat14 <- AIList.Valuate;
+AIBridgeList.Valuate <-
+AIBridgeList_Length.Valuate <-
+AICargoList.Valuate <-
+AICargoList_IndustryAccepting.Valuate <-
+AICargoList_IndustryProducing.Valuate <-
+AICargoList_StationAccepting.Valuate <-
+AIDepotList.Valuate <-
+AIEngineList.Valuate <-
+AIGroupList.Valuate <-
+AIIndustryList.Valuate <-
+AIIndustryList_CargoAccepting.Valuate <-
+AIIndustryList_CargoProducing.Valuate <-
+AIIndustryTypeList.Valuate <-
+AIList.Valuate <-
+AINewGRFList.Valuate <-
+AIObjectTypeList.Valuate <-
+AIRailTypeList.Valuate <-
+AIRoadTypeList.Valuate <-
+AISignList.Valuate <-
+AIStationList.Valuate <-
+AIStationList_Cargo.Valuate <-
+AIStationList_Vehicle.Valuate <-
+AISubsidyList.Valuate <-
+AITownList.Valuate <-
+AITownEffectList.Valuate <-
+AITileList.Valuate <-
+AIVehicleList.Valuate <-
+AIVehicleList_Station.Valuate <-
+AIVehicleList_Waypoint.Valuate <-
+AIVehicleList_Depot.Valuate <-
+AIVehicleList_SharedOrders.Valuate <-
+AIVehicleList_Group.Valuate <-
+AIVehicleList_DefaultGroup.Valuate <-
+AIWaypointList.Valuate <- function(valuator, ...)
+{
+	local args = [this, valuator];
+	for (local i = 0; i < vargc; i++) args.push(vargv[i]);
+	while(AIList.ValuateCompat14.acall(args));
+}

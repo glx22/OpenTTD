@@ -292,22 +292,22 @@ function Regression::BridgeList()
 	print("");
 	print("--BridgeList--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIBridge.GetMaxSpeed);
+	while(list.Valuate(AIBridge.GetMaxSpeed));
 	print("  MaxSpeed ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIBridge.GetPrice, 5);
+	while(list.Valuate(AIBridge.GetPrice, 5));
 	print("  Price ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIBridge.GetMaxLength);
+	while(list.Valuate(AIBridge.GetMaxLength));
 	print("  MaxLength ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIBridge.GetMinLength);
+	while(list.Valuate(AIBridge.GetMinLength));
 	print("  MinLength ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -318,12 +318,12 @@ function Regression::BridgeList()
 	print("");
 	print("--BridgeList_Length--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIBridge.GetMaxSpeed);
+	while(list.Valuate(AIBridge.GetMaxSpeed));
 	print("  MaxSpeed ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIBridge.GetPrice, 14);
+	while(list.Valuate(AIBridge.GetPrice, 14));
 	print("  Price ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -358,13 +358,13 @@ function Regression::CargoList()
 	print("");
 	print("--CargoList--");
 	print("  Count():            " + list.Count());
-	list.Valuate(AICargo.IsFreight);
+	while(list.Valuate(AICargo.IsFreight));
 	print("  IsFreight ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AICargo.GetCargoIncome, 100, 100);
+	while(list.Valuate(AICargo.GetCargoIncome, 100, 100));
 	print("  CargoIncomes(100, 100) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -498,27 +498,27 @@ function Regression::EngineList()
 	print("");
 	print("--EngineList--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIEngine.GetCargoType);
+	while(list.Valuate(AIEngine.GetCargoType));
 	print("  CargoType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIEngine.GetCapacity);
+	while(list.Valuate(AIEngine.GetCapacity));
 	print("  Capacity ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIEngine.GetReliability);
+	while(list.Valuate(AIEngine.GetReliability));
 	print("  Reliability ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIEngine.GetMaxSpeed);
+	while(list.Valuate(AIEngine.GetMaxSpeed));
 	print("  MaxSpeed ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIEngine.GetPrice);
+	while(list.Valuate(AIEngine.GetPrice));
 	print("  Price ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -659,27 +659,27 @@ function Regression::IndustryList()
 	print("");
 	print("--IndustryList--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIIndustry.GetLocation);
+	while(list.Valuate(AIIndustry.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIIndustry.GetDistanceManhattanToTile, 30000);
+	while(list.Valuate(AIIndustry.GetDistanceManhattanToTile, 30000));
 	print("  DistanceManhattanToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIIndustry.GetDistanceSquareToTile, 30000);
+	while(list.Valuate(AIIndustry.GetDistanceSquareToTile, 30000));
 	print("  DistanceSquareToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIIndustry.GetAmountOfStationsAround);
+	while(list.Valuate(AIIndustry.GetAmountOfStationsAround));
 	print("  GetAmountOfStationsAround(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIIndustry.IsCargoAccepted, 1);
+	while(list.Valuate(AIIndustry.IsCargoAccepted, 1));
 	print("  CargoAccepted(1) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -688,7 +688,7 @@ function Regression::IndustryList()
 	list = AIIndustryList_CargoAccepting(1);
 	print("--IndustryList_CargoAccepting--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIIndustry.GetLocation);
+	while(list.Valuate(AIIndustry.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -697,7 +697,7 @@ function Regression::IndustryList()
 	list = AIIndustryList_CargoProducing(1);
 	print("--IndustryList_CargoProducing--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIIndustry.GetLocation);
+	while(list.Valuate(AIIndustry.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -711,7 +711,7 @@ function Regression::IndustryTypeList()
 	print("");
 	print("--IndustryTypeList--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIIndustry.GetLocation);
+	while(list.Valuate(AIIndustry.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    Id:                      " + i);
@@ -757,17 +757,17 @@ function Regression::List()
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(CustomValuator);
+	while(list.Valuate(CustomValuator));
 	print("  Custom ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(function (a) { return a * 42; });
+	while(list.Valuate(function (a) { return a * 42; }));
 	print("  Custom ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIBase.RandItem);
+	while(list.Valuate(AIBase.RandItem));
 	print("  Randomize ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1025,7 +1025,7 @@ function Regression::Order()
 	print("");
 	print("--VehicleList_Station--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AIVehicle.GetLocation);
+	while(list.Valuate(AIVehicle.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1036,7 +1036,7 @@ function Regression::Order()
 	}
 	list = AIVehicleList_Station(3, AIVehicle.VT_ROAD);
 	print("  Count():             " + list.Count());
-	list.Valuate(AIVehicle.GetLocation);
+	while(list.Valuate(AIVehicle.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1047,7 +1047,7 @@ function Regression::Order()
 	}
 	list = AIVehicleList_Station(3, AIVehicle.VT_RAIL);
 	print("  Count():             " + list.Count());
-	list.Valuate(AIVehicle.GetLocation);
+	while(list.Valuate(AIVehicle.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1155,7 +1155,7 @@ function Regression::Rail()
 	local list = AIDepotList(AITile.TRANSPORT_RAIL);
 	print("    DepotList");
 	print("      Count():                     " + list.Count());
-	list.Valuate(AITile.GetDistanceManhattanToTile, 0);
+	while(list.Valuate(AITile.GetDistanceManhattanToTile, 0));
 	print("      Depot distance from (0,0) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("        " + i + " => " + list.GetValue(i));
@@ -1259,7 +1259,7 @@ function Regression::Road()
 	local list = AIDepotList(AITile.TRANSPORT_ROAD);
 	print("    DepotList");
 	print("      Count():                     " + list.Count());
-	list.Valuate(AITile.GetDistanceManhattanToTile, 0);
+	while(list.Valuate(AITile.GetDistanceManhattanToTile, 0));
 	print("      Depot distance from (0,0) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("        " + i + " => " + list.GetValue(i));
@@ -1445,7 +1445,7 @@ function Regression::TileList()
 	list.AddRectangle(27631 - 256 * 1, 256 * 1 + 27631 + 2);
 	print("  Count():             " + list.Count());
 
-	list.Valuate(AITile.GetSlope);
+	while(list.Valuate(AITile.GetSlope));
 	print("  Slope():             done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1463,7 +1463,7 @@ function Regression::TileList()
 	list.AddRectangle(34436, 256 * 2 + 34436 + 8);
 	print("  Count():             " + list.Count());
 
-	list.Valuate(AITile.GetCornerHeight, AITile.CORNER_N);
+	while(list.Valuate(AITile.GetCornerHeight, AITile.CORNER_N));
 	print("  Height():            done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1471,7 +1471,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.GetCornerHeight, AITile.CORNER_N);
+	while(list.Valuate(AITile.GetCornerHeight, AITile.CORNER_N));
 	print("  CornerHeight(North): done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1479,7 +1479,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.GetMinHeight);
+	while(list.Valuate(AITile.GetMinHeight));
 	print("  MinHeight():         done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1487,7 +1487,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.GetMaxHeight);
+	while(list.Valuate(AITile.GetMaxHeight));
 	print("  MaxHeight():         done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1495,7 +1495,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.GetSlope);
+	while(list.Valuate(AITile.GetSlope));
 	list.KeepValue(0);
 	print("  Slope():             done");
 	print("  KeepValue(0):        done");
@@ -1507,23 +1507,23 @@ function Regression::TileList()
 
 	list.Clear();
 	list.AddRectangle(41895 - 256 * 2, 256 * 2 + 41895 + 8);
-	list.Valuate(AITile.IsBuildable);
+	while(list.Valuate(AITile.IsBuildable));
 	list.KeepValue(1);
 	print("  Buildable():         done");
 	print("  KeepValue(1):        done");
 	print("  Count():             " + list.Count());
 
-	list.Valuate(AITile.IsBuildableRectangle, 3, 3);
+	while(list.Valuate(AITile.IsBuildableRectangle, 3, 3));
 	print("  BuildableRectangle(3, 3) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITile.GetDistanceManhattanToTile, 30000);
+	while(list.Valuate(AITile.GetDistanceManhattanToTile, 30000));
 	print("  DistanceManhattanToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITile.GetDistanceSquareToTile, 30000);
+	while(list.Valuate(AITile.GetDistanceSquareToTile, 30000));
 	print("  DistanceSquareToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1531,23 +1531,23 @@ function Regression::TileList()
 
 	list.AddRectangle(31895 - 256 * 5, 256 * 5 + 31895 + 8);
 
-	list.Valuate(AITile.GetOwner);
+	while(list.Valuate(AITile.GetOwner));
 	print("  GetOwner() ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITile.GetTownAuthority);
+	while(list.Valuate(AITile.GetTownAuthority));
 	print("  GetTownAuthority() ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITile.GetClosestTown);
+	while(list.Valuate(AITile.GetClosestTown));
 	print("  GetClosestTown() ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.GetCargoAcceptance, 0, 1, 1, 3);
+	while(list.Valuate(AITile.GetCargoAcceptance, 0, 1, 1, 3));
 	list.KeepAboveValue(10);
 	print("  CargoAcceptance():   done");
 	print("  KeepAboveValue(10):  done");
@@ -1557,7 +1557,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AIRoad.IsRoadTile);
+	while(list.Valuate(AIRoad.IsRoadTile));
 	list.KeepValue(1);
 	print("  RoadTile():          done");
 	print("  KeepValue(1):        done");
@@ -1567,7 +1567,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AIRoad.GetNeighbourRoadCount);
+	while(list.Valuate(AIRoad.GetNeighbourRoadCount));
 	list.KeepValue(1);
 	print("  NeighbourRoadCount():done");
 	print("  KeepValue(1):        done");
@@ -1578,7 +1578,7 @@ function Regression::TileList()
 	}
 
 	list.AddRectangle(0x6F3F, 0x7248);
-	list.Valuate(AITile.IsWaterTile);
+	while(list.Valuate(AITile.IsWaterTile));
 	print("  IsWaterTile():       done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1586,7 +1586,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.IsSeaTile);
+	while(list.Valuate(AITile.IsSeaTile));
 	print("  IsSeaTile():         done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1594,7 +1594,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.IsRiverTile);
+	while(list.Valuate(AITile.IsRiverTile));
 	print("  IsRiverTile()        done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1602,7 +1602,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AIMarine.IsCanalTile);
+	while(list.Valuate(AIMarine.IsCanalTile));
 	print("  IsCanalTile()        done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1610,7 +1610,7 @@ function Regression::TileList()
 		print("    " + i + " => " + list.GetValue(i));
 	}
 
-	list.Valuate(AITile.IsCoastTile);
+	while(list.Valuate(AITile.IsCoastTile));
 	print("  IsCoastTile()        done");
 	print("  Count():             " + list.Count());
 	print("  ListDump:");
@@ -1622,7 +1622,7 @@ function Regression::TileList()
 	print("");
 	print("--TileList_IndustryAccepting--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AITile.GetCargoAcceptance, 3, 1, 1, 3);
+	while(list.Valuate(AITile.GetCargoAcceptance, 3, 1, 1, 3));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1632,7 +1632,7 @@ function Regression::TileList()
 	print("");
 	print("--TileList_IndustryProducing--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AITile.GetCargoProduction, 7, 1, 1, 3);
+	while(list.Valuate(AITile.GetCargoProduction, 7, 1, 1, 3));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -1679,32 +1679,32 @@ function Regression::TownList()
 	print("");
 	print("--TownList--");
 	print("  Count():             " + list.Count());
-	list.Valuate(AITown.GetLocation);
+	while(list.Valuate(AITown.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITown.GetDistanceManhattanToTile, 30000);
+	while(list.Valuate(AITown.GetDistanceManhattanToTile, 30000));
 	print("  DistanceManhattanToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITown.GetDistanceSquareToTile, 30000);
+	while(list.Valuate(AITown.GetDistanceSquareToTile, 30000));
 	print("  DistanceSquareToTile(30000) ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITown.IsWithinTownInfluence, AITown.GetLocation(0));
+	while(list.Valuate(AITown.IsWithinTownInfluence, AITown.GetLocation(0)));
 	print("  IsWithinTownInfluence(" + AITown.GetLocation(0) + ") ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITown.GetAllowedNoise);
+	while(list.Valuate(AITown.GetAllowedNoise));
 	print("  GetAllowedNoise() ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AITown.GetPopulation);
+	while(list.Valuate(AITown.GetPopulation));
 	list.KeepAboveValue(500);
 	print("  KeepAboveValue(500): done");
 	print("  Count():             " + list.Count());
@@ -1889,77 +1889,77 @@ function Regression::Vehicle()
 	print("  Count():             " + list.Count());
 	print("  InDepot Count():     " + in_depot.Count());
 	print("  RoadVehicle Count(): " + rv_list.Count());
-	list.Valuate(AIVehicle.GetLocation);
+	while(list.Valuate(AIVehicle.GetLocation));
 	print("  Location ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetEngineType);
+	while(list.Valuate(AIVehicle.GetEngineType));
 	print("  EngineType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetUnitNumber);
+	while(list.Valuate(AIVehicle.GetUnitNumber));
 	print("  UnitNumber ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetAge);
+	while(list.Valuate(AIVehicle.GetAge));
 	print("  Age ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetMaxAge);
+	while(list.Valuate(AIVehicle.GetMaxAge));
 	print("  MaxAge ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetAgeLeft);
+	while(list.Valuate(AIVehicle.GetAgeLeft));
 	print("  AgeLeft ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetCurrentSpeed);
+	while(list.Valuate(AIVehicle.GetCurrentSpeed));
 	print("  CurrentSpeed ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetRunningCost);
+	while(list.Valuate(AIVehicle.GetRunningCost));
 	print("  RunningCost ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetProfitThisYear);
+	while(list.Valuate(AIVehicle.GetProfitThisYear));
 	print("  ProfitThisYear ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetProfitLastYear);
+	while(list.Valuate(AIVehicle.GetProfitLastYear));
 	print("  ProfitLastYear ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetCurrentValue);
+	while(list.Valuate(AIVehicle.GetCurrentValue));
 	print("  CurrentValue ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetVehicleType);
+	while(list.Valuate(AIVehicle.GetVehicleType));
 	print("  VehicleType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetRoadType);
+	while(list.Valuate(AIVehicle.GetRoadType));
 	print("  RoadType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetCapacity, 10);
+	while(list.Valuate(AIVehicle.GetCapacity, 10));
 	print("  VehicleType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
 	}
-	list.Valuate(AIVehicle.GetCargoLoad, 10);
+	while(list.Valuate(AIVehicle.GetCargoLoad, 10));
 	print("  VehicleType ListDump:");
 	for (local i = list.Begin(); !list.IsEnd(); i = list.Next()) {
 		print("    " + i + " => " + list.GetValue(i));
@@ -2130,6 +2130,6 @@ function Regression::Start()
 	} catch (e) {
 		print("constructor failed with: " + e);
 	}
-	list.Valuate(Infinite);
+	while(list.Valuate(Infinite));
 }
 

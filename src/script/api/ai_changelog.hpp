@@ -35,6 +35,7 @@
  * \li AIList instances can now be saved
  * \li AIVehicleList_Station accepts an optional AIVehicle::VehicleType parameter
  * \li AIList instances can now be cloned
+ * \li AIList.Valuate is now resumable but runs for less opcodes
  *
  * \b 14.0
  *

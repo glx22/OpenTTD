@@ -751,6 +751,21 @@ static SQInteger closure_getinfos(HSQUIRRELVM v) {
 		res->NewSlot(SQString::Create(_ss(v),"src"),f->_sourcename);
 		res->NewSlot(SQString::Create(_ss(v),"parameters"),params);
 		res->NewSlot(SQString::Create(_ss(v),"varargs"),f->_varparams);
+		if (sq_gettop(v) == 2) {
+			SQBool with_instructions;
+			sq_getbool(v,2,&with_instructions);
+			if (with_instructions == SQTrue) {
+				SQObjectPtr instructions = SQArray::Create(_ss(v),f->_ninstructions*5);
+				for(SQInteger n = 0; n<f->_ninstructions; n++){
+					_array(instructions)->Set(n*5, (SQInteger)f->_instructions[n].op);
+					_array(instructions)->Set(1+n*5, (SQInteger)f->_instructions[n]._arg0);
+					_array(instructions)->Set(2+n*5, (SQInteger)f->_instructions[n]._arg1);
+					_array(instructions)->Set(3+n*5, (SQInteger)f->_instructions[n]._arg2);
+					_array(instructions)->Set(4+n*5, (SQInteger)f->_instructions[n]._arg3);
+				}
+				res->NewSlot(SQString::Create(_ss(v),"instructions"),instructions);
+			}
+		}
 	}
 	else { //OT_NATIVECLOSURE
 		SQNativeClosure *nc = _nativeclosure(o);
@@ -780,7 +795,7 @@ static SQInteger closure_getinfos(HSQUIRRELVM v) {
 	{"weakref",obj_delegate_weakref,1, std::nullopt },
 	{"tostring",default_delegate_tostring,1, "."},
 	{"bindenv",closure_bindenv,2, "c x|y|t"},
-	{"getinfos",closure_getinfos,1, "c"},
+	{"getinfos",closure_getinfos,-1, "cb"},
 };
 
 //GENERATOR DEFAULT DELEGATE

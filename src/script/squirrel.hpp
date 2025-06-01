@@ -277,6 +277,11 @@ public:
 	SQInteger GetOpsTillSuspend();
 
 	/**
+	 * Did last operations trigger the CPU limit?
+	 */
+	static bool IsOpsTillSuspendError(HSQUIRRELVM vm);
+
+	/**
 	 * Completely reset the engine; start from scratch.
 	 */
 	void Reset();
