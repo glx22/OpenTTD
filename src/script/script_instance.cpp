@@ -473,8 +473,30 @@ static const SaveLoad _script_byte[] = {
 			}
 			SQInteger top = sq_gettop(vm);
 			try {
-				ScriptObject *obj = static_cast<ScriptObject *>(Squirrel::GetRealInstance(vm, -1, "Object"));
-				if (!obj->SaveObject(vm)) throw std::exception();
+				sq_pushstring(vm, "SaveObject");
+				if (SQ_SUCCEEDED(sq_get(vm, -2))) {
+					try {
+						sq_push(vm, -2);
+						Squirrel *engine = static_cast<Squirrel *>(sq_getforeignptr(vm));
+						if (SQ_FAILED(sq_call(vm, 1, SQTrue, SQTrue, MAX_SL_OPS))) throw "SaveObject() failed"sv;
+						if (engine->GetOpsTillSuspend() <= 0) throw "SaveObject() took too long"sv;
+						sq_remove(vm, -2); // instance
+						sq_remove(vm, -2); // closure
+						if (sq_gettype(vm, -1) != OT_ARRAY) throw "SaveObject() must return an array of 2 elements"sv;
+						if (SQ_FAILED(sq_arraypop(vm, -1, SQTrue))) throw "SaveObject() must return an array of 2 elements"sv;
+						if (SQ_FAILED(sq_arraypop(vm, -2, SQTrue))) throw "SaveObject() must return an array of 2 elements"sv;
+						if (SQ_SUCCEEDED(sq_arraypop(vm, -3, SQFalse))) throw "SaveObject() must return an array of 2 elements"sv;
+						if (sq_gettype(vm, -2) != OT_STRING) throw "Second element of the array must be the class name"sv;
+						sq_remove(vm, -3); // array
+					} catch (std::string_view error) {
+						ScriptLog::Error(fmt::format("{}. No data saved.", error));
+						sq_settop(vm, top);
+						return false;
+					}
+				} else {
+					ScriptObject *obj = static_cast<ScriptObject *>(Squirrel::GetRealInstance(vm, -1, "Object"));
+					if (!obj->SaveObject(vm)) throw std::exception();
+				}
 				if (sq_gettop(vm) != top + 2) throw std::exception();
 				if (sq_gettype(vm, -2) != OT_STRING || !SaveObject(vm, -2, max_depth - 1, test)) throw std::exception();
 				if (!SaveObject(vm, -1, max_depth - 1, test)) throw std::exception();
@@ -681,19 +703,35 @@ bool ScriptInstance::IsPaused()
 					Squirrel *engine = static_cast<Squirrel *>(sq_getforeignptr(this->vm));
 					std::string class_name = fmt::format("{}{}", engine->GetAPIName(), view);
 					sq_pushroottable(this->vm);
+					sq_push(this->vm, -2); // view
+					if (SQ_SUCCEEDED(sq_get(this->vm, -2))) {
+						sq_remove(this->vm, -2); // root table
+						sq_pushroottable(this->vm);
+						if (SQ_FAILED(sq_call(this->vm, 1, SQTrue, SQTrue))) throw Script_FatalError(fmt::format("Failed to instantiate '{}'", view));
+						sq_remove(this->vm, -2); // class
+						sq_pushstring(this->vm, "LoadObject");
+						if (SQ_FAILED(sq_get(this->vm, -2))) throw Script_FatalError(fmt::format("LoadObject() not found in '{}'", view));
+						sq_push(this->vm, -2); // instance
+						LoadObjects(this->vm, this->data);
+						if (SQ_FAILED(sq_call(this->vm, 2, SQFalse, SQTrue, MAX_SL_OPS))) throw Script_FatalError(fmt::format("LoadObject() failed for '{}'", view));
+						if (engine->IsSuspended()) {
+							sq_wakeupvm(this->vm, SQFalse, SQFalse, SQFalse, SQTrue);
+							throw Script_FatalError(fmt::format("LoadObject() took too long for '{}'", view));
+						}
+						sq_remove(this->vm, -1); // closure
+						sq_remove(this->vm, -2); // view
+						return true;
+					}
 					sq_pushstring(this->vm, class_name);
-					if (SQ_FAILED(sq_get(this->vm, -2))) throw Script_FatalError(fmt::format("'{}' doesn't exist", class_name));
-					sq_pushroottable(vm);
+					if (SQ_FAILED(sq_get(this->vm, -2))) throw Script_FatalError(fmt::format("'{}' or '{}' don't exist", view, class_name));
+					sq_remove(this->vm, -2); // root table
+					sq_remove(this->vm, -2); // view
+					sq_pushroottable(this->vm);
 					if (SQ_FAILED(sq_call(this->vm, 1, SQTrue, SQFalse))) throw Script_FatalError(fmt::format("Failed to instantiate '{}'", class_name));
-					HSQOBJECT res;
-					sq_getstackobj(vm, -1, &res);
-					sq_addref(vm, &res);
-					sq_settop(this->vm, top);
-					sq_pushobject(vm, res);
-					sq_release(vm, &res);
-					ScriptObject *obj = static_cast<ScriptObject *>(Squirrel::GetRealInstance(vm, -1, "Object"));
+					sq_remove(this->vm, -2); // class
+					ScriptObject *obj = static_cast<ScriptObject *>(Squirrel::GetRealInstance(this->vm, -1, "Object"));
 					LoadObjects(this->vm, this->data);
-					if (!obj->LoadObject(vm)) throw Script_FatalError(fmt::format("Failed to load '{}'", class_name));
+					if (!obj->LoadObject(this->vm)) throw Script_FatalError(fmt::format("Failed to load '{}'", class_name));
 					sq_pop(this->vm, 1);
 					return true;
 				}
