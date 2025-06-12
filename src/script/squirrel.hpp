@@ -98,7 +98,7 @@ public:
 	 * Adds a function to the stack. Depending on the current state this means
 	 *  either a method or a global function.
 	 */
-	void AddMethod(std::string_view method_name, SQFUNCTION proc, std::string_view params = {}, void *userdata = nullptr, int size = 0);
+	void AddMethod(std::string_view method_name, SQFUNCTION proc, std::string_view params = {}, void *userdata = nullptr, int size = 0, bool suspendable = false);
 
 	/**
 	 * Adds a const to the stack. Depending on the current state this means
@@ -275,6 +275,11 @@ public:
 	 * How many operations can we execute till suspension?
 	 */
 	SQInteger GetOpsTillSuspend();
+
+	/**
+	 * Did last operations trigger the CPU limit?
+	 */
+	static bool IsOpsTillSuspendError(HSQUIRRELVM vm);
 
 	/**
 	 * Completely reset the engine; start from scratch.

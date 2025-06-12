@@ -8,6 +8,7 @@
 /** @file script_list.cpp Implementation of ScriptList. */
 
 #include "../../stdafx.h"
+#include "script_controller.hpp"
 #include "script_list.hpp"
 #include "../../debug.h"
 #include "../../script/squirrel.hpp"
@@ -927,12 +928,12 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 	ScriptObject::DisableDoCommandScope disabler{};
 
 	/* Limit the total number of ops that can be consumed by a valuate operation */
-	SQOpsLimiter limiter(vm, MAX_VALUATE_OPS, "valuator function");
+	SQOpsLimiter limiter(vm, ScriptController::GetOpsTillSuspend(), "valuator function");
 
 	/* Push the function to call */
 	sq_push(vm, 2);
 
-	for (ScriptListMap::iterator iter = this->items.begin(); iter != this->items.end(); iter++) {
+	for (ScriptListMap::iterator iter = this->resume_iter.value_or(this->items.begin()); iter != this->items.end(); iter++) {
 		/* Check for changing of items. */
 		int previous_modification_count = this->modifications;
 
@@ -946,6 +947,11 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 
 		/* Call the function. Squirrel pops all parameters and pushes the return value. */
 		if (SQ_FAILED(sq_call(vm, nparam + 1, SQTrue, SQFalse))) {
+			if (this->resume_iter != iter && Squirrel::IsOpsTillSuspendError(vm)) {
+				this->resume_iter = iter;
+				sq_pushbool(vm, SQTrue);
+				return 1;
+			}
 			return SQ_ERROR;
 		}
 
@@ -994,5 +1000,7 @@ SQInteger ScriptList::Valuate(HSQUIRRELVM vm)
 	 * 4. The ScriptList instance object. */
 	sq_pop(vm, nparam + 3);
 
-	return 0;
+	this->resume_iter.reset();
+	sq_pushbool(vm, SQFalse);
+	return 1;
 }

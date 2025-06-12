@@ -35,13 +35,17 @@ public:
 	/** Sort descending */
 	static const bool SORT_DESCENDING = false;
 
+	typedef std::set<SQInteger> ScriptItemList;                   ///< The list of items inside the bucket
+	typedef std::map<SQInteger, ScriptItemList> ScriptListBucket; ///< The bucket list per value
+	typedef std::map<SQInteger, SQInteger> ScriptListMap;         ///< List per item
+
 private:
 	std::unique_ptr<ScriptListSorter> sorter; ///< Sorting algorithm
 	SorterType sorter_type;       ///< Sorting type
 	bool sort_ascending;          ///< Whether to sort ascending or descending
 	bool initialized;             ///< Whether an iteration has been started
 	int modifications;            ///< Number of modification that has been done. To prevent changing data while valuating.
-
+	std::optional<ScriptListMap::iterator> resume_iter; ///< Item to use on valuation start.
 protected:
 	/* Temporary helper functions to get the raw index from either strongly and non-strongly typed pool items. */
 	template <typename T>
@@ -154,10 +158,6 @@ protected:
 	void CopyList(const ScriptList *list);
 
 public:
-	typedef std::set<SQInteger> ScriptItemList;                   ///< The list of items inside the bucket
-	typedef std::map<SQInteger, ScriptItemList> ScriptListBucket; ///< The bucket list per value
-	typedef std::map<SQInteger, SQInteger> ScriptListMap;         ///< List per item
-
 	ScriptListMap items;           ///< The items in the list
 	ScriptListBucket buckets;      ///< The items in the list, sorted by value
 
@@ -374,6 +374,7 @@ public:
 
 	/**
 	 * The Valuate() wrapper from Squirrel.
+	 * @suspendable
 	 */
 	SQInteger Valuate(HSQUIRRELVM vm);
 #else
