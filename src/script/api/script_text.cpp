@@ -276,6 +276,7 @@ void ScriptText::_GetEncodedText(StringBuilder &builder, int &param_count, Param
 	auto skip_args = [&](size_t nb) { idx += nb; };
 
 	for (const StringParam &cur_param : params) {
+		int i = 0;
 		try {
 			switch (cur_param.type) {
 				case StringParam::UNUSED:
