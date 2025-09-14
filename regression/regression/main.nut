@@ -487,6 +487,7 @@ function Regression::Engine()
 		print("    GetRailType():      " + AIEngine.GetRailType(i));
 		print("    GetRoadType():      " + AIEngine.GetRoadType(i));
 		print("    GetPlaneType():     " + AIEngine.GetPlaneType(i));
+		print("    GetAllRailTypes()   " + AIEngine.GetAllRailTypes(i));
 	}
 	print("  Valid Engines:        " + j);
 }
