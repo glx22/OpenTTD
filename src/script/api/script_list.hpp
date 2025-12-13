@@ -52,29 +52,43 @@ protected:
 	static auto GetRawIndex(const T &index) { return index.base(); }
 
 	template <typename T, class ItemValid, class ItemFilter>
-	static void FillList(ScriptList *list, ItemValid item_valid, ItemFilter item_filter)
+	static bool FillList(ScriptList *list, ItemValid item_valid, ItemFilter item_filter)
 	{
+		/* Don't allow docommand from a filter, as we can't resume in mid C++-code. */
+		ScriptObject::DisableDoCommandScope disabler{};
+
+		size_t from = 0;
+		if (disabler.GetOriginalValue()) from = list->resume_item.value_or(0);
+
 		for (const T *item : T::Iterate()) {
+			if (disabler.GetOriginalValue() && GetRawIndex(item->index) != list->resume_item && ScriptController::GetOpsTillSuspend() < 0) {
+				list->resume_item = GetRawIndex(item->index);
+				return true;
+			}
+			ScriptController::DecreaseOps(1);
 			if (!item_valid(item)) continue;
 			if (!item_filter(item)) continue;
 			list->AddItem(GetRawIndex(item->index));
 		}
+
+		list->resume_item.reset();
+		return false;
 	}
 
 	template <typename T, class ItemValid>
-	static void FillList(ScriptList *list, ItemValid item_valid)
+	static bool FillList(ScriptList *list, ItemValid item_valid)
 	{
-		ScriptList::FillList<T>(list, item_valid, [](const T *) { return true; });
+		return ScriptList::FillList<T>(list, item_valid, [](const T *) { return true; });
 	}
 
 	template <typename T>
-	static void FillList(ScriptList *list)
+	static bool FillList(ScriptList *list)
 	{
-		ScriptList::FillList<T>(list, [](const T *) { return true; });
+		return ScriptList::FillList<T>(list, [](const T *) { return true; });
 	}
 
 	template <typename T, class ItemValid>
-	static void FillList(HSQUIRRELVM vm, ScriptList *list, ItemValid item_valid)
+	static SQInteger FillList(HSQUIRRELVM vm, ScriptList *list, ItemValid item_valid)
 	{
 		int nparam = sq_gettop(vm) - 1;
 		if (nparam >= 1) {
@@ -90,17 +104,15 @@ protected:
 			sq_push(vm, 2);
 		}
 
-		/* Don't allow docommand from a filter, as we can't resume in
-		 * mid C++-code. */
-		ScriptObject::DisableDoCommandScope disabler{};
+		bool ret = false;
 
 		if (nparam < 1) {
-			ScriptList::FillList<T>(list, item_valid);
+			ret = ScriptList::FillList<T>(list, item_valid);
 		} else {
 			/* Limit the total number of ops that can be consumed by a filter operation, if a filter function is present */
 			SQOpsLimiter limiter(vm, MAX_VALUATE_OPS, "list filter function");
 
-			ScriptList::FillList<T>(list, item_valid,
+			ret = ScriptList::FillList<T>(list, item_valid,
 				[vm, nparam](const T *item) {
 					/* Push the root table as instance object, this is what squirrel does for meta-functions. */
 					sq_pushroottable(vm);
@@ -137,12 +149,15 @@ protected:
 			/* Pop the filter function */
 			sq_poptop(vm);
 		}
+
+		sq_pushbool(vm, ret ? SQTrue : SQFalse);
+		return 1;
 	}
 
 	template <typename T>
-	static void FillList(HSQUIRRELVM vm, ScriptList *list)
+	static SQInteger FillList(HSQUIRRELVM vm, ScriptList *list)
 	{
-		ScriptList::FillList<T>(vm, list, [](const T *) { return true; });
+		return ScriptList::FillList<T>(vm, list, [](const T *) { return true; });
 	}
 
 	virtual bool SaveObject(HSQUIRRELVM vm) const override;

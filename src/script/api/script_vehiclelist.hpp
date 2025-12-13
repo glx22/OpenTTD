@@ -47,7 +47,7 @@ public:
 	/**
 	 * The constructor wrapper from Squirrel.
 	 */
-	ScriptVehicleList(HSQUIRRELVM vm);
+	SQInteger Constructor(HSQUIRRELVM vm);
 #endif /* DOXYGEN_API */
 };
 
@@ -134,7 +134,7 @@ public:
 	 * @param group_id The ID of the group the vehicles are in.
 	 * @game @pre ScriptCompanyMode::IsValid().
 	 */
-	ScriptVehicleList_Group(GroupID group_id);
+	bool Constructor(GroupID group_id);
 };
 
 /**
@@ -148,7 +148,7 @@ public:
 	 * @param vehicle_type The VehicleType to get the list of vehicles for.
 	 * @game @pre ScriptCompanyMode::IsValid().
 	 */
-	ScriptVehicleList_DefaultGroup(ScriptVehicle::VehicleType vehicle_type);
+	bool Constructor(ScriptVehicle::VehicleType vehicle_type);
 };
 
 #endif /* SCRIPT_VEHICLELIST_HPP */

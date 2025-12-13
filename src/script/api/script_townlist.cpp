@@ -13,9 +13,9 @@
 
 #include "../../safeguards.h"
 
-ScriptTownList::ScriptTownList(HSQUIRRELVM vm)
+SQInteger ScriptTownList::Constructor(HSQUIRRELVM vm)
 {
-	ScriptList::FillList<Town>(vm, this);
+	return ScriptList::FillList<Town>(vm, this);
 }
 
 ScriptTownEffectList::ScriptTownEffectList()

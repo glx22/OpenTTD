@@ -49,7 +49,7 @@ public:
 	/**
 	 * The constructor wrapper from Squirrel.
 	 */
-	ScriptGroupList(HSQUIRRELVM vm);
+	SQInteger Constructor(HSQUIRRELVM vm);
 #endif /* DOXYGEN_API */
 };
 

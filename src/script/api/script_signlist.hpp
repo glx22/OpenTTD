@@ -42,7 +42,7 @@ public:
 	 */
 	ScriptSignList(function filter_function, ...);
 #else
-	ScriptSignList(HSQUIRRELVM);
+	SQInteger Constructor(HSQUIRRELVM);
 #endif /* DOXYGEN_API */
 };
 

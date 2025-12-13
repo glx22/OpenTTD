@@ -14,9 +14,9 @@
 
 #include "../../safeguards.h"
 
-ScriptSignList::ScriptSignList(HSQUIRRELVM vm)
+SQInteger ScriptSignList::Constructor(HSQUIRRELVM vm)
 {
-	ScriptList::FillList<Sign>(vm, this,
+	return ScriptList::FillList<Sign>(vm, this,
 		[](const Sign *s) { return ScriptSign::IsValidSign(s->index); }
 	);
 }

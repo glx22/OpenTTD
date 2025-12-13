@@ -43,7 +43,7 @@ public:
 	 */
 	ScriptTownList(function filter_function, ...);
 #else
-	ScriptTownList(HSQUIRRELVM vm);
+	SQInteger Constructor(HSQUIRRELVM vm);
 #endif /* DOXYGEN_API */
 };
 

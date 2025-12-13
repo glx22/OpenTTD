@@ -23,7 +23,7 @@ public:
 	/**
 	 * @param waypoint_type The type of waypoint to make a list of waypoints for.
 	 */
-	ScriptWaypointList(ScriptWaypoint::WaypointType waypoint_type);
+	bool Constructor(ScriptWaypoint::WaypointType waypoint_type);
 };
 
 /**
