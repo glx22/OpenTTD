@@ -46,7 +46,7 @@ public:
 	/**
 	 * The constructor wrapper from Squirrel.
 	 */
-	ScriptIndustryList(HSQUIRRELVM vm);
+	SQInteger Constructor(HSQUIRRELVM vm);
 #endif /* DOXYGEN_API */
 };
 
@@ -60,7 +60,7 @@ public:
 	/**
 	 * @param cargo_type The cargo this industry should accept.
 	 */
-	ScriptIndustryList_CargoAccepting(CargoType cargo_type);
+	bool Constructor(CargoType cargo_type);
 };
 
 /**
@@ -74,7 +74,7 @@ public:
 	/**
 	 * @param cargo_type The cargo this industry should produce.
 	 */
-	ScriptIndustryList_CargoProducing(CargoType cargo_type);
+	bool Constructor(CargoType cargo_type);
 };
 
 #endif /* SCRIPT_INDUSTRYLIST_HPP */

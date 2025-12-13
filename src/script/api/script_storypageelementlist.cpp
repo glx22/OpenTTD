@@ -13,11 +13,11 @@
 
 #include "../../safeguards.h"
 
-ScriptStoryPageElementList::ScriptStoryPageElementList(StoryPageID story_page_id)
+bool ScriptStoryPageElementList::Constructor(StoryPageID story_page_id)
 {
-	if (!ScriptStoryPage::IsValidStoryPage(story_page_id)) return;
+	if (!ScriptStoryPage::IsValidStoryPage(story_page_id)) return false;
 
-	ScriptList::FillList<StoryPageElement>(this,
+	return ScriptList::FillList<StoryPageElement>(this,
 		[story_page_id](const StoryPageElement *pe) {return pe->page == story_page_id; }
 	);
 }

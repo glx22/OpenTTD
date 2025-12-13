@@ -23,7 +23,7 @@ public:
 	/**
 	 * @param station_type The type of station to make a list of stations for.
 	 */
-	ScriptStationList(ScriptStation::StationType station_type);
+	bool Constructor(ScriptStation::StationType station_type);
 };
 
 /**

@@ -16,12 +16,12 @@
 
 #include "../../safeguards.h"
 
-ScriptStationList::ScriptStationList(ScriptStation::StationType station_type)
+bool ScriptStationList::Constructor(ScriptStation::StationType station_type)
 {
-	EnforceDeityOrCompanyModeValid_Void();
+	EnforceDeityOrCompanyModeValid(false);
 	bool is_deity = ScriptCompanyMode::IsDeity();
 	::CompanyID owner = ScriptObject::GetCompany();
-	ScriptList::FillList<Station>(this,
+	return ScriptList::FillList<Station>(this,
 		[is_deity, owner, station_type](const Station *st) {
 			return (is_deity || st->owner == owner) && st->facilities.Any(static_cast<StationFacilities>(station_type));
 		}

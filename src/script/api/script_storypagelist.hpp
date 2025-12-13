@@ -23,7 +23,7 @@ public:
 	/**
 	 * @param company The company to list story pages for, or ScriptCompany::COMPANY_INVALID to only show global pages. Global pages are always included independent of this parameter.
 	 */
-	ScriptStoryPageList(ScriptCompany::CompanyID company);
+	bool Constructor(ScriptCompany::CompanyID company);
 };
 
 #endif /* SCRIPT_STORYPAGELIST_HPP */

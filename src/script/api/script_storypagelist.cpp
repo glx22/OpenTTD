@@ -14,11 +14,11 @@
 
 #include "../../safeguards.h"
 
-ScriptStoryPageList::ScriptStoryPageList(ScriptCompany::CompanyID company)
+bool ScriptStoryPageList::Constructor(ScriptCompany::CompanyID company)
 {
 	::CompanyID c = ScriptCompany::FromScriptCompanyID(company);
 
-	ScriptList::FillList<StoryPage>(this,
+	return ScriptList::FillList<StoryPage>(this,
 		[c](const StoryPage *p) {return p->company == c || p->company == CompanyID::Invalid(); }
 	);
 }

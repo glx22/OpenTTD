@@ -15,13 +15,13 @@
 
 #include "../../safeguards.h"
 
-ScriptWaypointList::ScriptWaypointList(ScriptWaypoint::WaypointType waypoint_type)
+bool ScriptWaypointList::Constructor(ScriptWaypoint::WaypointType waypoint_type)
 {
-	EnforceDeityOrCompanyModeValid_Void();
+	EnforceDeityOrCompanyModeValid(false);
 
 	bool is_deity = ScriptCompanyMode::IsDeity();
 	::CompanyID owner = ScriptObject::GetCompany();
-	ScriptList::FillList<Waypoint>(this,
+	return ScriptList::FillList<Waypoint>(this,
 		[is_deity, owner, waypoint_type](const Waypoint *wp) {
 			return (is_deity || wp->owner == owner || wp->owner == OWNER_NONE) && wp->facilities.Any(static_cast<StationFacilities>(waypoint_type));
 		}

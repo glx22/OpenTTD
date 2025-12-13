@@ -41,7 +41,7 @@ public:
 	 */
 	ScriptSubsidyList(function filter_function, ...);
 #else
-	ScriptSubsidyList(HSQUIRRELVM vm);
+	SQInteger Constructor(HSQUIRRELVM vm);
 #endif /* DOXYGEN_API */
 };
 

@@ -20,14 +20,14 @@
 
 #include "../../safeguards.h"
 
-ScriptVehicleList::ScriptVehicleList(HSQUIRRELVM vm)
+SQInteger ScriptVehicleList::Constructor(HSQUIRRELVM vm)
 {
-	EnforceDeityOrCompanyModeValid_Void();
+	EnforceDeityOrCompanyModeValid(0);
 
 	bool is_deity = ScriptCompanyMode::IsDeity();
 	::CompanyID owner = ScriptObject::GetCompany();
 
-	ScriptList::FillList<Vehicle>(vm, this,
+	return ScriptList::FillList<Vehicle>(vm, this,
 		[is_deity, owner](const Vehicle *v) {
 			return (is_deity || v->owner == owner) && (v->IsPrimaryVehicle() || (v->type == VEH_TRAIN && ::Train::From(v)->IsFreeWagon()));
 		}
@@ -140,27 +140,27 @@ ScriptVehicleList_SharedOrders::ScriptVehicleList_SharedOrders(VehicleID vehicle
 	}
 }
 
-ScriptVehicleList_Group::ScriptVehicleList_Group(GroupID group_id)
+bool ScriptVehicleList_Group::Constructor(GroupID group_id)
 {
-	EnforceCompanyModeValid_Void();
-	if (!ScriptGroup::IsValidGroup(group_id)) return;
+	EnforceCompanyModeValid(false);
+	if (!ScriptGroup::IsValidGroup(group_id)) return false;
 
 	::CompanyID owner = ScriptObject::GetCompany();
 
-	ScriptList::FillList<Vehicle>(this,
+	return ScriptList::FillList<Vehicle>(this,
 		[owner](const Vehicle *v) { return v->owner == owner && v->IsPrimaryVehicle(); },
 		[group_id](const Vehicle *v) { return v->group_id == group_id; }
 	);
 }
 
-ScriptVehicleList_DefaultGroup::ScriptVehicleList_DefaultGroup(ScriptVehicle::VehicleType vehicle_type)
+bool ScriptVehicleList_DefaultGroup::Constructor(ScriptVehicle::VehicleType vehicle_type)
 {
-	EnforceCompanyModeValid_Void();
-	if (vehicle_type < ScriptVehicle::VT_RAIL || vehicle_type > ScriptVehicle::VT_AIR) return;
+	EnforceCompanyModeValid(false);
+	if (vehicle_type < ScriptVehicle::VT_RAIL || vehicle_type > ScriptVehicle::VT_AIR) return false;
 
 	::CompanyID owner = ScriptObject::GetCompany();
 
-	ScriptList::FillList<Vehicle>(this,
+	return ScriptList::FillList<Vehicle>(this,
 		[owner](const Vehicle *v) { return v->owner == owner && v->IsPrimaryVehicle(); },
 		[vehicle_type](const Vehicle *v) { return v->type == (::VehicleType)vehicle_type && v->group_id == ScriptGroup::GROUP_DEFAULT; }
 	);

@@ -13,7 +13,7 @@
 
 #include "../../safeguards.h"
 
-ScriptSubsidyList::ScriptSubsidyList(HSQUIRRELVM vm)
+SQInteger ScriptSubsidyList::Constructor(HSQUIRRELVM vm)
 {
-	ScriptList::FillList<Subsidy>(vm, this);
+	return ScriptList::FillList<Subsidy>(vm, this);
 }
