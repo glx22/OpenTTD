@@ -274,12 +274,12 @@ void Squirrel::AddMethod(std::string_view method_name, SQFUNCTION proc, std::str
 	if (suspendable) {
 		std::string squirrel_script = fmt::format(
 			"function {0}(...)\n"
-			"{{\n"
+			"{{\n{1}"
 			"    local args = [this];\n"
 			"    for(local i = 0; i < vargc; i++) args.push(vargv[i]);\n"
 			"    while(this[\"@{0}@\"].acall(args)); \n"
 			"}}\n"
-			"return {0};\n", method_name);
+			"return {0};\n", method_name, method_name == "constructor" ? "    this[\"@@constructor@@\"]();\n" : "");
 
 		sq_pushstring(this->vm, method_name);
 		if (SQ_FAILED(sq_compilebuffer(this->vm, squirrel_script, method_name, SQTrue))) NOT_REACHED();

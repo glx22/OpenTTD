@@ -275,6 +275,7 @@ BEGIN {
 # Add a method to the list
 /^.*\(.*\).*$/ {
 	if (cls_level != 1) next
+	gsub(/bool Constructor/, cls)
 	if (!match($0, ";")) {
 		if (!match($0, "}$")) {
 			skip_function_body = "true"

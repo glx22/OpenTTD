@@ -95,10 +95,26 @@ public:
 		engine.AddMethod("constructor", DefSQConstructorCallback<CL, Func>, params);
 	}
 
+	template <typename Func, typename Proc>
+	void AddConstructor(Squirrel &engine, Proc function_proc, std::string_view params)
+	{
+		using namespace SQConvert;
+		engine.AddMethod("@@constructor@@", DefSQConstructorCallback<CL, Func>, "x");
+		engine.AddMethod("constructor", DefSQNonStaticCallback<CL, Proc, ST>, params, &function_proc, sizeof(function_proc), true);
+	}
+
 	void AddSQAdvancedConstructor(Squirrel &engine)
 	{
 		using namespace SQConvert;
 		engine.AddMethod("constructor", DefSQAdvancedConstructorCallback<CL>);
+	}
+
+	template <typename Func, typename Proc>
+	void AddSQAdvancedConstructor(Squirrel &engine, Proc function_proc)
+	{
+		using namespace SQConvert;
+		engine.AddMethod("@@constructor@@", DefSQConstructorCallback<CL, Func>, "x");
+		engine.AddMethod("constructor", DefSQAdvancedNonStaticCallback<CL, Proc, ST>, {}, &function_proc, sizeof(function_proc), true);
 	}
 
 	void PostRegister(Squirrel &engine)
