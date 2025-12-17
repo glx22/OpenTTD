@@ -54,5 +54,7 @@ macro(create_regression)
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 
+    set_property(TEST regression_${REGRESSION_TEST_NAME} PROPERTY TIMEOUT 120)
+
     add_dependencies(regression regression_${REGRESSION_TEST_NAME})
 endmacro()
