@@ -312,3 +312,10 @@
 	if (!IsValidEngine(engine_id)) return -1;
 	return std::byteswap(Engine::Get(engine_id)->GetGRFID());
 }
+
+/* static */ EngineID ScriptEngine::ResolveNewGRFID(ScriptVehicle::VehicleType vehicle_type, SQInteger grfid, SQInteger grf_local_id)
+{
+	grfid = std::byteswap(GB(grfid, 0, 32)); // Match people's expectations.
+	uint16_t local_id = ClampTo<uint16_t>(grf_local_id);
+	return _engine_mngr.GetID(static_cast<::VehicleType>(vehicle_type), local_id, grfid);
+}

@@ -21,6 +21,7 @@
  *
  * API additions:
  * \li GSEngine::GetNewGRF
+ * \li GSEngine::ResolveNewGRFID
  *
  * \b 15.0
  *

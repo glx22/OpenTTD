@@ -329,6 +329,15 @@ public:
 	 * @return The NewGRF.
 	 */
 	static SQInteger GetNewGRF(EngineID engine_id);
+
+	/**
+	 * Get a specific engine from a grf.
+	 * @param vehicle_type The vehicle-type of engine to get.
+	 * @param grfid The ID of the NewGRF.
+	 * @param grf_local_id The ID of the engine, local to the NewGRF.
+	 * @return The EngineID, local to the current game (this diverges from the grf_local_id).
+	 */
+	static EngineID ResolveNewGRFID(ScriptVehicle::VehicleType vehicle_type, SQInteger grfid, SQInteger grf_local_id);
 };
 
 #endif /* SCRIPT_ENGINE_HPP */
