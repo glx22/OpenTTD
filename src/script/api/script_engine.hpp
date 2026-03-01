@@ -322,6 +322,13 @@ public:
 	 */
 	static bool DisableForCompany(EngineID engine_id, ScriptCompany::CompanyID company_id);
 
+	/**
+	 * Get the NewGRF providing an engine.
+	 * @param engine_id The engine to get the NewGRF for.
+	 * @pre IsValidEngine(engine_id).
+	 * @return The NewGRF.
+	 */
+	static SQInteger GetNewGRF(EngineID engine_id);
 };
 
 #endif /* SCRIPT_ENGINE_HPP */

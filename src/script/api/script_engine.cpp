@@ -306,3 +306,9 @@
 
 	return ScriptObject::Command<Commands::EngineControl>::Do(engine_id, ScriptCompany::FromScriptCompanyID(company), false);
 }
+
+/* static */ SQInteger ScriptEngine::GetNewGRF(EngineID engine_id)
+{
+	if (!IsValidEngine(engine_id)) return -1;
+	return std::byteswap(Engine::Get(engine_id)->GetGRFID());
+}
