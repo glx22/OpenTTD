@@ -44,6 +44,7 @@ jobs:
         cp ${GITHUB_WORKSPACE}/os/emscripten/ports/liblzma.py /emsdk/upstream/emscripten/tools/ports/contrib/
 
     - name: Build (host tools)
+      if: false
       run: |
         mkdir build-host
         cd build-host
@@ -61,6 +62,7 @@ jobs:
       uses: ammaraskar/gcc-problem-matcher@master
 
     - name: Build
+      if: false
       run: |
         mkdir build
         cd build
@@ -81,10 +83,10 @@ jobs:
       run: |
         mkdir public
 
-        cp build/openttd.data public/
-        cp build/openttd.html public/
-        cp build/openttd.js public/
-        cp build/openttd.wasm public/
+        #cp build/openttd.data public/
+        #cp build/openttd.html public/
+        #cp build/openttd.js public/
+        #cp build/openttd.wasm public/
 
         mkdir pr
         echo ${{ github.event.pull_request.number }} > ./pr/number
