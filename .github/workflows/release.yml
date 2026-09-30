@@ -90,7 +90,7 @@ jobs:
     # The always() makes sure the rest is always evaluated.
     if: always() && needs.source.result == 'success' && needs.docs.result == 'success' && needs.linux.result == 'success' && needs.macos.result == 'success' && needs.windows.result == 'success' && (needs.windows-store.result == 'success' || needs.windows-store.result == 'skipped')
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     # This job is empty, but ensures no upload job starts before all targets finished and are successful.
     steps:
