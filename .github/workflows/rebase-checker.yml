@@ -17,3 +17,4 @@ jobs:
         with:
           dirtyLabel: "work: needs rebase"
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
+      - run: echo "test"
