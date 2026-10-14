@@ -10,7 +10,7 @@ concurrency:
 jobs:
   file-descriptions:
     name: File descriptions
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
     - name: Checkout

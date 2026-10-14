@@ -12,7 +12,7 @@ jobs:
   linux:
     name: Linux (Generic)
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container:
       # manylinux_2_28 is based on AlmaLinux 8, and already has a lot of things
       # installed and preconfigured. It makes it easier to build OpenTTD.
