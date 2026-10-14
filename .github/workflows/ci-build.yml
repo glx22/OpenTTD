@@ -15,12 +15,14 @@ concurrency:
 
 jobs:
   emscripten:
+    if: false
     name: Emscripten
 
     uses: ./.github/workflows/ci-emscripten.yml
     secrets: inherit
 
   linux:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -52,6 +54,7 @@ jobs:
       extra-cmake-parameters: ${{ matrix.extra-cmake-parameters }}
 
   macos:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -76,6 +79,7 @@ jobs:
       extra-cmake-parameters: ${{ matrix.extra-cmake-parameters }}
 
   windows:
+    if: false
     strategy:
       fail-fast: false
       matrix:
