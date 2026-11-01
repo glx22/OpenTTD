@@ -10,7 +10,7 @@ on:
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - name: check if prs are in need of a rebase
         uses: eps1lon/actions-label-merge-conflict@v3
