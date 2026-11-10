@@ -10,7 +10,7 @@ jobs:
   emscripten:
     name: CI
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container:
       # If you change this version, change the numbers in the cache step,
       # .github/workflows/preview-build.yml (2x) and os/emscripten/Dockerfile too.

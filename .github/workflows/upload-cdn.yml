@@ -17,7 +17,7 @@ jobs:
   prepare:
     name: Prepare
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
     - name: Download all bundles
@@ -117,7 +117,7 @@ jobs:
 
     name: Publish docs
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
     - name: Generate access token
