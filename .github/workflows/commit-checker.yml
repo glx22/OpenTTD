@@ -10,7 +10,7 @@ concurrency:
 jobs:
   commit-checker:
     name: Commit checker
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     steps:
     - name: Checkout
